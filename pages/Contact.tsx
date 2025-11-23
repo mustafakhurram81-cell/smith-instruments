@@ -15,14 +15,14 @@ const AccordionItem: React.FC<{ item: { q: string, a: string } }> = ({ item }) =
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="border-b border-stone-200 last:border-0 bg-white first:rounded-t-sm last:rounded-b-sm">
-      <button 
+      <button
         className="w-full py-6 px-6 flex justify-between items-center text-left focus:outline-none group hover:bg-stone-50 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="font-serif text-lg text-brand-charcoal group-hover:text-stone-600 transition-colors">{item.q}</span>
         {isOpen ? <Minus size={20} className="text-brand-gold shrink-0 ml-4" /> : <Plus size={20} className="text-stone-400 shrink-0 ml-4" />}
       </button>
-      <div 
+      <div
         className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <div className="p-6 pt-0 text-stone-500 font-light leading-relaxed">
@@ -38,9 +38,9 @@ export const Contact: React.FC = () => {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
   // TODO: Replace these with your actual EmailJS credentials
-  const SERVICE_ID = 'YOUR_SERVICE_ID';
-  const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-  const PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+  const SERVICE_ID = 'service_dzj0fa2';
+  const TEMPLATE_ID = 'template_3kqu18e';
+  const PUBLIC_KEY = 'JVcDcowpyoY1HnUQO';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,39 +49,39 @@ export const Contact: React.FC = () => {
     if (form.current) {
       emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
         .then((result) => {
-            console.log(result.text);
-            setFormStatus('success');
-            // Reset form status after 5 seconds to allow sending another
-            setTimeout(() => setFormStatus('idle'), 5000);
+          console.log(result.text);
+          setFormStatus('success');
+          // Reset form status after 5 seconds to allow sending another
+          setTimeout(() => setFormStatus('idle'), 5000);
         }, (error) => {
-            console.log(error.text);
-            setFormStatus('error');
-            setTimeout(() => setFormStatus('idle'), 5000);
+          console.log(error.text);
+          setFormStatus('error');
+          setTimeout(() => setFormStatus('idle'), 5000);
         });
     }
   };
 
   return (
     <div className="pt-20 bg-stone-50 min-h-screen">
-      
+
       {/* Header */}
       <div className="bg-brand-charcoal py-20 text-center">
-         <h1 className="font-serif text-4xl md:text-5xl text-white mb-4">Contact Us</h1>
-         <p className="text-stone-400 font-light max-w-xl mx-auto px-6">
-           Reach out for quotes, custom manufacturing inquiries, or support.
-         </p>
+        <h1 className="font-serif text-4xl md:text-5xl text-white mb-4">Contact Us</h1>
+        <p className="text-stone-400 font-light max-w-xl mx-auto px-6">
+          Reach out for quotes, custom manufacturing inquiries, or support.
+        </p>
       </div>
 
       <div className="container mx-auto px-6 py-16 md:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
-          
+
           {/* LEFT SIDEBAR: Contact Info */}
           <div className="space-y-8">
             <FadeIn>
               {/* Contact Details Card */}
               <div className="bg-white p-8 rounded-sm shadow-sm border border-stone-100">
                 <h3 className="font-serif text-2xl text-brand-charcoal mb-8">Get In Touch</h3>
-                
+
                 <div className="space-y-8">
                   {/* Phone */}
                   <div className="flex items-start gap-4">
@@ -114,7 +114,7 @@ export const Contact: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-brand-charcoal mb-1">Location</h4>
-                      <p className="text-stone-600 font-light">123 Medical Park Blvd<br/>New York, NY 10012</p>
+                      <p className="text-stone-600 font-light">123 Medical Park Blvd<br />New York, NY 10012</p>
                       <p className="text-xs text-stone-400 mt-1">Serving clients globally</p>
                     </div>
                   </div>
@@ -122,9 +122,9 @@ export const Contact: React.FC = () => {
 
                 {/* WhatsApp CTA */}
                 <div className="mt-10">
-                  <a 
-                    href="https://wa.me/923302449855" 
-                    target="_blank" 
+                  <a
+                    href="https://wa.me/923302449855"
+                    target="_blank"
                     rel="noreferrer"
                     className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-3 rounded-full font-medium transition-colors shadow-sm"
                   >
@@ -164,7 +164,7 @@ export const Contact: React.FC = () => {
             <FadeIn delay={0.2}>
               <div className="bg-white p-8 md:p-12 rounded-sm shadow-sm border border-stone-100">
                 <h3 className="font-serif text-3xl text-brand-charcoal mb-8">Send Us a Message</h3>
-                
+
                 {formStatus === 'success' ? (
                   <div className="bg-stone-50 text-brand-charcoal p-8 border border-brand-gold/50 text-center rounded-sm">
                     <div className="w-16 h-16 bg-brand-gold text-brand-charcoal rounded-full flex items-center justify-center mx-auto mb-4">
@@ -184,41 +184,41 @@ export const Contact: React.FC = () => {
                     {/* Note: 'name' attributes are required for EmailJS to map fields */}
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-2">Full Name <span className="text-brand-gold">*</span></label>
-                      <input 
-                        required 
-                        type="text" 
+                      <input
+                        required
+                        type="text"
                         name="user_name"
                         placeholder="Dr. John Smith"
-                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300" 
+                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-2">Email Address <span className="text-brand-gold">*</span></label>
-                      <input 
-                        required 
-                        type="email" 
+                      <input
+                        required
+                        type="email"
                         name="user_email"
                         placeholder="john.smith@hospital.com"
-                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300" 
+                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-2">Catalogue of Interest</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         name="interest"
                         placeholder="e.g., Orthopedic Instruments"
-                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300" 
+                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-2">Message <span className="text-brand-gold">*</span></label>
-                      <textarea 
-                        required 
-                        rows={6} 
+                      <textarea
+                        required
+                        rows={6}
                         name="message"
                         placeholder="Tell us about your requirements or questions..."
                         className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300 resize-none"
@@ -237,7 +237,7 @@ export const Contact: React.FC = () => {
                         )}
                       </Button>
                     </div>
-                    
+
                     <p className="text-xs text-stone-400 bg-stone-50 p-4 rounded-sm mt-4">
                       <strong>Privacy Notice:</strong> Your information will be used solely to respond to your inquiry. We do not share your data with third parties.
                     </p>
@@ -257,7 +257,7 @@ export const Contact: React.FC = () => {
             <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4">Frequently Asked Questions</h2>
             <p className="text-stone-500 font-light">Common questions about our manufacturing, shipping, and policies.</p>
           </div>
-          
+
           <div className="bg-white rounded-sm shadow-sm border border-stone-100">
             {FAQS.map((item, idx) => (
               <AccordionItem key={idx} item={item} />
