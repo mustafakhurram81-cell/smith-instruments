@@ -157,59 +157,57 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <p>Loading Catalogue...</p>
           </div>
         ) : (
-          <div className="relative shadow-2xl w-full max-w-[85vw] h-[80vh] flex items-center justify-center">
-            {/* @ts-ignore - React PageFlip types are sometimes loose */}
-            <HTMLFlipBook
-              width={500} // Slightly reduced base width
-              height={707} // Slightly reduced base height (maintaining A4 ratio)
-              size="stretch"
-              minWidth={300}
-              maxWidth={800} // Cap max width to prevent it getting huge
-              minHeight={400}
-              maxHeight={1200} // Cap max height
-              maxShadowOpacity={0.5}
-              showCover={true}
-              mobileScrollSupport={true}
-              usePortrait={false} // Force landscape/spread view on desktop
-              startZIndex={0}
-              autoSize={true}
-              onFlip={onFlip}
-              ref={book}
-              className="flip-book"
-              style={{ margin: '0 auto' }}
-            >
-              {/* Generate Pages */}
-              {Array.from(new Array(numPages), (el, index) => (
-                <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100">
-                  <div className="w-full h-full relative">
-                    <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
-                      <Page
-                        pageNumber={index + 1}
-                        width={600} // Render slightly larger for quality
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
-                        className="w-full h-full object-contain"
-                      />
-                    </Document>
-                    {/* Shadow Gradient for Spine */}
-                    <div className={`absolute top-0 bottom-0 w-8 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`}></div>
+          <div className="flex flex-col items-center gap-6 w-full h-full justify-center">
+            <div className="relative shadow-2xl w-full max-w-[80vw] h-[70vh] flex items-center justify-center">
+              {/* @ts-ignore - React PageFlip types are sometimes loose */}
+              <HTMLFlipBook
+                width={450}
+                height={636}
+                size="stretch"
+                minWidth={300}
+                maxWidth={600}
+                minHeight={400}
+                maxHeight={1000}
+                maxShadowOpacity={0.5}
+                showCover={true}
+                mobileScrollSupport={true}
+                usePortrait={false}
+                startZIndex={0}
+                autoSize={true}
+                onFlip={onFlip}
+                ref={book}
+                className="flip-book"
+                style={{ margin: '0 auto' }}
+              >
+                {/* Generate Pages */}
+                {Array.from(new Array(numPages), (el, index) => (
+                  <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100">
+                    <div className="w-full h-full relative">
+                      <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
+                        <Page
+                          pageNumber={index + 1}
+                          width={500}
+                          renderTextLayer={false}
+                          renderAnnotationLayer={false}
+                          className="w-full h-full object-contain"
+                        />
+                      </Document>
+                      {/* Shadow Gradient for Spine */}
+                      <div className={`absolute top-0 bottom-0 w-8 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`}></div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </HTMLFlipBook>
-          </div>
-        )}
+                ))}
+              </HTMLFlipBook>
+            </div>
 
-        {/* Navigation Controls (Floating Bottom) */}
-        {!loading && (
-          <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center gap-8 text-white z-50 pointer-events-none">
-            <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105">
+            {/* Navigation Controls (Moved Below Book) */}
+            <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105 z-50">
               <button
                 onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipPrev(); }}
                 className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
                 aria-label="Previous Page"
               >
-                <ChevronLeft size={28} />
+                <ChevronLeft size={24} />
               </button>
 
               <span className="text-sm font-medium tracking-widest text-stone-200 select-none min-w-[100px] text-center font-serif">
@@ -221,7 +219,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                 className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
                 aria-label="Next Page"
               >
-                <ChevronRight size={28} />
+                <ChevronRight size={24} />
               </button>
             </div>
           </div>
