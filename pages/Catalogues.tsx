@@ -157,16 +157,16 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <p>Loading Catalogue...</p>
           </div>
         ) : (
-          <div className="relative shadow-2xl w-full max-w-[90vw] h-[85vh] flex items-center justify-center">
+          <div className="relative shadow-2xl w-full max-w-[85vw] h-[80vh] flex items-center justify-center">
             {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
-              width={595} // A4 width in px (approx)
-              height={842} // A4 height in px (approx)
+              width={500} // Slightly reduced base width
+              height={707} // Slightly reduced base height (maintaining A4 ratio)
               size="stretch"
               minWidth={300}
-              maxWidth={1000}
+              maxWidth={800} // Cap max width to prevent it getting huge
               minHeight={400}
-              maxHeight={1533}
+              maxHeight={1200} // Cap max height
               maxShadowOpacity={0.5}
               showCover={true}
               mobileScrollSupport={true}
