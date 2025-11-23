@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Section, Button, FadeIn } from '../components/Shared';
 import { Download, Eye, X, ChevronRight, ChevronLeft, BookOpen, Layers, Keyboard, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Document, Page, pdfjs } from 'react-pdf';
+import HTMLFlipBook from 'react-pageflip';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
@@ -16,7 +17,6 @@ const CATALOGUES = [
     size: "12MB",
     color: "#262626",
     desc: "Comprehensive guide for general procedures.",
-    img: "https://images.unsplash.com/photo-1584515933487-9d1009c24027?auto=format&fit=crop&q=80&w=500",
     pdfUrl: "/catalogues/general-surgery.pdf"
   },
   {
@@ -24,7 +24,6 @@ const CATALOGUES = [
     size: "8MB",
     color: "#C5B495",
     desc: "Instruments for reconstruction and cosmetics.",
-    img: "https://images.unsplash.com/photo-1606166325683-e6deb697d301?auto=format&fit=crop&q=80&w=500",
     pdfUrl: "/catalogues/plastic-surgery.pdf"
   },
   {
@@ -32,7 +31,6 @@ const CATALOGUES = [
     size: "15MB",
     color: "#262626",
     desc: "High precision tools for heart surgery.",
-    img: "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=500",
     pdfUrl: "/catalogues/cardiovascular.pdf"
   },
   {
@@ -40,7 +38,6 @@ const CATALOGUES = [
     size: "10MB",
     color: "#C5B495",
     desc: "Microsurgical solutions for nervous systems.",
-    img: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=500",
     pdfUrl: "/catalogues/neuro-spine.pdf"
   },
   {
@@ -48,7 +45,6 @@ const CATALOGUES = [
     size: "9MB",
     color: "#262626",
     desc: "Tools for ear, nose, and throat specialists.",
-    img: "https://images.unsplash.com/photo-1583324113626-70df0f4deaab?auto=format&fit=crop&q=80&w=500",
     pdfUrl: "/catalogues/ent-diagnostics.pdf"
   },
   {
@@ -56,60 +52,66 @@ const CATALOGUES = [
     size: "11MB",
     color: "#C5B495",
     desc: "Complete range for dental professionals.",
-    img: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=500",
     pdfUrl: "/catalogues/dental.pdf"
   },
 ];
 
+// --- THUMBNAIL COMPONENT ---
+const CatalogueThumbnail: React.FC<{ url: string; color: string; title: string }> = ({ url, color, title }) => {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <div className="w-full h-full relative bg-stone-100 overflow-hidden">
+      <div className="absolute inset-0 flex items-center justify-center z-0">
+        <Loader2 className="animate-spin text-stone-300" size={24} />
+      </div>
+      <Document file={url} className="w-full h-full" loading={null}>
+        <Page
+          pageNumber={1}
+          width={260}
+          renderTextLayer={false}
+          renderAnnotationLayer={false}
+          onLoadSuccess={() => setLoading(false)}
+          className={`w-full h-full object-cover transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}
+        />
+      </Document>
+      {/* Overlay for Title if needed, or just rely on the PDF cover */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+        <div className="text-white">
+          <p className="font-serif text-lg">{title}</p>
+          <p className="text-xs uppercase tracking-widest opacity-80">View Catalogue</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- 3D FLIPBOOK COMPONENT ---
 const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ catalogue, onClose }) => {
   const [numPages, setNumPages] = useState<number>(0);
-  const [flippedIndex, setFlippedIndex] = useState(-1); // -1 means book is closed (cover visible).
   const [loading, setLoading] = useState(true);
+  const book = useRef<any>(null);
+  const [currentPage, setCurrentPage] = useState(0);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
     setLoading(false);
   }
 
-  // Generate sheets based on numPages
-  // Sheet 0: Front=Page 1, Back=Page 2
-  // Sheet 1: Front=Page 3, Back=Page 4
-  const sheets = useMemo(() => {
-    const s = [];
-    if (numPages > 0) {
-      for (let i = 1; i < numPages; i += 2) {
-        s.push({
-          front: i,
-          back: i + 1 <= numPages ? i + 1 : null
-        });
-      }
-    }
-    return s;
-  }, [numPages]);
-
-  const handleNext = () => {
-    if (flippedIndex < sheets.length - 1) {
-      setFlippedIndex(prev => prev + 1);
-    }
-  };
-
-  const handlePrev = () => {
-    if (flippedIndex >= -1) {
-      setFlippedIndex(prev => prev - 1);
-    }
-  };
+  const onFlip = useCallback((e: any) => {
+    setCurrentPage(e.data);
+  }, []);
 
   // Keyboard Navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') handleNext();
-      if (e.key === 'ArrowLeft') handlePrev();
+      if (e.key === 'ArrowRight') book.current?.pageFlip()?.flipNext();
+      if (e.key === 'ArrowLeft') book.current?.pageFlip()?.flipPrev();
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [flippedIndex, onClose]);
+  }, [onClose]);
 
   return (
     <div
@@ -140,10 +142,10 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
 
       {/* 3D SCENE CONTAINER */}
       <div
-        className="relative w-full h-full flex items-center justify-center perspective-[2500px] py-10"
+        className="relative w-full h-full flex items-center justify-center py-10"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Hidden Document Loader */}
+        {/* Hidden Document Loader to get page count */}
         <div className="hidden">
           <Document file={catalogue.pdfUrl} onLoadSuccess={onDocumentLoadSuccess} onLoadError={(error) => console.error("PDF Load Error:", error)}>
           </Document>
@@ -155,104 +157,43 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <p>Loading Catalogue...</p>
           </div>
         ) : (
-          /* BOOK WRAPPER */
-          <div className="relative w-[90vw] md:w-auto md:h-[85vh] md:aspect-[1.4] max-h-[800px] bg-transparent transition-all duration-300">
-
-            {/* Static Back Cover (Left Side - visible when pages flip) */}
-            <div className="absolute left-0 top-0 w-1/2 h-full bg-white rounded-l-md border-y border-l border-stone-300 shadow-2xl z-0 flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full bg-stone-100 flex flex-col justify-center items-center text-stone-400 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cardboard.png')] opacity-10 pointer-events-none mix-blend-multiply"></div>
-                <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black/10 to-transparent"></div>
-                <Layers size={80} className="mb-4 opacity-10" />
-                <p className="text-sm font-serif opacity-50">Smith Instruments</p>
-              </div>
-            </div>
-
-            {/* Static Right Base (Right Side) */}
-            <div className="absolute right-0 top-0 w-1/2 h-full bg-white rounded-r-md border-y border-r border-stone-300 shadow-2xl z-0 flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full bg-stone-100 flex flex-col justify-center items-center text-stone-400 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cardboard.png')] opacity-10 pointer-events-none mix-blend-multiply"></div>
-                <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black/10 to-transparent"></div>
-                <p className="text-sm font-serif opacity-50">End of Catalogue</p>
-              </div>
-            </div>
-
-            {/* SHEETS */}
-            {sheets.map((sheet, index) => {
-              const isFlipped = index <= flippedIndex;
-              // Z-Index Logic
-              let zIndex = isFlipped ? index + 10 : (sheets.length - index) + 10;
-
-              // Hardcover effect for first and last page
-              const isCover = index === 0;
-              const thickness = isCover ? '4px' : '1px';
-
-              return (
-                <div
-                  key={index}
-                  className="absolute right-0 top-0 w-1/2 h-full transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-style-3d origin-left cursor-pointer"
-                  style={{
-                    zIndex: zIndex,
-                    transform: isFlipped ? 'rotateY(-180deg)' : 'rotateY(0deg)',
-                  }}
-                  onClick={(e) => { e.stopPropagation(); isFlipped ? handlePrev() : handleNext(); }}
-                >
-                  {/* FRONT FACE (Visible when on RIGHT) */}
-                  <div
-                    className="absolute inset-0 w-full h-full bg-white rounded-r-sm overflow-hidden backface-hidden shadow-sm border-l border-stone-200"
-                    style={{ backfaceVisibility: 'hidden' }}
-                  >
-                    <div className="w-full h-full relative">
-                      <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50" />}>
-                        <Page
-                          pageNumber={sheet.front}
-                          width={500}
-                          renderTextLayer={false}
-                          renderAnnotationLayer={false}
-                          className="w-full h-full object-contain"
-                        />
-                      </Document>
-
-                      {/* Realistic Lighting Gradients */}
-                      <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-black/20 via-black/5 to-transparent pointer-events-none z-20 mix-blend-multiply"></div>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-black/5 pointer-events-none z-20 mix-blend-overlay"></div>
-                    </div>
-                  </div>
-
-                  {/* BACK FACE (Visible when on LEFT) */}
-                  <div
-                    className="absolute inset-0 w-full h-full bg-white rounded-l-sm overflow-hidden backface-hidden shadow-sm border-r border-stone-200"
-                    style={{
-                      backfaceVisibility: 'hidden',
-                      transform: 'rotateY(180deg)'
-                    }}
-                  >
-                    {/* IMPORTANT: scaleX(-1) fixes the mirroring issue on the back page */}
-                    <div className="w-full h-full relative" style={{ transform: 'scaleX(-1)' }}>
-                      {sheet.back ? (
-                        <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50" />}>
-                          <Page
-                            pageNumber={sheet.back}
-                            width={500}
-                            renderTextLayer={false}
-                            renderAnnotationLayer={false}
-                            className="w-full h-full object-contain"
-                          />
-                        </Document>
-                      ) : (
-                        <div className="w-full h-full bg-white flex items-center justify-center">
-                          <span className="text-stone-300 font-serif">Notes</span>
-                        </div>
-                      )}
-
-                      {/* Realistic Lighting Gradients (Mirrored for back page) */}
-                      <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-black/20 via-black/5 to-transparent pointer-events-none z-20 mix-blend-multiply"></div>
-                      <div className="absolute inset-0 bg-gradient-to-l from-transparent via-white/10 to-black/5 pointer-events-none z-20 mix-blend-overlay"></div>
-                    </div>
+          <div className="relative shadow-2xl">
+            {/* @ts-ignore - React PageFlip types are sometimes loose */}
+            <HTMLFlipBook
+              width={400}
+              height={550}
+              size="stretch"
+              minWidth={300}
+              maxWidth={600}
+              minHeight={400}
+              maxHeight={800}
+              maxShadowOpacity={0.5}
+              showCover={true}
+              mobileScrollSupport={true}
+              onFlip={onFlip}
+              ref={book}
+              className="flip-book"
+              style={{ margin: '0 auto' }}
+            >
+              {/* Generate Pages */}
+              {Array.from(new Array(numPages), (el, index) => (
+                <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100">
+                  <div className="w-full h-full relative">
+                    <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
+                      <Page
+                        pageNumber={index + 1}
+                        width={400}
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
+                        className="w-full h-full object-contain"
+                      />
+                    </Document>
+                    {/* Shadow Gradient for Spine */}
+                    <div className={`absolute top-0 bottom-0 w-8 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`}></div>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </HTMLFlipBook>
           </div>
         )}
 
@@ -261,22 +202,20 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
           <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center gap-8 text-white z-50 pointer-events-none">
             <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105">
               <button
-                onClick={(e) => { e.stopPropagation(); handlePrev(); }}
-                disabled={flippedIndex === -1}
-                className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipPrev(); }}
+                className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
                 aria-label="Previous Page"
               >
                 <ChevronLeft size={28} />
               </button>
 
               <span className="text-sm font-medium tracking-widest text-stone-200 select-none min-w-[100px] text-center font-serif">
-                {flippedIndex + 2} <span className="text-stone-500 mx-1">/</span> {sheets.length + 1}
+                {currentPage + 1} <span className="text-stone-500 mx-1">/</span> {numPages}
               </span>
 
               <button
-                onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                disabled={flippedIndex === sheets.length - 1}
-                className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipNext(); }}
+                className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
                 aria-label="Next Page"
               >
                 <ChevronRight size={28} />
@@ -304,48 +243,41 @@ export const Catalogues: React.FC = () => {
       {/* Grid of 3D Books */}
       <Section className="bg-white">
         <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20 perspective-[1000px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
             {CATALOGUES.map((cat, idx) => (
               <FadeIn key={idx} delay={idx * 0.1}>
                 <div className="group cursor-pointer relative" onClick={() => setSelectedCatalogue(cat)}>
-                  {/* 3D Book Container */}
-                  <div className="relative w-[260px] h-[360px] mx-auto transition-transform duration-500 ease-out transform-style-3d group-hover:rotate-y-[-15deg] group-hover:translate-x-4">
+                  {/* Book Container */}
+                  <div className="relative w-[260px] h-[360px] mx-auto transition-transform duration-500 ease-out group-hover:-translate-y-2">
 
                     {/* Front Cover */}
-                    <div className="absolute inset-0 bg-brand-charcoal rounded-r-md shadow-xl overflow-hidden flex flex-col border-l-4 border-stone-700"
-                      style={{ backgroundColor: cat.color }}>
-                      <div className="h-2/3 relative">
-                        {/* Removed grayscale classes to always show color */}
-                        <img src={cat.img} alt={cat.title} className="w-full h-full object-cover opacity-90 transition-all duration-500" />
-                        <div className="absolute inset-0 bg-black/20"></div>
-                        <div className="absolute top-4 right-4 w-8 h-8 border border-white/50 rounded-full flex items-center justify-center">
-                          <span className="text-white text-[10px] font-serif font-bold">SI</span>
-                        </div>
+                    <div className="absolute inset-0 bg-white rounded-r-md shadow-xl overflow-hidden flex flex-col border-l-4 border-stone-700">
+                      <div className="h-full relative">
+                        <CatalogueThumbnail url={cat.pdfUrl} color={cat.color} title={cat.title} />
+
+                        {/* Spine Shadow */}
+                        <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black/20 to-transparent pointer-events-none z-10"></div>
                       </div>
-                      <div className="h-1/3 p-6 flex flex-col justify-between bg-white">
-                        <div>
-                          <h3 className="font-serif text-xl text-brand-charcoal leading-tight">{cat.title}</h3>
-                          <p className="text-[10px] uppercase tracking-widest text-stone-400 mt-1">Edition 2024</p>
-                        </div>
+
+                      {/* Info Overlay on Hover */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-sm transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 border-t border-stone-100 z-20">
+                        <h3 className="font-serif text-lg text-brand-charcoal leading-tight mb-1">{cat.title}</h3>
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-stone-500 font-medium">{cat.size} PDF</span>
                           <Eye size={16} className="text-brand-gold" />
                         </div>
                       </div>
-
-                      {/* Shine Effect */}
-                      <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
                     </div>
 
                     {/* Book Spine Effect (Left side) */}
-                    <div className="absolute left-0 top-0 bottom-0 w-4 bg-stone-800 origin-left rotate-y-90"></div>
+                    <div className="absolute left-[-12px] top-1 bottom-1 w-3 bg-stone-800 rounded-l-sm shadow-lg"></div>
 
                     {/* Pages Effect (Right side) */}
-                    <div className="absolute right-0 top-2 bottom-2 w-3 bg-white origin-right rotate-y-90 translate-z-[-2px] shadow-inner"></div>
-                    <div className="absolute right-0 top-2 bottom-2 w-3 bg-stone-200 origin-right rotate-y-90 translate-z-[-4px]"></div>
+                    <div className="absolute right-0 top-2 bottom-2 w-3 bg-white border-r border-stone-200 shadow-sm translate-x-[2px] z-[-1]"></div>
+                    <div className="absolute right-0 top-2 bottom-2 w-3 bg-stone-100 border-r border-stone-200 shadow-sm translate-x-[4px] z-[-2]"></div>
 
                     {/* Shadow under book */}
-                    <div className="absolute -bottom-8 left-4 right-4 h-4 bg-black/20 blur-lg rounded-[100%] transition-all duration-500 group-hover:scale-x-110 group-hover:bg-black/30"></div>
+                    <div className="absolute -bottom-6 left-4 right-4 h-4 bg-black/20 blur-lg rounded-[100%] transition-all duration-500 group-hover:scale-x-110 group-hover:bg-black/30"></div>
                   </div>
                 </div>
               </FadeIn>
