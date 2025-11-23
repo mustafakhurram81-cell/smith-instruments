@@ -142,7 +142,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
 
       {/* 3D SCENE CONTAINER */}
       <div
-        className="relative w-full h-full flex items-center justify-center py-10"
+        className="relative w-full h-full flex items-center justify-center p-4 md:p-10"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Hidden Document Loader to get page count */}
@@ -157,19 +157,22 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <p>Loading Catalogue...</p>
           </div>
         ) : (
-          <div className="relative shadow-2xl">
+          <div className="relative shadow-2xl w-full max-w-[90vw] h-[85vh] flex items-center justify-center">
             {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
-              width={400}
-              height={550}
+              width={595} // A4 width in px (approx)
+              height={842} // A4 height in px (approx)
               size="stretch"
               minWidth={300}
-              maxWidth={600}
+              maxWidth={1000}
               minHeight={400}
-              maxHeight={800}
+              maxHeight={1533}
               maxShadowOpacity={0.5}
               showCover={true}
               mobileScrollSupport={true}
+              usePortrait={false} // Force landscape/spread view on desktop
+              startZIndex={0}
+              autoSize={true}
               onFlip={onFlip}
               ref={book}
               className="flip-book"
@@ -182,7 +185,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                     <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
                       <Page
                         pageNumber={index + 1}
-                        width={400}
+                        width={600} // Render slightly larger for quality
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
                         className="w-full h-full object-contain"
