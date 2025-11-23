@@ -113,11 +113,11 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/98 backdrop-blur-md overflow-hidden"
+      className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/95 backdrop-blur-xl overflow-hidden"
       onClick={onClose}
     >
       {/* Viewer Header */}
-      <div className="absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center text-white z-50 bg-gradient-to-b from-black/50 to-transparent pointer-events-none">
+      <div className="absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center text-white z-50 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
         <div className="flex items-center gap-3 pointer-events-auto">
           <BookOpen className="text-brand-gold" />
           <div>
@@ -140,7 +140,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
 
       {/* 3D SCENE CONTAINER */}
       <div
-        className="relative w-full h-full flex items-center justify-center perspective-[2000px] py-10"
+        className="relative w-full h-full flex items-center justify-center perspective-[2500px] py-10"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Hidden Document Loader */}
@@ -159,19 +159,21 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
           <div className="relative w-[90vw] md:w-auto md:h-[85vh] md:aspect-[1.4] max-h-[800px] bg-transparent transition-all duration-300">
 
             {/* Static Back Cover (Left Side - visible when pages flip) */}
-            <div className="absolute left-0 top-0 w-1/2 h-full bg-white rounded-l-md border border-stone-200 shadow-2xl z-0 flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full bg-stone-50 flex flex-col justify-center items-center text-stone-400 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cardboard.png')] opacity-20 pointer-events-none mix-blend-multiply"></div>
-                <Layers size={80} className="mb-4 opacity-20" />
-                <p className="text-sm font-serif">Smith Instruments</p>
+            <div className="absolute left-0 top-0 w-1/2 h-full bg-white rounded-l-md border-y border-l border-stone-300 shadow-2xl z-0 flex items-center justify-center overflow-hidden">
+              <div className="w-full h-full bg-stone-100 flex flex-col justify-center items-center text-stone-400 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cardboard.png')] opacity-10 pointer-events-none mix-blend-multiply"></div>
+                <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black/10 to-transparent"></div>
+                <Layers size={80} className="mb-4 opacity-10" />
+                <p className="text-sm font-serif opacity-50">Smith Instruments</p>
               </div>
             </div>
 
             {/* Static Right Base (Right Side) */}
-            <div className="absolute right-0 top-0 w-1/2 h-full bg-white rounded-r-md border border-stone-200 shadow-2xl z-0 flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full bg-stone-50 flex flex-col justify-center items-center text-stone-400 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cardboard.png')] opacity-20 pointer-events-none mix-blend-multiply"></div>
-                <p className="text-sm font-serif">End of Catalogue</p>
+            <div className="absolute right-0 top-0 w-1/2 h-full bg-white rounded-r-md border-y border-r border-stone-300 shadow-2xl z-0 flex items-center justify-center overflow-hidden">
+              <div className="w-full h-full bg-stone-100 flex flex-col justify-center items-center text-stone-400 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cardboard.png')] opacity-10 pointer-events-none mix-blend-multiply"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-black/10 to-transparent"></div>
+                <p className="text-sm font-serif opacity-50">End of Catalogue</p>
               </div>
             </div>
 
@@ -181,10 +183,14 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
               // Z-Index Logic
               let zIndex = isFlipped ? index + 10 : (sheets.length - index) + 10;
 
+              // Hardcover effect for first and last page
+              const isCover = index === 0;
+              const thickness = isCover ? '4px' : '1px';
+
               return (
                 <div
                   key={index}
-                  className="absolute right-0 top-0 w-1/2 h-full transition-all duration-700 ease-in-out transform-style-3d origin-left cursor-pointer"
+                  className="absolute right-0 top-0 w-1/2 h-full transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] transform-style-3d origin-left cursor-pointer"
                   style={{
                     zIndex: zIndex,
                     transform: isFlipped ? 'rotateY(-180deg)' : 'rotateY(0deg)',
@@ -193,14 +199,11 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                 >
                   {/* FRONT FACE (Visible when on RIGHT) */}
                   <div
-                    className="absolute inset-0 w-full h-full bg-white rounded-r-md overflow-hidden backface-hidden shadow-md border-l border-stone-100"
+                    className="absolute inset-0 w-full h-full bg-white rounded-r-sm overflow-hidden backface-hidden shadow-sm border-l border-stone-200"
                     style={{ backfaceVisibility: 'hidden' }}
                   >
                     <div className="w-full h-full relative">
-                      {/* We render the Document again here to get the specific page. 
-                            Optimization: In a real app, we might render pages to images first, 
-                            but react-pdf is fast enough for this if we don't render too many at once. */}
-                      <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-100 animate-pulse" />}>
+                      <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50" />}>
                         <Page
                           pageNumber={sheet.front}
                           width={500}
@@ -210,22 +213,24 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                         />
                       </Document>
 
-                      {/* Gradient for spine shadow */}
-                      <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black/10 to-transparent pointer-events-none z-20"></div>
+                      {/* Realistic Lighting Gradients */}
+                      <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-black/20 via-black/5 to-transparent pointer-events-none z-20 mix-blend-multiply"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-black/5 pointer-events-none z-20 mix-blend-overlay"></div>
                     </div>
                   </div>
 
                   {/* BACK FACE (Visible when on LEFT) */}
                   <div
-                    className="absolute inset-0 w-full h-full bg-white rounded-l-md overflow-hidden backface-hidden shadow-md border-r border-stone-100"
+                    className="absolute inset-0 w-full h-full bg-white rounded-l-sm overflow-hidden backface-hidden shadow-sm border-r border-stone-200"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)'
                     }}
                   >
-                    <div className="w-full h-full relative">
+                    {/* IMPORTANT: scaleX(-1) fixes the mirroring issue on the back page */}
+                    <div className="w-full h-full relative" style={{ transform: 'scaleX(-1)' }}>
                       {sheet.back ? (
-                        <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-100 animate-pulse" />}>
+                        <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50" />}>
                           <Page
                             pageNumber={sheet.back}
                             width={500}
@@ -236,12 +241,13 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                         </Document>
                       ) : (
                         <div className="w-full h-full bg-white flex items-center justify-center">
-                          <span className="text-stone-300">Notes</span>
+                          <span className="text-stone-300 font-serif">Notes</span>
                         </div>
                       )}
 
-                      {/* Gradient for spine shadow */}
-                      <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/10 to-transparent pointer-events-none z-20"></div>
+                      {/* Realistic Lighting Gradients (Mirrored for back page) */}
+                      <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-black/20 via-black/5 to-transparent pointer-events-none z-20 mix-blend-multiply"></div>
+                      <div className="absolute inset-0 bg-gradient-to-l from-transparent via-white/10 to-black/5 pointer-events-none z-20 mix-blend-overlay"></div>
                     </div>
                   </div>
                 </div>
@@ -253,7 +259,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
         {/* Navigation Controls (Floating Bottom) */}
         {!loading && (
           <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center gap-8 text-white z-50 pointer-events-none">
-            <div className="flex items-center gap-6 bg-brand-charcoal/80 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-700 shadow-2xl">
+            <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105">
               <button
                 onClick={(e) => { e.stopPropagation(); handlePrev(); }}
                 disabled={flippedIndex === -1}
@@ -263,7 +269,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                 <ChevronLeft size={28} />
               </button>
 
-              <span className="text-sm font-medium tracking-widest text-stone-200 select-none min-w-[100px] text-center">
+              <span className="text-sm font-medium tracking-widest text-stone-200 select-none min-w-[100px] text-center font-serif">
                 {flippedIndex + 2} <span className="text-stone-500 mx-1">/</span> {sheets.length + 1}
               </span>
 
