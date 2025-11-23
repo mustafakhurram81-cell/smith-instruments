@@ -113,13 +113,33 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  const [isIdle, setIsIdle] = useState(false);
+  const idleTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const resetIdleTimer = useCallback(() => {
+    setIsIdle(false);
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(() => setIsIdle(true), 3000);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('mousemove', resetIdleTimer);
+    window.addEventListener('keydown', resetIdleTimer);
+    resetIdleTimer(); // Start timer on mount
+    return () => {
+      window.removeEventListener('mousemove', resetIdleTimer);
+      window.removeEventListener('keydown', resetIdleTimer);
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    };
+  }, [resetIdleTimer]);
+
   return (
     <div
-      className="fixed inset-0 z-[60] flex flex-col bg-brand-charcoal/95 backdrop-blur-xl"
+      className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/95 backdrop-blur-xl overflow-hidden"
       onClick={onClose}
     >
-      {/* Viewer Header */}
-      <div className="flex-none h-20 px-4 md:px-6 flex justify-between items-center text-white z-50 pointer-events-none">
+      {/* Viewer Header - Auto Hides */}
+      <div className={`absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center text-white z-50 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <div className="flex items-center gap-3 pointer-events-auto">
           <BookOpen className="text-brand-gold" />
           <div>
@@ -140,9 +160,9 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
         </div>
       </div>
 
-      {/* 3D SCENE CONTAINER - Flex Grow to fill middle space */}
+      {/* 3D SCENE CONTAINER */}
       <div
-        className="flex-1 flex items-center justify-center overflow-hidden p-4 min-h-0"
+        className="relative w-full h-full flex items-center justify-center"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Hidden Document Loader to get page count */}
@@ -157,16 +177,16 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <p>Loading Catalogue...</p>
           </div>
         ) : (
-          <div className="relative shadow-2xl w-full max-w-[70vw] max-h-[75vh] flex items-center justify-center aspect-[1.4]">
+          <div className="relative shadow-2xl w-full h-full flex items-center justify-center p-4">
             {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
-              width={480}
-              height={680}
+              width={550}
+              height={778}
               size="stretch"
               minWidth={300}
-              maxWidth={800}
+              maxWidth={1000}
               minHeight={400}
-              maxHeight={1200}
+              maxHeight={1414}
               maxShadowOpacity={0.5}
               showCover={true}
               mobileScrollSupport={true}
@@ -181,15 +201,14 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
               {/* Generate Pages */}
               {Array.from(new Array(numPages), (el, index) => (
                 <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center">
-                  <div className="w-full h-full relative flex items-center justify-center">
+                  <div className="w-full h-full relative flex items-center justify-center bg-white">
                     <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
                       <Page
                         pageNumber={index + 1}
-                        width={480}
-                        height={680}
+                        height={778} // Match the book height to ensure vertical fit
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="w-full h-full object-contain"
+                        className="h-full w-auto object-contain !min-w-0 !max-w-none"
                       />
                     </Document>
                     {/* Shadow Gradient for Spine */}
@@ -202,9 +221,9 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
         )}
       </div>
 
-      {/* Navigation Controls - Fixed Height Bottom */}
+      {/* Navigation Controls - Auto Hides */}
       {!loading && (
-        <div className="flex-none h-24 flex items-center justify-center pointer-events-none pb-4">
+        <div className={`absolute bottom-8 left-0 right-0 flex justify-center items-center gap-8 text-white z-50 transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105">
             <button
               onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipPrev(); }}
