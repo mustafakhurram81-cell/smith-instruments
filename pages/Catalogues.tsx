@@ -140,8 +140,16 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
     >
       {/* Viewer Header - Auto Hides */}
       <div className={`absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center text-white z-50 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        <div className="flex items-center gap-3 pointer-events-auto">
-          <BookOpen className="text-brand-gold" />
+        <div className="flex items-center gap-4 pointer-events-auto">
+          {/* Logo with transparency effect */}
+          <div className="h-10 w-32 relative overflow-hidden">
+            <img
+              src="/smith-logo-full.jpg"
+              alt="Smith Instruments"
+              className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
+            />
+          </div>
+          <div className="h-8 w-px bg-white/20"></div>
           <div>
             <h3 className="font-serif text-lg leading-none">{catalogue.title}</h3>
             <p className="text-xs text-stone-400 mt-1">Interactive 3D Preview</p>
@@ -180,13 +188,13 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
           <div className="relative shadow-2xl w-full h-full flex items-center justify-center p-4">
             {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
-              width={550}
-              height={778}
+              width={500}
+              height={707}
               size="stretch"
               minWidth={300}
-              maxWidth={1000}
+              maxWidth={800}
               minHeight={400}
-              maxHeight={1414}
+              maxHeight={1200}
               maxShadowOpacity={0.5}
               showCover={true}
               mobileScrollSupport={true}
@@ -201,14 +209,14 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
               {/* Generate Pages */}
               {Array.from(new Array(numPages), (el, index) => (
                 <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center">
-                  <div className="w-full h-full relative flex items-center justify-center bg-white">
+                  <div className="w-full h-full relative flex items-center justify-center bg-white overflow-hidden">
                     <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
                       <Page
                         pageNumber={index + 1}
-                        height={778} // Match the book height to ensure vertical fit
+                        width={500} // Fixed width to match book page width
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="h-full w-auto object-contain !min-w-0 !max-w-none"
+                        className="mx-auto my-auto shadow-sm"
                       />
                     </Document>
                     {/* Shadow Gradient for Spine */}
