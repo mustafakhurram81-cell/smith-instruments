@@ -115,11 +115,11 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/95 backdrop-blur-xl overflow-hidden"
+      className="fixed inset-0 z-[60] flex flex-col bg-brand-charcoal/95 backdrop-blur-xl"
       onClick={onClose}
     >
       {/* Viewer Header */}
-      <div className="absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center text-white z-50 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
+      <div className="flex-none h-20 px-4 md:px-6 flex justify-between items-center text-white z-50 pointer-events-none">
         <div className="flex items-center gap-3 pointer-events-auto">
           <BookOpen className="text-brand-gold" />
           <div>
@@ -140,9 +140,9 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
         </div>
       </div>
 
-      {/* 3D SCENE CONTAINER */}
+      {/* 3D SCENE CONTAINER - Flex Grow to fill middle space */}
       <div
-        className="relative w-full h-full flex items-center justify-center p-4 md:p-10"
+        className="flex-1 flex items-center justify-center overflow-hidden p-4 min-h-0"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Hidden Document Loader to get page count */}
@@ -157,74 +157,76 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <p>Loading Catalogue...</p>
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-6 w-full h-full justify-center">
-            <div className="relative shadow-2xl w-full max-w-[80vw] h-[70vh] flex items-center justify-center">
-              {/* @ts-ignore - React PageFlip types are sometimes loose */}
-              <HTMLFlipBook
-                width={450}
-                height={636}
-                size="stretch"
-                minWidth={300}
-                maxWidth={600}
-                minHeight={400}
-                maxHeight={1000}
-                maxShadowOpacity={0.5}
-                showCover={true}
-                mobileScrollSupport={true}
-                usePortrait={false}
-                startZIndex={0}
-                autoSize={true}
-                onFlip={onFlip}
-                ref={book}
-                className="flip-book"
-                style={{ margin: '0 auto' }}
-              >
-                {/* Generate Pages */}
-                {Array.from(new Array(numPages), (el, index) => (
-                  <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100">
-                    <div className="w-full h-full relative">
-                      <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
-                        <Page
-                          pageNumber={index + 1}
-                          width={500}
-                          renderTextLayer={false}
-                          renderAnnotationLayer={false}
-                          className="w-full h-full object-contain"
-                        />
-                      </Document>
-                      {/* Shadow Gradient for Spine */}
-                      <div className={`absolute top-0 bottom-0 w-8 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`}></div>
-                    </div>
+          <div className="relative shadow-2xl w-full max-w-[70vw] max-h-[65vh] flex items-center justify-center aspect-[1.4]">
+            {/* @ts-ignore - React PageFlip types are sometimes loose */}
+            <HTMLFlipBook
+              width={400}
+              height={565}
+              size="stretch"
+              minWidth={200}
+              maxWidth={600}
+              minHeight={300}
+              maxHeight={850}
+              maxShadowOpacity={0.5}
+              showCover={true}
+              mobileScrollSupport={true}
+              usePortrait={false}
+              startZIndex={0}
+              autoSize={true}
+              onFlip={onFlip}
+              ref={book}
+              className="flip-book"
+              style={{ margin: '0 auto' }}
+            >
+              {/* Generate Pages */}
+              {Array.from(new Array(numPages), (el, index) => (
+                <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100">
+                  <div className="w-full h-full relative">
+                    <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
+                      <Page
+                        pageNumber={index + 1}
+                        width={500}
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
+                        className="w-full h-full object-contain"
+                      />
+                    </Document>
+                    {/* Shadow Gradient for Spine */}
+                    <div className={`absolute top-0 bottom-0 w-8 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`}></div>
                   </div>
-                ))}
-              </HTMLFlipBook>
-            </div>
-
-            {/* Navigation Controls (Moved Below Book) */}
-            <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105 z-50">
-              <button
-                onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipPrev(); }}
-                className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
-                aria-label="Previous Page"
-              >
-                <ChevronLeft size={24} />
-              </button>
-
-              <span className="text-sm font-medium tracking-widest text-stone-200 select-none min-w-[100px] text-center font-serif">
-                {currentPage + 1} <span className="text-stone-500 mx-1">/</span> {numPages}
-              </span>
-
-              <button
-                onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipNext(); }}
-                className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
-                aria-label="Next Page"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
+                </div>
+              ))}
+            </HTMLFlipBook>
           </div>
         )}
       </div>
+
+      {/* Navigation Controls - Fixed Height Bottom */}
+      {!loading && (
+        <div className="flex-none h-24 flex items-center justify-center pointer-events-none pb-4">
+          <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105">
+            <button
+              onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipPrev(); }}
+              className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
+              aria-label="Previous Page"
+            >
+              <ChevronLeft size={24} />
+            </button>
+
+            <span className="text-sm font-medium tracking-widest text-stone-200 select-none min-w-[100px] text-center font-serif">
+              {currentPage + 1} <span className="text-stone-500 mx-1">/</span> {numPages}
+            </span>
+
+            <button
+              onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipNext(); }}
+              className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
+              aria-label="Next Page"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
