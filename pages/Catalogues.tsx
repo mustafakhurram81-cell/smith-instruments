@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { CATALOGUES } from '../data/catalogues';
 import { CatalogueThumbnail } from '../components/CatalogueThumbnail';
 import { FlipBookViewer } from '../components/FlipBookViewer';
+import { SEO } from '../components/SEO';
 
 export const Catalogues: React.FC = () => {
   const navigate = useNavigate();
@@ -32,6 +33,11 @@ export const Catalogues: React.FC = () => {
 
   return (
     <div className="pt-20">
+      <SEO
+        title="Surgical Instrument Catalogues"
+        description="Browse our comprehensive digital library of surgical instruments including General Surgery, Dental, Cardiovascular, and more."
+        keywords="surgical catalogues, medical instruments, dental tools, cardiovascular instruments, neurosurgery tools"
+      />
       {/* Header */}
       <div className="bg-stone-50 py-24 text-center relative overflow-hidden border-b border-stone-200">
         <h1 className="font-serif text-5xl md:text-6xl text-brand-charcoal relative z-10 mb-4">Our Catalogues</h1>
@@ -64,8 +70,8 @@ export const Catalogues: React.FC = () => {
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${selectedCategory === cat
-                    ? 'bg-brand-charcoal text-white shadow-md'
-                    : 'bg-white text-stone-500 border border-stone-200 hover:border-brand-gold hover:text-brand-gold'
+                  ? 'bg-brand-charcoal text-white shadow-md'
+                  : 'bg-white text-stone-500 border border-stone-200 hover:border-brand-gold hover:text-brand-gold'
                   }`}
               >
                 {cat}
