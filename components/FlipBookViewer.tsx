@@ -161,6 +161,8 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
           width: 100% !important;
           height: 100% !important;
           background-color: transparent !important;
+          user-select: none !important;
+          -webkit-user-select: none !important;
         }
         .react-pdf__Page__canvas {
           margin: 0 auto !important;
@@ -170,6 +172,8 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
           width: auto !important;
           height: auto !important;
           object-fit: contain !important;
+          user-select: none !important;
+          -webkit-user-select: none !important;
         }
         .react-pdf__Document {
           display: flex;
@@ -234,6 +238,11 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                 ) : (
                     <div
                         className="relative w-full h-full flex items-center justify-center animate-in zoom-in-95 duration-500 pointer-events-auto"
+                        onClick={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
+                        onMouseUp={(e) => e.stopPropagation()}
+                        onTouchStart={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => e.stopPropagation()}
                     >
                         {/* @ts-ignore - React PageFlip types are sometimes loose */}
                         <HTMLFlipBook
