@@ -88,15 +88,28 @@ const CatalogueThumbnail: React.FC<{ url: string; color: string; title: string }
 
 // --- 3D FLIPBOOK COMPONENT ---
 // --- 3D FLIPBOOK COMPONENT ---
+// --- 3D FLIPBOOK COMPONENT ---
 const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ catalogue, onClose }) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  const [bookDimensions, setBookDimensions] = useState({ width: 450, height: 600 }); // Default init
   const book = useRef<any>(null);
   const [currentPage, setCurrentPage] = useState(0);
 
-  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
-    setNumPages(numPages);
-    setLoading(false);
+  function onDocumentLoadSuccess(pdf: any) {
+    setNumPages(pdf.numPages);
+
+    // Calculate aspect ratio from the first page to ensure no whitespace
+    pdf.getPage(1).then((page: any) => {
+      const viewport = page.getViewport({ scale: 1 });
+      // Set a base height for quality (e.g., 800px) and calculate width
+      const baseHeight = 800;
+      const ratio = viewport.width / viewport.height;
+      const baseWidth = baseHeight * ratio;
+
+      setBookDimensions({ width: baseWidth, height: baseHeight });
+      setLoading(false);
+    });
   }
 
   const onFlip = useCallback((e: any) => {
@@ -163,10 +176,10 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
 
       {/* 3D SCENE CONTAINER */}
       <div
-        className="relative w-full h-full flex items-center justify-center"
+        className="relative w-full h-full flex items-center justify-center p-4 md:p-10"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Hidden Document Loader to get page count */}
+        {/* Hidden Document Loader to get page count and dimensions */}
         <div className="hidden">
           <Document file={catalogue.pdfUrl} onLoadSuccess={onDocumentLoadSuccess} onLoadError={(error) => console.error("PDF Load Error:", error)}>
           </Document>
@@ -178,16 +191,16 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <p>Loading Catalogue...</p>
           </div>
         ) : (
-          <div className="relative shadow-2xl w-full h-full flex items-center justify-center p-4">
+          <div className="relative shadow-2xl flex items-center justify-center">
             {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
-              width={500}
-              height={707}
+              width={bookDimensions.width}
+              height={bookDimensions.height}
               size="stretch"
               minWidth={300}
-              maxWidth={800}
+              maxWidth={1000}
               minHeight={400}
-              maxHeight={1200}
+              maxHeight={1400}
               maxShadowOpacity={0.5}
               showCover={true}
               mobileScrollSupport={true}
@@ -210,7 +223,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                     >
                       <Page
                         pageNumber={index + 1}
-                        width={500}
+                        width={bookDimensions.width}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
                         className="shadow-sm"
