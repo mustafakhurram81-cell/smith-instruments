@@ -205,10 +205,10 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                     <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
                       <Page
                         pageNumber={index + 1}
-                        scale={0.65}
+                        width={500} // Match container width exactly
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="!max-w-full !max-h-full"
+                        className="mx-auto my-auto object-contain !max-w-full !max-h-full"
                       />
                     </Document>
                     {/* Shadow Gradient for Spine */}
