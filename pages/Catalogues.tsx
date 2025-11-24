@@ -89,12 +89,37 @@ const CatalogueThumbnail: React.FC<{ url: string; color: string; title: string }
 // --- 3D FLIPBOOK COMPONENT ---
 // --- 3D FLIPBOOK COMPONENT ---
 // --- 3D FLIPBOOK COMPONENT ---
+// --- 3D FLIPBOOK COMPONENT ---
 const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ catalogue, onClose }) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [bookDimensions, setBookDimensions] = useState({ width: 450, height: 600 }); // Default init
+  const [maxDimensions, setMaxDimensions] = useState({ width: 600, height: 800 }); // Responsive constraints
   const book = useRef<any>(null);
   const [currentPage, setCurrentPage] = useState(0);
+
+  // Handle Window Resize for Responsiveness
+  useEffect(() => {
+    const updateDimensions = () => {
+      const paddingX = 40; // Horizontal padding
+      const paddingY = 140; // Vertical padding (header + footer + margins)
+
+      const availableWidth = window.innerWidth - paddingX;
+      const availableHeight = window.innerHeight - paddingY;
+
+      // For 2-page spread, max page width is half available width
+      // We limit max width to 800px per page to avoid absurdly large books on ultrawide screens
+      const maxPageWidth = Math.min(800, availableWidth / 2);
+      const maxPageHeight = Math.min(1200, availableHeight);
+
+      setMaxDimensions({ width: maxPageWidth, height: maxPageHeight });
+    };
+
+    window.addEventListener('resize', updateDimensions);
+    updateDimensions(); // Initial call
+
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
 
   function onDocumentLoadSuccess(pdf: any) {
     setNumPages(pdf.numPages);
@@ -102,8 +127,8 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
     // Calculate aspect ratio from the first page to ensure no whitespace
     pdf.getPage(1).then((page: any) => {
       const viewport = page.getViewport({ scale: 1 });
-      // Set a base height for quality (e.g., 1200px) and calculate width
-      const baseHeight = 1200;
+      // Set a base height for quality (e.g., 1000px) and calculate width
+      const baseHeight = 1000;
       const ratio = viewport.width / viewport.height;
       const baseWidth = baseHeight * ratio;
 
@@ -224,9 +249,9 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
               height={bookDimensions.height}
               size="stretch"
               minWidth={300}
-              maxWidth={2000}
+              maxWidth={maxDimensions.width}
               minHeight={400}
-              maxHeight={2500}
+              maxHeight={maxDimensions.height}
               maxShadowOpacity={0.5}
               showCover={true}
               mobileScrollSupport={true}
