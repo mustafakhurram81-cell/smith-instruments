@@ -239,10 +239,6 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                     <div
                         className="relative w-full h-full flex items-center justify-center animate-in zoom-in-95 duration-500 pointer-events-auto"
                         onClick={(e) => e.stopPropagation()}
-                        onMouseDown={(e) => e.stopPropagation()}
-                        onMouseUp={(e) => e.stopPropagation()}
-                        onTouchStart={(e) => e.stopPropagation()}
-                        onTouchEnd={(e) => e.stopPropagation()}
                     >
                         {/* @ts-ignore - React PageFlip types are sometimes loose */}
                         <HTMLFlipBook
