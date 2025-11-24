@@ -90,49 +90,62 @@ const CatalogueThumbnail: React.FC<{ url: string; color: string; title: string }
 // --- 3D FLIPBOOK COMPONENT ---
 // --- 3D FLIPBOOK COMPONENT ---
 // --- 3D FLIPBOOK COMPONENT ---
+// --- 3D FLIPBOOK COMPONENT ---
 const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ catalogue, onClose }) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [bookDimensions, setBookDimensions] = useState({ width: 450, height: 600 }); // Default init
-  const [maxDimensions, setMaxDimensions] = useState({ width: 600, height: 800 }); // Responsive constraints
   const book = useRef<any>(null);
   const [currentPage, setCurrentPage] = useState(0);
 
   // Handle Window Resize for Responsiveness
   useEffect(() => {
     const updateDimensions = () => {
-      const paddingX = 40; // Horizontal padding
-      const paddingY = 140; // Vertical padding (header + footer + margins)
+      // Calculate available space with safe margins
+      const marginX = 40;
+      const marginY = 100; // Header/Footer space
 
-      const availableWidth = window.innerWidth - paddingX;
-      const availableHeight = window.innerHeight - paddingY;
+      const maxWidth = window.innerWidth - marginX;
+      const maxHeight = window.innerHeight - marginY;
 
-      // For 2-page spread, max page width is half available width
-      // We limit max width to 800px per page to avoid absurdly large books on ultrawide screens
-      const maxPageWidth = Math.min(800, availableWidth / 2);
-      const maxPageHeight = Math.min(1200, availableHeight);
+      // We need to fit a 2-page spread (width * 2) into maxWidth
+      // So single page width limit is maxWidth / 2
+      const maxPageWidth = maxWidth / 2;
 
-      setMaxDimensions({ width: maxPageWidth, height: maxPageHeight });
+      // Current aspect ratio of the book (default A4-ish)
+      const currentRatio = bookDimensions.width / bookDimensions.height;
+
+      // Calculate dimensions that fit within BOTH width and height constraints
+      let finalHeight = maxHeight;
+      let finalWidth = finalHeight * currentRatio;
+
+      // If width is still too big, scale down by width
+      if (finalWidth > maxPageWidth) {
+        finalWidth = maxPageWidth;
+        finalHeight = finalWidth / currentRatio;
+      }
+
+      setBookDimensions({ width: finalWidth, height: finalHeight });
     };
 
     window.addEventListener('resize', updateDimensions);
-    updateDimensions(); // Initial call
+    // Call once on mount (and when bookDimensions changes to refine it)
+    updateDimensions();
 
     return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
+  }, [bookDimensions.width, bookDimensions.height]); // Re-run if base ratio changes
 
   function onDocumentLoadSuccess(pdf: any) {
     setNumPages(pdf.numPages);
 
-    // Calculate aspect ratio from the first page to ensure no whitespace
+    // Calculate aspect ratio from the first page
     pdf.getPage(1).then((page: any) => {
       const viewport = page.getViewport({ scale: 1 });
-      // Set a base height for quality (e.g., 1000px) and calculate width
-      const baseHeight = 1000;
       const ratio = viewport.width / viewport.height;
-      const baseWidth = baseHeight * ratio;
 
-      setBookDimensions({ width: baseWidth, height: baseHeight });
+      // Set initial base dimensions (high res base)
+      // The useEffect will immediately resize this to fit the screen
+      setBookDimensions({ width: 1000 * ratio, height: 1000 });
       setLoading(false);
     });
   }
@@ -177,7 +190,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
       className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/95 backdrop-blur-xl overflow-hidden"
       onClick={onClose}
     >
-      {/* CSS Overrides for Strict Centering */}
+      {/* CSS Overrides for Strict Scaling */}
       <style>{`
         .react-pdf__Page {
           display: flex !important;
@@ -192,6 +205,8 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
           display: block !important;
           max-width: 100% !important;
           max-height: 100% !important;
+          width: auto !important;
+          height: auto !important;
           object-fit: contain !important;
         }
         .react-pdf__Document {
@@ -227,7 +242,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
 
       {/* 3D SCENE CONTAINER */}
       <div
-        className="relative w-full h-full flex items-center justify-center p-4 md:p-10"
+        className="relative w-full h-full flex items-center justify-center p-4 md:p-10 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Hidden Document Loader to get page count and dimensions */}
@@ -247,17 +262,17 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <HTMLFlipBook
               width={bookDimensions.width}
               height={bookDimensions.height}
-              size="stretch"
-              minWidth={300}
-              maxWidth={maxDimensions.width}
-              minHeight={400}
-              maxHeight={maxDimensions.height}
+              size="fixed" // Use fixed size calculated by JS
+              minWidth={200}
+              maxWidth={2000}
+              minHeight={300}
+              maxHeight={2500}
               maxShadowOpacity={0.5}
               showCover={true}
               mobileScrollSupport={true}
               usePortrait={false}
               startZIndex={0}
-              autoSize={true}
+              autoSize={false} // Disable autoSize to respect our strict dimensions
               onFlip={onFlip}
               ref={book}
               className="flip-book shadow-2xl"
@@ -274,7 +289,6 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                     >
                       <Page
                         pageNumber={index + 1}
-                        width={bookDimensions.width}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
                         className="shadow-sm flex items-center justify-center"
