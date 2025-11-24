@@ -11,7 +11,7 @@ export const AnimatedCounter: React.FC<{ from?: number; to: number; duration?: n
   useEffect(() => {
     if (!isInView) return;
     const node = nodeRef.current;
-    
+
     const controls = animate(from, to, {
       duration,
       ease: "easeOut",
@@ -75,7 +75,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button: React.FC<ButtonProps> = ({ variant = 'primary', className = '', children, ...props }) => {
   const baseStyles = "inline-flex items-center justify-center px-8 py-3 text-sm font-medium tracking-wide transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-gold disabled:opacity-50 disabled:cursor-not-allowed rounded-full";
-  
+
   const variants = {
     // Primary: Gold BG, Charcoal Text (Luxury Standard)
     primary: "bg-brand-gold text-brand-charcoal hover:bg-stone-200 hover:shadow-md shadow-sm border border-transparent",
@@ -141,15 +141,15 @@ export const Header: React.FC = () => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${isScrolled || !isHome ? 'bg-stone-50/95 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
       <div className="container mx-auto px-6 flex items-center justify-between">
-        
+
         {/* Logo Section */}
         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
-          <div className={`w-10 h-10 border flex items-center justify-center font-serif text-xl font-bold rounded-sm transition-colors ${isScrolled || !isHome ? 'border-brand-charcoal text-brand-charcoal group-hover:bg-brand-charcoal group-hover:text-brand-gold' : 'border-white text-white group-hover:bg-white group-hover:text-brand-charcoal'}`}>
-            S
-          </div>
-          <div className="hidden md:block">
-            <h1 className={`text-lg font-bold tracking-[0.2em] leading-none ${isScrolled || !isHome ? 'text-brand-charcoal' : 'text-white'}`}>SMITH</h1>
-            <span className={`text-[0.65rem] tracking-[0.3em] uppercase block ${isScrolled || !isHome ? 'text-stone-500' : 'text-stone-300'}`}>Instruments</span>
+          <div className="h-12 w-32 relative overflow-hidden">
+            <img
+              src="/smith-logo-full.jpg"
+              alt="Smith Instruments"
+              className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
+            />
           </div>
         </div>
 
@@ -159,11 +159,10 @@ export const Header: React.FC = () => {
             <NavLink
               key={link.path}
               to={link.path}
-              className={({ isActive }) => 
-                `text-sm font-medium tracking-wide transition-colors duration-300 ${
-                  isScrolled || !isHome 
-                    ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
-                    : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')
+              className={({ isActive }) =>
+                `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome
+                  ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
+                  : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')
                 }`
               }
             >
@@ -174,14 +173,14 @@ export const Header: React.FC = () => {
 
         {/* CTA & Mobile Toggle */}
         <div className="flex items-center gap-4">
-          <Button 
+          <Button
             variant={isScrolled || !isHome ? 'secondary' : 'primary'}
             className="hidden md:inline-flex text-xs uppercase tracking-widest px-6"
             onClick={() => navigate('/contact')}
           >
             Get Quote
           </Button>
-          <button 
+          <button
             className={`md:hidden focus:outline-none ${isScrolled || !isHome ? 'text-brand-charcoal' : 'text-white'}`}
             onClick={() => setIsMobileOpen(!isMobileOpen)}
           >
@@ -204,7 +203,7 @@ export const Header: React.FC = () => {
                 <NavLink
                   key={link.path}
                   to={link.path}
-                  className={({ isActive }) => 
+                  className={({ isActive }) =>
                     `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`
                   }
                 >
@@ -225,24 +224,24 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-brand-charcoal text-stone-300 pt-20 pb-10 border-t border-stone-800">
       <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-stone-800 pb-16">
-        
+
         {/* Brand */}
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 bg-brand-gold text-brand-charcoal flex items-center justify-center font-serif text-lg font-bold rounded-sm">
-              S
-            </div>
-            <div>
-              <h2 className="text-white text-base font-bold tracking-widest">SMITH</h2>
-              <span className="text-xs tracking-widest text-stone-500 uppercase">Instruments</span>
+            <div className="h-12 w-32 relative overflow-hidden">
+              <img
+                src="/smith-logo-full.jpg"
+                alt="Smith Instruments"
+                className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
+              />
             </div>
           </div>
           <p className="text-sm font-light leading-relaxed max-w-xs text-stone-400">
             Molding the metal to serve life. Precision engineered surgical instruments for the modern medical world.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-brand-gold transition-colors"><Facebook size={20} /></a>
-            <a href="#" className="hover:text-brand-gold transition-colors"><Instagram size={20} /></a>
+            <a href="https://www.facebook.com/smithinstrumentsusa" target="_blank" rel="noopener noreferrer" className="hover:text-brand-gold transition-colors"><Facebook size={20} /></a>
+            <a href="https://www.instagram.com/smithinstruments/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-gold transition-colors"><Instagram size={20} /></a>
           </div>
         </div>
 
@@ -273,7 +272,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="container mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-stone-500">
         <p>&copy; {new Date().getFullYear()} Smith Instruments. All rights reserved.</p>
         <div className="flex gap-6 mt-4 md:mt-0">
