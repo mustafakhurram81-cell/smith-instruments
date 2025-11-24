@@ -205,7 +205,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                     <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
                       <Page
                         pageNumber={index + 1}
-                        width={500} // Match container width exactly
+                        height={707} // Match container height exactly to ensure vertical fit
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
                         className="mx-auto my-auto object-contain !max-w-full !max-h-full"
