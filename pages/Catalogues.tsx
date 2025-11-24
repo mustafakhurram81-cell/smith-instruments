@@ -217,7 +217,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <p>Loading Catalogue...</p>
           </div>
         ) : (
-          <div className="relative shadow-2xl flex items-center justify-center">
+          <div className="relative w-full h-full flex items-center justify-center">
             {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
               width={bookDimensions.width}
@@ -235,7 +235,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
               autoSize={true}
               onFlip={onFlip}
               ref={book}
-              className="flip-book"
+              className="flip-book shadow-2xl"
               style={{ margin: '0 auto' }}
             >
               {/* Generate Pages */}
