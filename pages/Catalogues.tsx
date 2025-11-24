@@ -164,14 +164,13 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
       const viewport = page.getViewport({ scale: 1 });
       const ratio = viewport.width / viewport.height;
 
-      // Set initial base dimensions (high res base)
-      // The useEffect will immediately resize this to fit the screen
-      setBookDimensions({ width: 1000 * ratio, height: 1000 });
+      // Set initial base dimensions
+      // Optimize resolution based on device capability (screen width)
+      const isMobile = window.innerWidth < 768;
+      const targetHeight = isMobile ? 800 : 1000; // Slightly lower res on mobile for speed
 
-      // Add a small delay to ensure smooth transition
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+      setBookDimensions({ width: targetHeight * ratio, height: targetHeight });
+      // Note: We don't stop loading here anymore. We wait for the first page to actually render.
     });
   }
 
@@ -312,8 +311,8 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             >
               {/* Generate Pages */}
               {Array.from(new Array(numPages), (el, index) => (
-                <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center">
-                  <div className="w-full h-full flex items-center justify-center bg-white overflow-hidden">
+                <div key={index} className={`bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center ${index === 0 ? 'border-l-4 border-stone-300' : ''}`}>
+                  <div className="w-full h-full flex items-center justify-center bg-white overflow-hidden relative">
                     <Document
                       file={catalogue.pdfUrl}
                       loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}
@@ -325,10 +324,24 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
                         className="shadow-sm flex items-center justify-center"
+                        onRenderSuccess={() => {
+                          // Smart Loading: Hide loader ONLY when the first page (cover) is ready
+                          if (index === 0) setLoading(false);
+                        }}
                       />
                     </Document>
-                    {/* Shadow Gradient for Spine */}
-                    <div className={`absolute top-0 bottom-0 w-8 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`}></div>
+
+                    {/* Enhanced Spine/Shadow Effects */}
+                    {index === 0 ? (
+                      // HARD COVER EFFECT
+                      <>
+                        <div className="absolute inset-0 pointer-events-none z-10 bg-gradient-to-r from-black/20 via-transparent to-transparent"></div>
+                        <div className="absolute inset-0 pointer-events-none z-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')] opacity-30 mix-blend-multiply"></div>
+                      </>
+                    ) : (
+                      // Standard Page Spine Shadow
+                      <div className={`absolute top-0 bottom-0 w-8 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`}></div>
+                    )}
                   </div>
                 </div>
               ))}
