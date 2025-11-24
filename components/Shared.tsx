@@ -129,6 +129,7 @@ export const Header: React.FC = () => {
 
   const navLinks = [
     { label: 'Home', path: '/' },
+    { label: 'Products', path: '/products' },
     { label: 'Catalogues', path: '/catalogues' },
     { label: 'About Us', path: '/about' },
     { label: 'Blog', path: '/blog' },
@@ -249,6 +250,7 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col space-y-4">
           <h3 className="text-white font-serif text-lg mb-2">Explore</h3>
           <NavLink to="/" className="hover:text-white transition-colors text-sm">Home</NavLink>
+          <NavLink to="/products" className="hover:text-white transition-colors text-sm">Products</NavLink>
           <NavLink to="/catalogues" className="hover:text-white transition-colors text-sm">Catalogues</NavLink>
           <NavLink to="/about" className="hover:text-white transition-colors text-sm">About Us</NavLink>
           <NavLink to="/blog" className="hover:text-white transition-colors text-sm">Blog</NavLink>
