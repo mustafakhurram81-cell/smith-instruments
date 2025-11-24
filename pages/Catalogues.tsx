@@ -99,18 +99,23 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
   const book = useRef<any>(null);
   const [currentPage, setCurrentPage] = useState(0);
 
-  // Sound Effect
-  const flipSound = useRef<HTMLAudioElement | null>(null);
+  // Sound Effect - Optimized for low latency
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    flipSound.current = new Audio('/page-flip.mp3'); // Ensure this file exists in public/
-    flipSound.current.volume = 0.4;
+    // Preload audio
+    const audio = new Audio('/page-flip.mp3');
+    audio.volume = 0.4;
+    audio.preload = 'auto';
+    audioRef.current = audio;
   }, []);
 
   const playSound = useCallback(() => {
-    if (flipSound.current) {
-      flipSound.current.currentTime = 0;
-      flipSound.current.play().catch(() => { }); // Ignore auto-play errors
+    if (audioRef.current) {
+      // Clone node to allow overlapping sounds for rapid flipping
+      const sound = audioRef.current.cloneNode() as HTMLAudioElement;
+      sound.volume = 0.4;
+      sound.play().catch(() => { });
     }
   }, []);
 
@@ -172,19 +177,25 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
 
   const onFlip = useCallback((e: any) => {
     setCurrentPage(e.data);
-    playSound();
-  }, [playSound]);
+    // Sound is now triggered by interaction events for zero latency
+  }, []);
 
   // Keyboard Navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') book.current?.pageFlip()?.flipNext();
-      if (e.key === 'ArrowLeft') book.current?.pageFlip()?.flipPrev();
+      if (e.key === 'ArrowRight') {
+        book.current?.pageFlip()?.flipNext();
+        playSound();
+      }
+      if (e.key === 'ArrowLeft') {
+        book.current?.pageFlip()?.flipPrev();
+        playSound();
+      }
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [onClose, playSound]);
 
   const [isIdle, setIsIdle] = useState(false);
   const idleTimer = useRef<NodeJS.Timeout | null>(null);
@@ -331,7 +342,11 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
         <div className={`absolute bottom-8 left-0 right-0 flex justify-center items-center gap-8 text-white z-50 transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105">
             <button
-              onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipPrev(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                book.current?.pageFlip()?.flipPrev();
+                playSound();
+              }}
               className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
               aria-label="Previous Page"
             >
@@ -343,7 +358,11 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             </span>
 
             <button
-              onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipNext(); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                book.current?.pageFlip()?.flipNext();
+                playSound();
+              }}
               className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
               aria-label="Next Page"
             >
