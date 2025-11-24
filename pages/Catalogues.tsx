@@ -173,6 +173,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
   }, [bookDimensions.width, bookDimensions.height]); // Re-run if base ratio changes
 
   function onDocumentLoadSuccess(pdf: any) {
+    console.log("PDF Loaded Successfully:", pdf.numPages);
     setNumPages(pdf.numPages);
 
     // Calculate aspect ratio from the first page
@@ -181,12 +182,19 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
       const ratio = viewport.width / viewport.height;
 
       // Set initial base dimensions
-      // Optimize resolution based on device capability (screen width)
       const isMobile = window.innerWidth < 768;
-      const targetHeight = isMobile ? 800 : 1000; // Slightly lower res on mobile for speed
+      const targetHeight = isMobile ? 800 : 1000;
 
       setBookDimensions({ width: targetHeight * ratio, height: targetHeight });
-      // Note: We don't stop loading here anymore. We wait for the first page to actually render.
+
+      // SAFETY FALLBACK: Force loading to false after a short delay
+      // This ensures that even if onRenderSuccess fails to fire, the book will show.
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
+    }).catch(err => {
+      console.error("Error getting page 1:", err);
+      setLoading(false); // Ensure we don't get stuck
     });
   }
 
@@ -356,10 +364,6 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
                         className="shadow-sm flex items-center justify-center"
-                        onRenderSuccess={() => {
-                          // Smart Loading: Hide loader ONLY when the first page (cover) is ready
-                          if (index === 0) setLoading(false);
-                        }}
                         loading={
                           <div className="w-full h-full flex items-center justify-center bg-stone-50">
                             <Loader2 className="animate-spin text-stone-200" size={32} />
