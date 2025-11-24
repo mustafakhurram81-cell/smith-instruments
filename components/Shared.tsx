@@ -146,9 +146,9 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
           <div className="h-12 w-32 relative overflow-hidden">
             <img
-              src="/smith-logo-full.jpg"
+              src="/smith-logo-full.png"
               alt="Smith Instruments"
-              className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
+              className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'brightness-0 invert'}`}
             />
           </div>
         </div>
@@ -230,9 +230,9 @@ export const Footer: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className="h-12 w-32 relative overflow-hidden">
               <img
-                src="/smith-logo-full.jpg"
+                src="/smith-logo-full.png"
                 alt="Smith Instruments"
-                className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
+                className="w-full h-full object-contain brightness-0 invert opacity-90"
               />
             </div>
           </div>
