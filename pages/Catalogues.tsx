@@ -140,16 +140,8 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
     >
       {/* Viewer Header - Auto Hides */}
       <div className={`absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center text-white z-50 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        <div className="flex items-center gap-4 pointer-events-auto">
-          {/* Logo with transparency effect */}
-          <div className="h-10 w-32 relative overflow-hidden">
-            <img
-              src="/smith-logo-full.jpg"
-              alt="Smith Instruments"
-              className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
-            />
-          </div>
-          <div className="h-8 w-px bg-white/20"></div>
+        <div className="flex items-center gap-3 pointer-events-auto">
+          <BookOpen className="text-brand-gold" />
           <div>
             <h3 className="font-serif text-lg leading-none">{catalogue.title}</h3>
             <p className="text-xs text-stone-400 mt-1">Interactive 3D Preview</p>
@@ -209,14 +201,14 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
               {/* Generate Pages */}
               {Array.from(new Array(numPages), (el, index) => (
                 <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center">
-                  <div className="w-full h-full relative flex items-center justify-center bg-white overflow-hidden"> {/* Removed padding to force margin */}
+                  <div className="w-full h-full relative flex items-center justify-center bg-white overflow-hidden">
                     <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
                       <Page
                         pageNumber={index + 1}
-                        height={707} // Match exact book height to ensure full vertical fit
+                        width={500} // Match book page width exactly
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="mx-auto my-auto shadow-sm !min-w-0 !max-w-full object-contain" // Force constraints
+                        className="mx-auto my-auto shadow-sm object-contain"
                       />
                     </Document>
                     {/* Shadow Gradient for Spine */}
