@@ -90,8 +90,18 @@ const CatalogueThumbnail: React.FC<{ url: string; color: string; title: string }
 // --- 3D FLIPBOOK COMPONENT ---
 const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ catalogue, onClose }) => {
   const [numPages, setNumPages] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
   const book = useRef<any>(null);
   const [currentPage, setCurrentPage] = useState(0);
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
+    setLoading(false);
+  }
+
+  const onFlip = useCallback((e: any) => {
+    setCurrentPage(e.data);
+  }, []);
 
   // Keyboard Navigation
   useEffect(() => {
@@ -104,109 +114,144 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  const onFlip = useCallback((e: any) => {
-    setCurrentPage(e.data);
+  const [isIdle, setIsIdle] = useState(false);
+  const idleTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const resetIdleTimer = useCallback(() => {
+    setIsIdle(false);
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(() => setIsIdle(true), 3000);
   }, []);
 
-  return (
-    <div className="fixed inset-0 z-[60] bg-brand-charcoal/95 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-300">
+  useEffect(() => {
+    window.addEventListener('mousemove', resetIdleTimer);
+    window.addEventListener('keydown', resetIdleTimer);
+    resetIdleTimer(); // Start timer on mount
+    return () => {
+      window.removeEventListener('mousemove', resetIdleTimer);
+      window.removeEventListener('keydown', resetIdleTimer);
+      if (idleTimer.current) clearTimeout(idleTimer.current);
+    };
+  }, [resetIdleTimer]);
 
-      {/* Top Bar */}
-      <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 text-white bg-gradient-to-b from-black/50 to-transparent pointer-events-none">
-        <div className="flex items-center gap-4 pointer-events-auto">
-          <h2 className="font-serif text-xl">{catalogue.title}</h2>
-          <span className="text-white/50 text-sm hidden md:inline-block">|</span>
-          <span className="text-white/50 text-sm hidden md:inline-block">Use Arrow Keys to Navigate</span>
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/95 backdrop-blur-xl overflow-hidden"
+      onClick={onClose}
+    >
+      {/* Viewer Header - Auto Hides */}
+      <div className={`absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center text-white z-50 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <div className="flex items-center gap-3 pointer-events-auto">
+          <BookOpen className="text-brand-gold" />
+          <div>
+            <h3 className="font-serif text-lg leading-none">{catalogue.title}</h3>
+            <p className="text-xs text-stone-400 mt-1">Interactive 3D Preview</p>
+          </div>
         </div>
         <div className="flex items-center gap-4 pointer-events-auto">
-          <Button variant="primary" className="py-2 px-4 text-xs" onClick={() => window.open(catalogue.pdfUrl, '_blank')}>
-            <Download size={14} className="mr-2" /> Download
+          <div className="hidden md:flex items-center gap-2 text-xs text-stone-500 mr-4 border border-stone-700 px-3 py-1 rounded-full">
+            <Keyboard size={12} /> Arrow Keys
+          </div>
+          <Button variant="primary" className="py-2 px-6 text-xs" onClick={(e) => { e.stopPropagation(); window.open(catalogue.pdfUrl, '_blank'); }}>
+            <Download size={14} className="mr-2" /> Download PDF
           </Button>
-          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-            <X size={24} />
+          <button onClick={onClose} className="hover:text-brand-gold transition-colors p-2">
+            <X size={32} />
           </button>
         </div>
       </div>
 
-      {/* Book Container */}
-      <div className="relative flex-1 w-full flex items-center justify-center p-4 md:p-8 overflow-hidden">
-        <Document
-          file={catalogue.pdfUrl}
-          onLoadSuccess={({ numPages }) => setNumPages(numPages)}
-          loading={
-            <div className="flex flex-col items-center gap-4 text-white">
-              <Loader2 size={40} className="animate-spin text-brand-gold" />
-              <p className="font-light tracking-widest uppercase text-sm">Loading Catalogue...</p>
-            </div>
-          }
-          className="flex items-center justify-center"
-        >
-          {numPages > 0 && (
+      {/* 3D SCENE CONTAINER */}
+      <div
+        className="relative w-full h-full flex items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Hidden Document Loader to get page count */}
+        <div className="hidden">
+          <Document file={catalogue.pdfUrl} onLoadSuccess={onDocumentLoadSuccess} onLoadError={(error) => console.error("PDF Load Error:", error)}>
+          </Document>
+        </div>
+
+        {loading ? (
+          <div className="text-white flex flex-col items-center gap-4">
+            <Loader2 className="animate-spin text-brand-gold" size={48} />
+            <p>Loading Catalogue...</p>
+          </div>
+        ) : (
+          <div className="relative shadow-2xl w-full h-full flex items-center justify-center p-4">
+            {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
-              width={450}
-              height={636} // A4 Ratio approx
+              width={500}
+              height={707}
               size="stretch"
               minWidth={300}
-              maxWidth={600}
+              maxWidth={800}
               minHeight={400}
-              maxHeight={800}
+              maxHeight={1200}
               maxShadowOpacity={0.5}
               showCover={true}
               mobileScrollSupport={true}
-              ref={book}
+              usePortrait={false}
+              startZIndex={0}
+              autoSize={true}
               onFlip={onFlip}
-              className="shadow-2xl"
+              ref={book}
+              className="flip-book"
               style={{ margin: '0 auto' }}
             >
-              {Array.from(new Array(numPages), (_, index) => (
-                <div key={index} className="bg-white flex items-center justify-center overflow-hidden shadow-inner relative">
-                  {/* Page Content */}
-                  <div className="w-full h-full flex items-center justify-center bg-white">
-                    <Page
-                      pageNumber={index + 1}
-                      width={450} // Match flipbook page width
-                      renderTextLayer={false}
-                      renderAnnotationLayer={false}
-                      className="shadow-sm !bg-white"
+              {/* Generate Pages */}
+              {Array.from(new Array(numPages), (el, index) => (
+                <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center">
+                  <div className="w-full h-full flex items-center justify-center bg-white overflow-hidden">
+                    <Document
+                      file={catalogue.pdfUrl}
                       loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}
-                    />
+                      className="w-full h-full flex items-center justify-center"
+                    >
+                      <Page
+                        pageNumber={index + 1}
+                        width={500}
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
+                        className="shadow-sm"
+                      />
+                    </Document>
+                    {/* Shadow Gradient for Spine */}
+                    <div className={`absolute top-0 bottom-0 w-8 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`}></div>
                   </div>
-
-                  {/* Page Number */}
-                  <div className="absolute bottom-4 text-[10px] text-stone-400 font-serif z-10">
-                    {index + 1}
-                  </div>
-
-                  {/* Spine Shadow Gradient */}
-                  <div className={`absolute top-0 bottom-0 w-6 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/5 to-transparent`}></div>
                 </div>
               ))}
             </HTMLFlipBook>
-          )}
-        </Document>
+          </div>
+        )}
       </div>
 
-      {/* Bottom Controls */}
-      <div className="absolute bottom-8 flex items-center gap-8 z-50 pointer-events-auto">
-        <button
-          onClick={() => book.current?.pageFlip()?.flipPrev()}
-          className="p-3 rounded-full bg-white/10 hover:bg-brand-gold hover:text-brand-charcoal text-white transition-all backdrop-blur-md border border-white/10"
-        >
-          <ChevronLeft size={24} />
-        </button>
+      {/* Navigation Controls - Auto Hides */}
+      {!loading && (
+        <div className={`absolute bottom-8 left-0 right-0 flex justify-center items-center gap-8 text-white z-50 transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+          <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105">
+            <button
+              onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipPrev(); }}
+              className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
+              aria-label="Previous Page"
+            >
+              <ChevronLeft size={24} />
+            </button>
 
-        <span className="text-white font-serif text-lg tracking-widest select-none">
-          {currentPage + 1} / {numPages}
-        </span>
+            <span className="text-sm font-medium tracking-widest text-stone-200 select-none min-w-[100px] text-center font-serif">
+              {currentPage + 1} <span className="text-stone-500 mx-1">/</span> {numPages}
+            </span>
 
-        <button
-          onClick={() => book.current?.pageFlip()?.flipNext()}
-          className="p-3 rounded-full bg-white/10 hover:bg-brand-gold hover:text-brand-charcoal text-white transition-all backdrop-blur-md border border-white/10"
-        >
-          <ChevronRight size={24} />
-        </button>
-      </div>
-
+            <button
+              onClick={(e) => { e.stopPropagation(); book.current?.pageFlip()?.flipNext(); }}
+              className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
+              aria-label="Next Page"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
