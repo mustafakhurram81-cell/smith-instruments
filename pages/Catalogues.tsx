@@ -9,7 +9,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
 // Configure PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const CATALOGUES = [
   {
@@ -59,13 +59,28 @@ const CATALOGUES = [
 // --- THUMBNAIL COMPONENT ---
 const CatalogueThumbnail: React.FC<{ url: string; color: string; title: string }> = ({ url, color, title }) => {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  if (error) {
+    return (
+      <div className="w-full h-full bg-stone-200 flex flex-col items-center justify-center text-stone-400 p-4 text-center">
+        <BookOpen size={32} className="mb-2 opacity-50" />
+        <span className="text-[10px] uppercase tracking-widest">Preview Unavailable</span>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full relative bg-stone-100 overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center z-0">
         <Loader2 className="animate-spin text-stone-300" size={24} />
       </div>
-      <Document file={url} className="w-full h-full" loading={null}>
+      <Document
+        file={url}
+        className="w-full h-full"
+        loading={null}
+        onLoadError={() => setError(true)}
+      >
         <Page
           pageNumber={1}
           width={260}
@@ -94,6 +109,7 @@ const CatalogueThumbnail: React.FC<{ url: string; color: string; title: string }
 const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ catalogue, onClose }) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [bookDimensions, setBookDimensions] = useState({ width: 450, height: 600 }); // Default init
   const [maxDimensions, setMaxDimensions] = useState({ width: 600, height: 800 }); // Responsive constraints
   const book = useRef<any>(null);
@@ -278,7 +294,15 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
       >
         {/* Hidden Document Loader to get page count and dimensions */}
         <div className="hidden">
-          <Document file={catalogue.pdfUrl} onLoadSuccess={onDocumentLoadSuccess} onLoadError={(error) => console.error("PDF Load Error:", error)}>
+          <Document
+            file={catalogue.pdfUrl}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={(err) => {
+              console.error("PDF Load Error:", err);
+              setLoading(false);
+              setError("Failed to load PDF. Please check if the file exists.");
+            }}
+          >
           </Document>
         </div>
 
@@ -286,6 +310,14 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
           <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500">
             <Loader2 className="animate-spin text-brand-gold" size={48} />
             <p className="text-stone-300 tracking-widest uppercase text-sm">Loading Catalogue...</p>
+          </div>
+        ) : error ? (
+          <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500">
+            <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-center">
+              <p className="text-red-200 font-medium mb-2">Error Loading Catalogue</p>
+              <p className="text-sm text-red-300/80">{error}</p>
+            </div>
+            <Button variant="secondary" className="mt-4" onClick={onClose}>Close Viewer</Button>
           </div>
         ) : (
           <div className="relative w-full h-full flex items-center justify-center animate-in zoom-in-95 duration-500">
@@ -328,6 +360,11 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                           // Smart Loading: Hide loader ONLY when the first page (cover) is ready
                           if (index === 0) setLoading(false);
                         }}
+                        loading={
+                          <div className="w-full h-full flex items-center justify-center bg-stone-50">
+                            <Loader2 className="animate-spin text-stone-200" size={32} />
+                          </div>
+                        }
                       />
                     </Document>
 
