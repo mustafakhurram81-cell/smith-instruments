@@ -75,11 +75,11 @@ const CatalogueThumbnail: React.FC<{ url: string; color: string; title: string }
           className={`w-full h-full object-cover transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}
         />
       </Document>
-      {/* Overlay for Title - Always Visible now */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
+      {/* Overlay for Title if needed, or just rely on the PDF cover */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
         <div className="text-white">
-          <p className="font-serif text-lg leading-tight mb-1">{title}</p>
-          <p className="text-[10px] uppercase tracking-widest opacity-80">View Catalogue</p>
+          <p className="font-serif text-lg">{title}</p>
+          <p className="text-xs uppercase tracking-widest opacity-80">View Catalogue</p>
         </div>
       </div>
     </div>
