@@ -75,11 +75,11 @@ const CatalogueThumbnail: React.FC<{ url: string; color: string; title: string }
           className={`w-full h-full object-cover transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}
         />
       </Document>
-      {/* Overlay for Title if needed, or just rely on the PDF cover */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+      {/* Overlay for Title - Always Visible now */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
         <div className="text-white">
-          <p className="font-serif text-lg">{title}</p>
-          <p className="text-xs uppercase tracking-widest opacity-80">View Catalogue</p>
+          <p className="font-serif text-lg leading-tight mb-1">{title}</p>
+          <p className="text-[10px] uppercase tracking-widest opacity-80">View Catalogue</p>
         </div>
       </div>
     </div>
@@ -95,8 +95,24 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
   const [numPages, setNumPages] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [bookDimensions, setBookDimensions] = useState({ width: 450, height: 600 }); // Default init
+  const [maxDimensions, setMaxDimensions] = useState({ width: 600, height: 800 }); // Responsive constraints
   const book = useRef<any>(null);
   const [currentPage, setCurrentPage] = useState(0);
+
+  // Sound Effect
+  const flipSound = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    flipSound.current = new Audio('/page-flip.mp3'); // Ensure this file exists in public/
+    flipSound.current.volume = 0.4;
+  }, []);
+
+  const playSound = useCallback(() => {
+    if (flipSound.current) {
+      flipSound.current.currentTime = 0;
+      flipSound.current.play().catch(() => { }); // Ignore auto-play errors
+    }
+  }, []);
 
   // Handle Window Resize for Responsiveness
   useEffect(() => {
@@ -146,13 +162,18 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
       // Set initial base dimensions (high res base)
       // The useEffect will immediately resize this to fit the screen
       setBookDimensions({ width: 1000 * ratio, height: 1000 });
-      setLoading(false);
+
+      // Add a small delay to ensure smooth transition
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     });
   }
 
   const onFlip = useCallback((e: any) => {
     setCurrentPage(e.data);
-  }, []);
+    playSound();
+  }, [playSound]);
 
   // Keyboard Navigation
   useEffect(() => {
@@ -252,12 +273,12 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
         </div>
 
         {loading ? (
-          <div className="text-white flex flex-col items-center gap-4">
+          <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500">
             <Loader2 className="animate-spin text-brand-gold" size={48} />
-            <p>Loading Catalogue...</p>
+            <p className="text-stone-300 tracking-widest uppercase text-sm">Loading Catalogue...</p>
           </div>
         ) : (
-          <div className="relative w-full h-full flex items-center justify-center">
+          <div className="relative w-full h-full flex items-center justify-center animate-in zoom-in-95 duration-500">
             {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
               width={bookDimensions.width}
@@ -289,6 +310,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                     >
                       <Page
                         pageNumber={index + 1}
+                        width={bookDimensions.width}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
                         className="shadow-sm flex items-center justify-center"
