@@ -208,7 +208,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                         scale={0.65} // Increased scale for better visibility
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="shadow-sm -mt-16 -ml-8" // Shift further up and left
+                        className="shadow-sm mx-auto my-auto" // Shift further up and left
                       />
                     </Document>
                     {/* Shadow Gradient for Spine */}
