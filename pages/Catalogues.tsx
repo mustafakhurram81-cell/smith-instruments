@@ -152,6 +152,32 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
       className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/95 backdrop-blur-xl overflow-hidden"
       onClick={onClose}
     >
+      {/* CSS Overrides for Strict Centering */}
+      <style>{`
+        .react-pdf__Page {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 100% !important;
+          height: 100% !important;
+          background-color: transparent !important;
+        }
+        .react-pdf__Page__canvas {
+          margin: 0 auto !important;
+          display: block !important;
+          max-width: 100% !important;
+          max-height: 100% !important;
+          object-fit: contain !important;
+        }
+        .react-pdf__Document {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+      `}</style>
+
       {/* Viewer Header - Auto Hides */}
       <div className={`absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center text-white z-50 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <div className="flex items-center gap-3 pointer-events-auto">
@@ -226,7 +252,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
                         width={bookDimensions.width}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="shadow-sm"
+                        className="shadow-sm flex items-center justify-center"
                       />
                     </Document>
                     {/* Shadow Gradient for Spine */}
