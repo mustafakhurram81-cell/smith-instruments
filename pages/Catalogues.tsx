@@ -102,8 +102,8 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
     // Calculate aspect ratio from the first page to ensure no whitespace
     pdf.getPage(1).then((page: any) => {
       const viewport = page.getViewport({ scale: 1 });
-      // Set a base height for quality (e.g., 800px) and calculate width
-      const baseHeight = 800;
+      // Set a base height for quality (e.g., 1200px) and calculate width
+      const baseHeight = 1200;
       const ratio = viewport.width / viewport.height;
       const baseWidth = baseHeight * ratio;
 
@@ -224,9 +224,9 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
               height={bookDimensions.height}
               size="stretch"
               minWidth={300}
-              maxWidth={1000}
+              maxWidth={2000}
               minHeight={400}
-              maxHeight={1400}
+              maxHeight={2500}
               maxShadowOpacity={0.5}
               showCover={true}
               mobileScrollSupport={true}
