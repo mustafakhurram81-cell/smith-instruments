@@ -328,7 +328,10 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <Button variant="secondary" className="mt-4" onClick={onClose}>Close Viewer</Button>
           </div>
         ) : (
-          <div className="relative w-full h-full flex items-center justify-center animate-in zoom-in-95 duration-500">
+          <div
+            className="relative w-full h-full flex items-center justify-center animate-in zoom-in-95 duration-500"
+            onClick={(e) => e.stopPropagation()} // CRITICAL: Stop clicks on the book from closing the modal
+          >
             {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
               width={bookDimensions.width}
