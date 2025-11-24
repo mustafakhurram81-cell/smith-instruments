@@ -143,12 +143,8 @@ export const Contact: React.FC = () => {
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between text-stone-600">
-                    <span>Monday - Friday</span>
-                    <span className="font-medium">9:00 AM - 6:00 PM</span>
-                  </div>
-                  <div className="flex justify-between text-stone-600">
-                    <span>Saturday</span>
-                    <span className="font-medium">10:00 AM - 2:00 PM</span>
+                    <span>Monday - Saturday</span>
+                    <span className="font-medium">8:00 AM - 5:00 PM</span>
                   </div>
                   <div className="flex justify-between text-stone-400">
                     <span>Sunday</span>
