@@ -200,16 +200,15 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             >
               {/* Generate Pages */}
               {Array.from(new Array(numPages), (el, index) => (
-                <div key={index} className="bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center">
-                  <div className="w-full h-full relative flex items-center justify-center bg-white p-2">
+                <div key={index} className="bg-white overflow-visible shadow-inner border-r border-stone-100 flex items-center justify-center">
+                  <div className="w-full h-full relative flex items-center justify-center bg-white">
                     <Document file={catalogue.pdfUrl} loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}>
                       <Page
                         pageNumber={index + 1}
-                        height={680} // Use height constraint to ensure full page fits vertically
+                        scale={0.7}
                         renderTextLayer={false}
                         renderAnnotationLayer={false}
-                        className="mx-auto my-auto"
-                        scale={1.0}
+                        className="!w-auto !h-auto !max-w-full !max-h-full mx-auto my-auto"
                       />
                     </Document>
                     {/* Shadow Gradient for Spine */}
