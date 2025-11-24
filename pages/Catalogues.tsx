@@ -242,9 +242,11 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/95 backdrop-blur-xl overflow-hidden"
-      onClick={onClose}
+      className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/95 backdrop-blur-xl overflow-hidden select-none"
     >
+      {/* Backdrop Click Layer - Handles closing when clicking outside */}
+      <div className="absolute inset-0 cursor-pointer" onClick={onClose} aria-label="Close Viewer" />
+
       {/* CSS Overrides for Strict Scaling */}
       <style>{`
         .react-pdf__Page {
@@ -296,10 +298,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
       </div>
 
       {/* 3D SCENE CONTAINER */}
-      <div
-        className="relative w-full h-full flex items-center justify-center p-4 md:p-10 overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="relative w-full h-full flex items-center justify-center p-4 md:p-10 overflow-hidden pointer-events-none">
         {/* Hidden Document Loader to get page count and dimensions */}
         <div className="hidden">
           <Document
@@ -320,7 +319,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
             <p className="text-stone-300 tracking-widest uppercase text-sm">Loading Catalogue...</p>
           </div>
         ) : error ? (
-          <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500">
+          <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500 pointer-events-auto">
             <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-center">
               <p className="text-red-200 font-medium mb-2">Error Loading Catalogue</p>
               <p className="text-sm text-red-300/80">{error}</p>
@@ -329,8 +328,7 @@ const FlipBookViewer: React.FC<{ catalogue: any; onClose: () => void }> = ({ cat
           </div>
         ) : (
           <div
-            className="relative w-full h-full flex items-center justify-center animate-in zoom-in-95 duration-500"
-            onClick={(e) => e.stopPropagation()} // CRITICAL: Stop clicks on the book from closing the modal
+            className="relative w-full h-full flex items-center justify-center animate-in zoom-in-95 duration-500 pointer-events-auto"
           >
             {/* @ts-ignore - React PageFlip types are sometimes loose */}
             <HTMLFlipBook
