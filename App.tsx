@@ -2,7 +2,10 @@ import React from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Header, Footer, WhatsAppFloat, ScrollToTop } from './components/Shared';
 import { Home } from './pages/Home';
-import { Products } from './pages/Products';
+import { ProductsIndex } from './pages/products/ProductsIndex';
+import { CategoryView } from './pages/products/CategoryView';
+import { SubcategoryView } from './pages/products/SubcategoryView';
+import { ProductDetail } from './pages/products/ProductDetail';
 import { Catalogues } from './pages/Catalogues';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
@@ -28,7 +31,10 @@ const App: React.FC = () => {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/products" element={<Products />} />
+            <Route path="/products" element={<ProductsIndex />} />
+            <Route path="/products/:categoryId" element={<CategoryView />} />
+            <Route path="/products/:categoryId/:subcategoryId" element={<SubcategoryView />} />
+            <Route path="/products/:categoryId/:subcategoryId/:productId" element={<ProductDetail />} />
             <Route path="/catalogues" element={<Catalogues />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
