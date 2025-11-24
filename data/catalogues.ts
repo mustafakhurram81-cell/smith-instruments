@@ -1,10 +1,10 @@
 export const CATALOGUES = [
     {
-        title: "General Surgery",
+        title: "Electro Surgery",
         size: "12MB",
         color: "#262626",
-        desc: "Comprehensive guide for general procedures.",
-        pdfUrl: "/catalogues/general-surgery.pdf"
+        desc: "Advanced electrosurgical instruments and accessories.",
+        pdfUrl: "/catalogues/electro-surgery.pdf"
     },
     {
         title: "Plastic & Aesthetic",
