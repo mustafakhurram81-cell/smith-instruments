@@ -1,70 +1,147 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Section, FadeIn } from '../../components/Shared';
+import { Section, FadeIn, Button } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
-import { ProductCard } from '../../components/ProductCard';
-import { CATEGORIES_DATA, getSubcategories } from '../../data/categories';
-import { getProductsBySubcategory } from '../../data/products';
-import { ChevronRight } from 'lucide-react';
+import { getProductsBySubcategory, Product } from '../../lib/database';
+import { ChevronRight, Package, Loader2, Grid, LayoutGrid } from 'lucide-react';
 
 export const SubcategoryView: React.FC = () => {
     const { categoryId, subcategoryId } = useParams<{ categoryId: string; subcategoryId: string }>();
     const navigate = useNavigate();
 
-    const category = CATEGORIES_DATA.find(c => c.id === categoryId);
-    const subcategories = categoryId ? getSubcategories(categoryId) : [];
-    const subcategory = subcategories.find(s => s.id === subcategoryId);
+    const category = decodeURIComponent(categoryId || '');
+    const subcategory = decodeURIComponent(subcategoryId || '');
 
-    const products = (categoryId && subcategoryId) ? getProductsBySubcategory(categoryId, subcategoryId) : [];
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [displayCount, setDisplayCount] = useState(24);
+    const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid');
 
-    if (!category || !subcategory) {
-        return <div className="pt-32 text-center">Category or Subcategory not found</div>;
-    }
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!category || !subcategory) return;
+
+            const prods = await getProductsBySubcategory(category, subcategory);
+            setProducts(prods);
+            setLoading(false);
+        };
+        fetchData();
+    }, [category, subcategory]);
+
+    const loadMore = () => {
+        setDisplayCount(prev => prev + 24);
+    };
+
+    const visibleProducts = products.slice(0, displayCount);
+    const hasMore = displayCount < products.length;
 
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
             <SEO
-                title={`${subcategory.name} - ${category.name}`}
-                description={`Browse our range of ${subcategory.name} for ${category.name}.`}
+                title={`${subcategory} - ${category}`}
+                description={`Browse our range of ${subcategory} for ${category}.`}
             />
 
             {/* Header */}
-            <div className="bg-brand-charcoal text-white py-12 md:py-16 relative overflow-hidden">
+            <div className="bg-brand-charcoal text-white py-16 md:py-24 relative overflow-hidden">
                 <div className="container mx-auto px-6 relative z-10">
                     {/* Breadcrumbs */}
-                    <div className="flex items-center gap-2 text-xs text-stone-400 mb-4 uppercase tracking-widest">
+                    <div className="flex items-center gap-2 text-xs text-stone-400 mb-4 uppercase tracking-widest flex-wrap">
                         <Link to="/products" className="hover:text-white">Products</Link>
                         <ChevronRight size={12} />
-                        <Link to={`/products/${categoryId}`} className="hover:text-white">{category.name}</Link>
+                        <Link to={`/products/${encodeURIComponent(category)}`} className="hover:text-white">{category}</Link>
                         <ChevronRight size={12} />
-                        <span className="text-brand-gold">{subcategory.name}</span>
+                        <span className="text-brand-gold">{subcategory}</span>
                     </div>
 
-                    <h1 className="font-serif text-3xl md:text-5xl mb-4">{subcategory.name}</h1>
-                    <p className="text-stone-400 font-light max-w-2xl">
-                        {products.length} instruments available.
+                    <h1 className="font-serif text-4xl md:text-6xl mb-4">{subcategory}</h1>
+                    <p className="text-stone-400 font-light max-w-2xl text-lg">
+                        {products.length} precision instruments available
                     </p>
                 </div>
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-stone-800 to-transparent opacity-50 pointer-events-none"></div>
+                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                    <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-brand-gold blur-[150px] rounded-full"></div>
+                </div>
             </div>
 
-            <Section className="bg-white">
+            <Section className="bg-stone-50">
                 <div className="container mx-auto px-6">
-                    {products.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {products.map((product, idx) => (
-                                <FadeIn key={product.id} delay={idx * 0.05}>
-                                    <ProductCard
-                                        product={product}
-                                        onClick={() => navigate(`/products/${categoryId}/${subcategoryId}/${product.id}`)}
-                                    />
-                                </FadeIn>
-                            ))}
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-20">
+                            <Loader2 className="animate-spin text-brand-gold mb-4" size={48} />
+                            <p className="text-stone-500">Loading instruments...</p>
                         </div>
+                    ) : products.length > 0 ? (
+                        <>
+                            {/* Toolbar */}
+                            <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
+                                <p className="text-stone-500">
+                                    Showing {Math.min(displayCount, products.length)} of {products.length} products
+                                </p>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setViewMode('grid')}
+                                        className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-brand-gold text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
+                                    >
+                                        <Grid size={18} />
+                                    </button>
+                                    <button
+                                        onClick={() => setViewMode('compact')}
+                                        className={`p-2 rounded-lg transition-colors ${viewMode === 'compact' ? 'bg-brand-gold text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
+                                    >
+                                        <LayoutGrid size={18} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : 'grid-cols-3 md:grid-cols-4 lg:grid-cols-6'}`}>
+                                {visibleProducts.map((product, idx) => (
+                                    <FadeIn key={product.sku} delay={Math.min(idx * 0.02, 0.5)}>
+                                        <div
+                                            onClick={() => navigate(`/product/${encodeURIComponent(product.sku)}`)}
+                                            className="group cursor-pointer bg-white rounded-xl overflow-hidden border border-stone-200 hover:shadow-lg hover:border-brand-gold/30 transition-all duration-300"
+                                        >
+                                            <div className={`bg-stone-100 relative overflow-hidden ${viewMode === 'grid' ? 'aspect-square' : 'aspect-square'}`}>
+                                                {product.image_url ? (
+                                                    <img
+                                                        src={product.image_url}
+                                                        alt={product.name}
+                                                        className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                                                        loading="lazy"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <Package className="text-stone-300" size={viewMode === 'grid' ? 48 : 32} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className={`${viewMode === 'grid' ? 'p-4' : 'p-3'}`}>
+                                                <p className={`text-brand-gold font-mono mb-1 ${viewMode === 'grid' ? 'text-xs' : 'text-[10px]'}`}>{product.sku}</p>
+                                                <h3 className={`font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors ${viewMode === 'grid' ? 'text-sm line-clamp-2' : 'text-xs line-clamp-1'}`}>
+                                                    {product.name}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </FadeIn>
+                                ))}
+                            </div>
+
+                            {hasMore && (
+                                <div className="text-center mt-12">
+                                    <Button variant="outline" onClick={loadMore}>
+                                        Load More ({products.length - displayCount} remaining)
+                                    </Button>
+                                </div>
+                            )}
+                        </>
                     ) : (
                         <div className="text-center py-20">
+                            <Package className="mx-auto text-stone-300 mb-4" size={64} />
                             <h3 className="text-xl font-serif text-brand-charcoal mb-2">No products found</h3>
-                            <p className="text-stone-500">We are adding products to this category soon.</p>
+                            <p className="text-stone-500 mb-6">We are adding products to this category soon.</p>
+                            <Button variant="primary" onClick={() => navigate(`/products/${encodeURIComponent(category)}`)}>
+                                Back to {category}
+                            </Button>
                         </div>
                     )}
                 </div>

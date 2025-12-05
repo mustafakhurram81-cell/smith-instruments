@@ -1,144 +1,262 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Section, Button, FadeIn } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
-import { CATEGORIES_DATA, getSubcategories } from '../../data/categories';
-import { getProductById } from '../../data/products';
-import { ChevronRight, MessageCircle, Check, ShieldCheck, Truck } from 'lucide-react';
+import { getProductBySku, getProductsBySubcategory, Product } from '../../lib/database';
+import { ChevronRight, Package, Loader2, MessageCircle, Mail, ArrowRight, X, ZoomIn } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const ProductDetail: React.FC = () => {
-    const { categoryId, subcategoryId, productId } = useParams<{ categoryId: string; subcategoryId: string; productId: string }>();
+    const { productId } = useParams<{ productId: string }>();
+    const sku = decodeURIComponent(productId || '');
+    const navigate = useNavigate();
 
-    const category = CATEGORIES_DATA.find(c => c.id === categoryId);
-    const subcategories = categoryId ? getSubcategories(categoryId) : [];
-    const subcategory = subcategories.find(s => s.id === subcategoryId);
-    const product = productId ? getProductById(productId) : undefined;
+    const [product, setProduct] = useState<Product | null>(null);
+    const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [isZoomed, setIsZoomed] = useState(false);
 
-    if (!product || !category || !subcategory) {
-        return <div className="pt-32 text-center">Product not found</div>;
+    useEffect(() => {
+        const fetchProduct = async () => {
+            if (!sku) return;
+            setLoading(true);
+            const prod = await getProductBySku(sku);
+            setProduct(prod);
+
+            // Fetch related products from same subcategory
+            if (prod) {
+                const related = await getProductsBySubcategory(prod.category, prod.subcategory);
+                // Filter out current product and limit to 4
+                setRelatedProducts(related.filter(p => p.sku !== prod.sku).slice(0, 4));
+            }
+
+            setLoading(false);
+        };
+        fetchProduct();
+    }, [sku]);
+
+    if (loading) {
+        return (
+            <div className="pt-32 min-h-screen flex items-center justify-center">
+                <Loader2 className="animate-spin text-brand-gold" size={48} />
+            </div>
+        );
     }
+
+    if (!product) {
+        return (
+            <div className="pt-32 min-h-screen text-center">
+                <h1 className="text-2xl font-serif text-brand-charcoal">Product not found</h1>
+                <Link to="/products" className="text-brand-gold hover:underline mt-4 inline-block">
+                    ← Back to Products
+                </Link>
+            </div>
+        );
+    }
+
+    const whatsappMessage = encodeURIComponent(
+        `Hi, I'm interested in the product:\n\nSKU: ${product.sku}\nName: ${product.name}\n\nPlease provide more information.`
+    );
+    const whatsappUrl = `https://wa.me/447778880462?text=${whatsappMessage}`;
+
+    const emailSubject = encodeURIComponent(`Inquiry: ${product.name} (${product.sku})`);
+    const emailBody = encodeURIComponent(`Hello,\n\nI'm interested in the following product:\n\nSKU: ${product.sku}\nName: ${product.name}\n\nPlease provide pricing and availability.\n\nThank you.`);
+    const emailUrl = `mailto:info@smithinstruments.co.uk?subject=${emailSubject}&body=${emailBody}`;
 
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
             <SEO
-                title={`${product.name} | ${product.sku}`}
-                description={`${product.name} (${product.sku}) - ${product.description}`}
+                title={`${product.name} - ${product.sku}`}
+                description={product.description || `${product.name} surgical instrument`}
             />
 
-            {/* Breadcrumbs Header */}
-            <div className="bg-white border-b border-stone-200 py-4">
-                <div className="container mx-auto px-6">
-                    <div className="flex items-center gap-2 text-xs text-stone-500 uppercase tracking-widest flex-wrap">
-                        <Link to="/products" className="hover:text-brand-charcoal">Products</Link>
+            {/* Breadcrumbs */}
+            <div className="bg-white border-b border-stone-200">
+                <div className="container mx-auto px-6 py-4">
+                    <div className="flex items-center gap-2 text-xs text-stone-500 uppercase tracking-widest">
+                        <Link to="/products" className="hover:text-brand-gold">Products</Link>
                         <ChevronRight size={12} />
-                        <Link to={`/products/${categoryId}`} className="hover:text-brand-charcoal">{category.name}</Link>
+                        <Link to={`/products/${encodeURIComponent(product.category)}`} className="hover:text-brand-gold">
+                            {product.category}
+                        </Link>
+                        {product.subcategory && product.subcategory !== 'General' && (
+                            <>
+                                <ChevronRight size={12} />
+                                <Link
+                                    to={`/products/${encodeURIComponent(product.category)}/${encodeURIComponent(product.subcategory)}`}
+                                    className="hover:text-brand-gold"
+                                >
+                                    {product.subcategory}
+                                </Link>
+                            </>
+                        )}
                         <ChevronRight size={12} />
-                        <Link to={`/products/${categoryId}/${subcategoryId}`} className="hover:text-brand-charcoal">{subcategory.name}</Link>
-                        <ChevronRight size={12} />
-                        <span className="text-brand-gold font-bold">{product.sku}</span>
+                        <span className="text-brand-gold">{product.sku}</span>
                     </div>
                 </div>
             </div>
 
-            <Section className="bg-white pt-12 pb-24">
+            <Section className="bg-white">
                 <div className="container mx-auto px-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
-
-                        {/* Left: Image */}
-                        <FadeIn>
-                            <div className="bg-stone-50 border border-stone-100 rounded-sm overflow-hidden relative group">
-                                <div className="aspect-square flex items-center justify-center p-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        {/* Image with Zoom */}
+                        <div
+                            className="bg-stone-100 rounded-2xl overflow-hidden aspect-square flex items-center justify-center relative cursor-zoom-in group"
+                            onClick={() => product.image_url && setIsZoomed(true)}
+                        >
+                            {product.image_url ? (
+                                <>
                                     <img
-                                        src={product.imageUrl}
+                                        src={product.image_url}
                                         alt={product.name}
-                                        className="max-w-full max-h-full object-contain mix-blend-multiply transform group-hover:scale-110 transition-transform duration-700"
+                                        className="w-full h-full object-contain p-8 group-hover:scale-105 transition-transform duration-300"
                                     />
-                                </div>
-                                <div className="absolute top-4 left-4 bg-brand-gold text-brand-charcoal text-xs font-bold px-3 py-1 rounded-full">
-                                    PREMIUM GRADE
-                                </div>
-                            </div>
-                        </FadeIn>
+                                    <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <ZoomIn size={20} className="text-brand-charcoal" />
+                                    </div>
+                                </>
+                            ) : (
+                                <Package className="text-stone-300" size={120} />
+                            )}
+                        </div>
 
-                        {/* Right: Details */}
-                        <FadeIn delay={0.2}>
+                        {/* Details */}
+                        <div className="space-y-6">
                             <div>
-                                <h1 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-2">{product.name}</h1>
-                                <div className="flex items-center gap-4 mb-6">
-                                    <span className="bg-stone-100 text-stone-600 px-3 py-1 rounded-sm text-sm font-mono border border-stone-200">
-                                        SKU: {product.sku}
+                                <p className="text-brand-gold font-medium text-sm mb-2">SKU: {product.sku}</p>
+                                <h1 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4">
+                                    {product.name}
+                                </h1>
+
+                                <div className="flex gap-2 flex-wrap mb-6">
+                                    <span className="px-3 py-1 bg-brand-gold/10 text-brand-gold text-sm rounded-full">
+                                        {product.category}
                                     </span>
-                                    <span className="text-green-600 text-sm flex items-center gap-1">
-                                        <Check size={14} /> In Stock
-                                    </span>
+                                    {product.subcategory && product.subcategory !== 'General' && (
+                                        <span className="px-3 py-1 bg-stone-100 text-stone-600 text-sm rounded-full">
+                                            {product.subcategory}
+                                        </span>
+                                    )}
                                 </div>
-
-                                <p className="text-stone-600 leading-relaxed mb-8 text-lg font-light">
-                                    {product.description}
-                                </p>
-
-                                {/* Specs Table */}
-                                <div className="bg-stone-50 border border-stone-100 rounded-sm p-6 mb-8">
-                                    <h3 className="font-serif text-lg mb-4 text-brand-charcoal">Specifications</h3>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
-                                        <div className="flex justify-between border-b border-stone-200 pb-2">
-                                            <span className="text-stone-500">Material</span>
-                                            <span className="font-medium text-brand-charcoal">{product.specifications.material}</span>
-                                        </div>
-                                        <div className="flex justify-between border-b border-stone-200 pb-2">
-                                            <span className="text-stone-500">Finish</span>
-                                            <span className="font-medium text-brand-charcoal">{product.specifications.finish}</span>
-                                        </div>
-                                        {product.specifications.length && (
-                                            <div className="flex justify-between border-b border-stone-200 pb-2">
-                                                <span className="text-stone-500">Length</span>
-                                                <span className="font-medium text-brand-charcoal">{product.specifications.length}</span>
-                                            </div>
-                                        )}
-                                        {product.specifications.type && (
-                                            <div className="flex justify-between border-b border-stone-200 pb-2">
-                                                <span className="text-stone-500">Type</span>
-                                                <span className="font-medium text-brand-charcoal">{product.specifications.type}</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Actions */}
-                                <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                                    <Button
-                                        variant="primary"
-                                        className="flex-1 py-4 text-base gap-2"
-                                        onClick={() => window.open(`https://wa.me/923302449855?text=Hi, I would like to request a quote for: ${product.name} (SKU: ${product.sku})`, '_blank')}
-                                    >
-                                        <MessageCircle size={20} /> Request Quote via WhatsApp
-                                    </Button>
-                                    <Button
-                                        variant="outline"
-                                        className="flex-1 py-4 text-base"
-                                        onClick={() => window.location.href = `mailto:sales@smithinstruments.com?subject=Quote Request: ${product.sku}&body=I am interested in ${product.name} (${product.sku}). Please provide pricing.`}
-                                    >
-                                        Email Inquiry
-                                    </Button>
-                                </div>
-
-                                {/* Trust Badges */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="flex items-center gap-3 text-stone-500 text-sm">
-                                        <ShieldCheck className="text-brand-gold" size={20} />
-                                        <span>ISO 13485 Certified</span>
-                                    </div>
-                                    <div className="flex items-center gap-3 text-stone-500 text-sm">
-                                        <Truck className="text-brand-gold" size={20} />
-                                        <span>Worldwide Shipping</span>
-                                    </div>
-                                </div>
-
                             </div>
-                        </FadeIn>
+
+                            {product.description && (
+                                <div className="prose prose-stone max-w-none">
+                                    <h3 className="text-lg font-medium text-brand-charcoal mb-2">Description</h3>
+                                    <p className="text-stone-600 leading-relaxed">{product.description}</p>
+                                </div>
+                            )}
+
+                            {/* CTA Buttons */}
+                            <div className="pt-6 border-t border-stone-200 space-y-4">
+                                <h3 className="text-lg font-medium text-brand-charcoal">Request Quote</h3>
+                                <div className="flex flex-col sm:flex-row gap-4">
+                                    <a
+                                        href={whatsappUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex-1"
+                                    >
+                                        <Button variant="primary" className="w-full py-3">
+                                            <MessageCircle size={18} className="mr-2" />
+                                            WhatsApp Inquiry
+                                        </Button>
+                                    </a>
+                                    <a href={emailUrl} className="flex-1">
+                                        <Button variant="outline" className="w-full py-3">
+                                            <Mail size={18} className="mr-2" />
+                                            Email Inquiry
+                                        </Button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </Section>
+
+            {/* Related Products Section */}
+            {relatedProducts.length > 0 && (
+                <Section className="bg-stone-50">
+                    <div className="container mx-auto px-6">
+                        <div className="flex justify-between items-center mb-8">
+                            <div>
+                                <h2 className="font-serif text-2xl md:text-3xl text-brand-charcoal">
+                                    Related Products
+                                </h2>
+                                <p className="text-stone-500 text-sm mt-1">
+                                    More from {product.subcategory || product.category}
+                                </p>
+                            </div>
+                            <Link
+                                to={`/products/${encodeURIComponent(product.category)}/${encodeURIComponent(product.subcategory)}`}
+                                className="hidden sm:flex items-center gap-2 text-brand-gold hover:underline text-sm font-medium"
+                            >
+                                View All <ArrowRight size={16} />
+                            </Link>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            {relatedProducts.map((prod, idx) => (
+                                <FadeIn key={prod.id} delay={idx * 0.1}>
+                                    <div
+                                        onClick={() => navigate(`/product/${encodeURIComponent(prod.sku)}`)}
+                                        className="group cursor-pointer bg-white rounded-xl overflow-hidden border border-stone-200 hover:shadow-lg hover:border-brand-gold/30 transition-all duration-300"
+                                    >
+                                        <div className="aspect-square bg-stone-100 overflow-hidden">
+                                            {prod.image_url ? (
+                                                <img
+                                                    src={prod.image_url}
+                                                    alt={prod.name}
+                                                    className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center">
+                                                    <Package className="text-stone-300" size={48} />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="p-4">
+                                            <p className="text-xs text-brand-gold font-mono mb-1">{prod.sku}</p>
+                                            <h3 className="text-sm font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors line-clamp-2">
+                                                {prod.name}
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </FadeIn>
+                            ))}
+                        </div>
+                    </div>
+                </Section>
+            )}
+
+            {/* Zoom Modal */}
+            <AnimatePresence>
+                {isZoomed && product?.image_url && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
+                        onClick={() => setIsZoomed(false)}
+                    >
+                        <button
+                            onClick={() => setIsZoomed(false)}
+                            className="absolute top-6 right-6 text-white hover:text-brand-gold transition-colors"
+                        >
+                            <X size={32} />
+                        </button>
+                        <motion.img
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            src={product.image_url}
+                            alt={product.name}
+                            className="max-w-full max-h-[90vh] object-contain"
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

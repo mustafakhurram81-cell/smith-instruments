@@ -25,10 +25,20 @@ const ScrollToTopOnNav = () => {
   return null;
 };
 
+import { Navigate, Outlet } from 'react-router-dom';
+import { Login } from './pages/admin/Login';
+
+// Protected Route Wrapper
+const RequireAuth = () => {
+  const isAuthenticated = localStorage.getItem('admin_authenticated') === 'true';
+  return isAuthenticated ? <Outlet /> : <Navigate to="/admin/login" replace />;
+};
+
 const App: React.FC = () => {
   return (
     <Router>
       <ScrollToTopOnNav />
+      {/* Conditionally render Header/Footer could be done here based on location, but keeping them simple for now */}
       <div className="flex flex-col min-h-screen font-sans antialiased text-brand-charcoal bg-stone-50">
         <Header />
         <main className="flex-grow">
@@ -38,15 +48,21 @@ const App: React.FC = () => {
             <Route path="/products/:categoryId" element={<CategoryView />} />
             <Route path="/products/:categoryId/:subcategoryId" element={<SubcategoryView />} />
             <Route path="/products/:categoryId/:subcategoryId/:productId" element={<ProductDetail />} />
+            <Route path="/product/:productId" element={<ProductDetail />} />
             <Route path="/catalogues" element={<Catalogues />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog" element={<Blog />} />
 
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="migrate" element={<Migration />} />
+            {/* Admin Auth */}
+            <Route path="/admin/login" element={<Login />} />
+
+            {/* Protected Admin Routes */}
+            <Route element={<RequireAuth />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="migrate" element={<Migration />} />
+              </Route>
             </Route>
           </Routes>
         </main>
