@@ -206,10 +206,10 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                 </div>
             </div>
 
-            {/* 3D SCENE CONTAINER */}
             <div className="relative w-full h-full flex items-center justify-center p-4 md:p-10 overflow-hidden pointer-events-none">
-                {/* Hidden Document Loader to get page count and dimensions */}
-                <div className="hidden">
+
+                {/* Single Document Instance Wrapper */}
+                <div className="w-full h-full flex items-center justify-center pointer-events-auto">
                     <Document
                         file={catalogue.pdfUrl}
                         onLoadSuccess={onDocumentLoadSuccess}
@@ -218,103 +218,90 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                             setLoading(false);
                             setError("Failed to load PDF. Please check if the file exists.");
                         }}
+                        loading={
+                            <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500">
+                                <Loader2 className="animate-spin text-brand-gold" size={48} />
+                                <p className="text-stone-300 tracking-widest uppercase text-sm">Loading Catalogue...</p>
+                            </div>
+                        }
+                        className="w-full h-full flex items-center justify-center"
                     >
+                        {!loading && !error && (
+                            <div
+                                className="relative flex items-center justify-center animate-in zoom-in-95 duration-500"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {/* @ts-ignore - React PageFlip types are sometimes loose */}
+                                <HTMLFlipBook
+                                    width={bookDimensions.width}
+                                    height={bookDimensions.height}
+                                    size="fixed"
+                                    minWidth={200}
+                                    maxWidth={2000}
+                                    minHeight={300}
+                                    maxHeight={2500}
+                                    maxShadowOpacity={0.5}
+                                    showCover={true}
+                                    mobileScrollSupport={true}
+                                    usePortrait={false}
+                                    startZIndex={0}
+                                    autoSize={false}
+                                    onFlip={onFlip}
+                                    ref={book}
+                                    className="flip-book shadow-2xl"
+                                    style={{ margin: '0 auto' }}
+                                >
+                                    {/* Generate Pages */}
+                                    {Array.from(new Array(numPages), (el, index) => (
+                                        <div key={index} className={`bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center ${index === 0 ? 'border-l-4 border-stone-300' : ''}`}>
+                                            <div className="w-full h-full flex items-center justify-center bg-white overflow-hidden relative">
+
+                                                <Page
+                                                    pageNumber={index + 1}
+                                                    width={bookDimensions.width}
+                                                    renderTextLayer={false}
+                                                    renderAnnotationLayer={false}
+                                                    className="shadow-sm flex items-center justify-center"
+                                                    loading={
+                                                        <div className="w-full h-full flex items-center justify-center bg-stone-50">
+                                                            <Loader2 className="animate-spin text-stone-200" size={32} />
+                                                        </div>
+                                                    }
+                                                />
+
+                                                {/* Enhanced Spine/Shadow Effects - Same as before */}
+                                                {index === 0 ? (
+                                                    // HARD COVER PREMIUM EFFECT
+                                                    <>
+                                                        <div className="absolute inset-0 pointer-events-none z-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')] opacity-20 mix-blend-multiply"></div>
+                                                        <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/30 to-transparent pointer-events-none z-20 mix-blend-overlay"></div>
+                                                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none z-20"></div>
+                                                        <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-brand-gold/10 to-transparent pointer-events-none z-10 mix-blend-color-dodge"></div>
+                                                    </>
+                                                ) : (
+                                                    // Standard Page Lighting
+                                                    <>
+                                                        <div className={`absolute top-0 bottom-0 w-12 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/15 to-transparent`}></div>
+                                                        <div className="absolute inset-0 pointer-events-none z-10 bg-stone-50/30 mix-blend-multiply"></div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </HTMLFlipBook>
+                            </div>
+                        )}
                     </Document>
-                </div>
-
-                {loading ? (
-                    <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500">
-                        <Loader2 className="animate-spin text-brand-gold" size={48} />
-                        <p className="text-stone-300 tracking-widest uppercase text-sm">Loading Catalogue...</p>
-                    </div>
-                ) : error ? (
-                    <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500 pointer-events-auto">
-                        <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-center">
-                            <p className="text-red-200 font-medium mb-2">Error Loading Catalogue</p>
-                            <p className="text-sm text-red-300/80">{error}</p>
+                    {error && (
+                        <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500 pointer-events-auto">
+                            <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-center">
+                                <p className="text-red-200 font-medium mb-2">Error Loading Catalogue</p>
+                                <p className="text-sm text-red-300/80">{error}</p>
+                            </div>
+                            <Button variant="secondary" className="mt-4" onClick={onClose}>Close Viewer</Button>
                         </div>
-                        <Button variant="secondary" className="mt-4" onClick={onClose}>Close Viewer</Button>
-                    </div>
-                ) : (
-                    <div
-                        className="relative w-full h-full flex items-center justify-center animate-in zoom-in-95 duration-500 pointer-events-auto"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        {/* @ts-ignore - React PageFlip types are sometimes loose */}
-                        <HTMLFlipBook
-                            width={bookDimensions.width}
-                            height={bookDimensions.height}
-                            size="fixed" // Use fixed size calculated by JS
-                            minWidth={200}
-                            maxWidth={2000}
-                            minHeight={300}
-                            maxHeight={2500}
-                            maxShadowOpacity={0.5}
-                            showCover={true}
-                            mobileScrollSupport={true}
-                            usePortrait={false}
-                            startZIndex={0}
-                            autoSize={false} // Disable autoSize to respect our strict dimensions
-                            onFlip={onFlip}
-                            ref={book}
-                            className="flip-book shadow-2xl"
-                            style={{ margin: '0 auto' }}
-                        >
-                            {/* Generate Pages */}
-                            {Array.from(new Array(numPages), (el, index) => (
-                                <div key={index} className={`bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center ${index === 0 ? 'border-l-4 border-stone-300' : ''}`}>
-                                    <div className="w-full h-full flex items-center justify-center bg-white overflow-hidden relative">
-                                        <Document
-                                            file={catalogue.pdfUrl}
-                                            loading={<div className="w-full h-full bg-stone-50 animate-pulse" />}
-                                            className="w-full h-full flex items-center justify-center"
-                                        >
-                                            <Page
-                                                pageNumber={index + 1}
-                                                width={bookDimensions.width}
-                                                renderTextLayer={false}
-                                                renderAnnotationLayer={false}
-                                                className="shadow-sm flex items-center justify-center"
-                                                loading={
-                                                    <div className="w-full h-full flex items-center justify-center bg-stone-50">
-                                                        <Loader2 className="animate-spin text-stone-200" size={32} />
-                                                    </div>
-                                                }
-                                            />
-                                        </Document>
-
-                                        {/* Enhanced Spine/Shadow Effects */}
-                                        {index === 0 ? (
-                                            // HARD COVER PREMIUM EFFECT
-                                            <>
-                                                {/* Leather Texture Overlay */}
-                                                <div className="absolute inset-0 pointer-events-none z-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')] opacity-20 mix-blend-multiply"></div>
-
-                                                {/* Spine Highlight (Left) */}
-                                                <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/30 to-transparent pointer-events-none z-20 mix-blend-overlay"></div>
-
-                                                {/* Glossy Sheen (Diagonal) */}
-                                                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none z-20"></div>
-
-                                                {/* Gold Foil Hint (Bottom Right) */}
-                                                <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-brand-gold/10 to-transparent pointer-events-none z-10 mix-blend-color-dodge"></div>
-                                            </>
-                                        ) : (
-                                            // Standard Page Lighting
-                                            <>
-                                                {/* Spine Shadow (Gutter) */}
-                                                <div className={`absolute top-0 bottom-0 w-12 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/15 to-transparent`}></div>
-
-                                                {/* Paper Grain Texture */}
-                                                <div className="absolute inset-0 pointer-events-none z-10 bg-stone-50/30 mix-blend-multiply"></div>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </HTMLFlipBook>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
 
             {/* Navigation Controls - Auto Hides */}

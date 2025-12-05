@@ -110,12 +110,16 @@ export const WhatsAppFloat: React.FC = () => {
   );
 };
 
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './LanguageSwitcher';
+
 // --- HEADER ---
 export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -128,12 +132,12 @@ export const Header: React.FC = () => {
   }, [location]);
 
   const navLinks = [
-    { label: 'Home', path: '/' },
-    { label: 'Products', path: '/products' },
-    { label: 'Catalogues', path: '/catalogues' },
-    { label: 'About Us', path: '/about' },
-    { label: 'Blog', path: '/blog' },
-    { label: 'Contact', path: '/contact' },
+    { label: t('nav.home'), path: '/' },
+    { label: t('nav.products'), path: '/products' },
+    { label: t('nav.catalogues'), path: '/catalogues' },
+    { label: t('nav.about'), path: '/about' },
+    { label: t('nav.blog'), path: '/blog' },
+    { label: t('nav.contact'), path: '/contact' },
   ];
 
   // Check if current page is Home to determine initial header transparency interaction
@@ -143,14 +147,19 @@ export const Header: React.FC = () => {
     <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${isScrolled || !isHome ? 'bg-stone-50/95 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
       <div className="container mx-auto px-6 flex items-center justify-between">
 
-        {/* Logo Section */}
-        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
-          <div className="h-12 w-32 relative overflow-hidden">
-            <img
-              src="/smith-logo-full.jpg"
-              alt="Smith Instruments"
-              className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
-            />
+        <div className="flex items-center gap-6">
+          {/* Logo Section */}
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
+            <div className="h-12 w-32 relative overflow-hidden">
+              <img
+                src="/smith-logo-full.jpg"
+                alt="Smith Instruments"
+                className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
+              />
+            </div>
+          </div>
+          <div className="hidden md:block">
+            <LanguageSwitcher />
           </div>
         </div>
 

@@ -10,6 +10,9 @@ import { Catalogues } from './pages/Catalogues';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
 import { Blog } from './pages/Blog';
+import { AdminLayout } from './pages/admin/AdminLayout';
+import { Dashboard } from './pages/admin/Dashboard';
+import { Migration } from './pages/admin/Migration';
 
 // Scroll to top on route change
 const ScrollToTopOnNav = () => {
@@ -39,6 +42,12 @@ const App: React.FC = () => {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog" element={<Blog />} />
+
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="migrate" element={<Migration />} />
+            </Route>
           </Routes>
         </main>
         <Footer />
