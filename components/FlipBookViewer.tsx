@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import HTMLFlipBook from 'react-pageflip';
-import { Download, X, ChevronRight, ChevronLeft, BookOpen, Keyboard, Loader2 } from 'lucide-react';
-import { Button } from './Shared';
+import { Download, X, ChevronRight, ChevronLeft, ZoomIn, ZoomOut, Maximize, Minimize } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-// Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface FlipBookViewerProps {
@@ -14,330 +13,299 @@ interface FlipBookViewerProps {
 
 export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClose }) => {
     const [numPages, setNumPages] = useState<number>(0);
+    const [loadedPages, setLoadedPages] = useState<number>(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [bookDimensions, setBookDimensions] = useState({ width: 450, height: 600 }); // Default init
-    const book = useRef<any>(null);
+    const [zoom, setZoom] = useState(1);
+    const [isFullscreen, setIsFullscreen] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
+    const [showControls, setShowControls] = useState(true);
 
-    // Sound Effect - Optimized for low latency
+    const book = useRef<any>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const controlsTimer = useRef<NodeJS.Timeout | null>(null);
 
+    // Touch handling
+    const touchStartX = useRef<number>(0);
+    const touchStartY = useRef<number>(0);
+
+    // Calculate dimensions based on zoom
+    const baseWidth = Math.min(500, window.innerWidth * 0.4);
+    const baseHeight = baseWidth * 1.4;
+    const bookWidth = baseWidth * zoom;
+    const bookHeight = baseHeight * zoom;
+
+    // Preload sound
     useEffect(() => {
-        // Preload audio
         const audio = new Audio('/page-flip.mp3');
-        audio.volume = 0.4;
+        audio.volume = 0.3;
         audio.preload = 'auto';
         audioRef.current = audio;
     }, []);
 
     const playSound = useCallback(() => {
         if (audioRef.current) {
-            // Clone node to allow overlapping sounds for rapid flipping
             const sound = audioRef.current.cloneNode() as HTMLAudioElement;
-            sound.volume = 0.4;
+            sound.volume = 0.3;
             sound.play().catch(() => { });
         }
     }, []);
 
-    // Handle Window Resize for Responsiveness
-    useEffect(() => {
-        const updateDimensions = () => {
-            // Calculate available space with safe margins
-            const marginX = 40;
-            const marginY = 100; // Header/Footer space
-
-            const maxWidth = window.innerWidth - marginX;
-            const maxHeight = window.innerHeight - marginY;
-
-            // We need to fit a 2-page spread (width * 2) into maxWidth
-            // So single page width limit is maxWidth / 2
-            const maxPageWidth = maxWidth / 2;
-
-            // Current aspect ratio of the book (default A4-ish)
-            const currentRatio = bookDimensions.width / bookDimensions.height;
-
-            // Calculate dimensions that fit within BOTH width and height constraints
-            let finalHeight = maxHeight;
-            let finalWidth = finalHeight * currentRatio;
-
-            // If width is still too big, scale down by width
-            if (finalWidth > maxPageWidth) {
-                finalWidth = maxPageWidth;
-                finalHeight = finalWidth / currentRatio;
-            }
-
-            setBookDimensions({ width: finalWidth, height: finalHeight });
-        };
-
-        window.addEventListener('resize', updateDimensions);
-        // Call once on mount (and when bookDimensions changes to refine it)
-        updateDimensions();
-
-        return () => window.removeEventListener('resize', updateDimensions);
-    }, [bookDimensions.width, bookDimensions.height]); // Re-run if base ratio changes
-
-    function onDocumentLoadSuccess(pdf: any) {
-        console.log("PDF Loaded Successfully:", pdf.numPages);
-        setNumPages(pdf.numPages);
-
-        // Calculate aspect ratio from the first page
-        pdf.getPage(1).then((page: any) => {
-            const viewport = page.getViewport({ scale: 1 });
-            const ratio = viewport.width / viewport.height;
-
-            // Set initial base dimensions
-            const isMobile = window.innerWidth < 768;
-            const targetHeight = isMobile ? 800 : 1000;
-
-            setBookDimensions({ width: targetHeight * ratio, height: targetHeight });
-
-            // SAFETY FALLBACK: Force loading to false after a short delay
-            // This ensures that even if onRenderSuccess fails to fire, the book will show.
-            setTimeout(() => {
-                setLoading(false);
-            }, 1500);
-        }).catch(err => {
-            console.error("Error getting page 1:", err);
-            setLoading(false); // Ensure we don't get stuck
-        });
-    }
-
-    const onFlip = useCallback((e: any) => {
-        setCurrentPage(e.data);
-        // Sound is now triggered by interaction events for zero latency
+    // Auto-hide controls
+    const resetControlsTimer = useCallback(() => {
+        setShowControls(true);
+        if (controlsTimer.current) clearTimeout(controlsTimer.current);
+        controlsTimer.current = setTimeout(() => setShowControls(false), 3000);
     }, []);
 
-    // Keyboard Navigation
+    useEffect(() => {
+        window.addEventListener('mousemove', resetControlsTimer);
+        window.addEventListener('touchstart', resetControlsTimer);
+        resetControlsTimer();
+        return () => {
+            window.removeEventListener('mousemove', resetControlsTimer);
+            window.removeEventListener('touchstart', resetControlsTimer);
+            if (controlsTimer.current) clearTimeout(controlsTimer.current);
+        };
+    }, [resetControlsTimer]);
+
+    // Keyboard navigation
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'ArrowRight') {
-                book.current?.pageFlip()?.flipNext();
-                playSound();
-            }
-            if (e.key === 'ArrowLeft') {
-                book.current?.pageFlip()?.flipPrev();
-                playSound();
-            }
+            if (e.key === 'ArrowRight') { book.current?.pageFlip()?.flipNext(); playSound(); }
+            if (e.key === 'ArrowLeft') { book.current?.pageFlip()?.flipPrev(); playSound(); }
             if (e.key === 'Escape') onClose();
+            if (e.key === '+' || e.key === '=') setZoom(z => Math.min(z + 0.2, 2));
+            if (e.key === '-') setZoom(z => Math.max(z - 0.2, 0.6));
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [onClose, playSound]);
 
-    const [isIdle, setIsIdle] = useState(false);
-    const idleTimer = useRef<NodeJS.Timeout | null>(null);
+    // Touch swipe
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.touches[0].clientX;
+        touchStartY.current = e.touches[0].clientY;
+    };
 
-    const resetIdleTimer = useCallback(() => {
-        setIsIdle(false);
-        if (idleTimer.current) clearTimeout(idleTimer.current);
-        idleTimer.current = setTimeout(() => setIsIdle(true), 3000);
-    }, []);
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+        const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY.current);
+
+        // Only trigger if horizontal swipe is stronger than vertical
+        if (Math.abs(deltaX) > 50 && deltaY < 100) {
+            if (deltaX > 0) {
+                book.current?.pageFlip()?.flipPrev();
+            } else {
+                book.current?.pageFlip()?.flipNext();
+            }
+            playSound();
+        }
+    };
+
+    // Fullscreen
+    const toggleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            containerRef.current?.requestFullscreen();
+            setIsFullscreen(true);
+        } else {
+            document.exitFullscreen();
+            setIsFullscreen(false);
+        }
+    };
 
     useEffect(() => {
-        window.addEventListener('mousemove', resetIdleTimer);
-        window.addEventListener('keydown', resetIdleTimer);
-        resetIdleTimer(); // Start timer on mount
-        return () => {
-            window.removeEventListener('mousemove', resetIdleTimer);
-            window.removeEventListener('keydown', resetIdleTimer);
-            if (idleTimer.current) clearTimeout(idleTimer.current);
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
         };
-    }, [resetIdleTimer]);
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    }, []);
+
+    const onDocumentLoadSuccess = (pdf: any) => {
+        setNumPages(pdf.numPages);
+        setTimeout(() => setLoading(false), 500);
+    };
+
+    const onPageLoadSuccess = () => {
+        setLoadedPages(prev => prev + 1);
+    };
+
+    const loadProgress = numPages > 0 ? Math.round((loadedPages / numPages) * 100) : 0;
 
     return (
         <div
-            className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-brand-charcoal/95 backdrop-blur-xl overflow-hidden select-none"
+            ref={containerRef}
+            className="fixed inset-0 z-[60] bg-stone-900 flex items-center justify-center select-none"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
         >
-            {/* Backdrop Click Layer - Handles closing when clicking outside */}
-            <div className="absolute inset-0 cursor-pointer" onClick={onClose} aria-label="Close Viewer" />
+            {/* Loading Overlay */}
+            {loading && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="absolute inset-0 z-50 bg-stone-900 flex flex-col items-center justify-center"
+                >
+                    <div className="w-48 h-1 bg-stone-700 rounded-full overflow-hidden mb-4">
+                        <motion.div
+                            className="h-full bg-brand-gold"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${loadProgress}%` }}
+                            transition={{ duration: 0.3 }}
+                        />
+                    </div>
+                    <p className="text-stone-400 text-sm">{loadProgress}% loaded</p>
+                </motion.div>
+            )}
 
-            {/* CSS Overrides for Strict Scaling */}
+            {/* PDF Styles */}
             <style>{`
-        .react-pdf__Page {
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          width: 100% !important;
-          height: 100% !important;
-          background-color: transparent !important;
-          user-select: none !important;
-          -webkit-user-select: none !important;
-        }
-        .react-pdf__Page__canvas {
-          margin: 0 auto !important;
-          display: block !important;
-          max-width: 100% !important;
-          max-height: 100% !important;
-          width: auto !important;
-          height: auto !important;
-          object-fit: contain !important;
-          user-select: none !important;
-          -webkit-user-select: none !important;
-        }
-        .react-pdf__Document {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          height: 100%;
-        }
-      `}</style>
+                .react-pdf__Page { display: flex !important; align-items: center !important; justify-content: center !important; width: 100% !important; height: 100% !important; background: white !important; }
+                .react-pdf__Page__canvas { max-width: 100% !important; max-height: 100% !important; width: auto !important; height: auto !important; object-fit: contain !important; }
+            `}</style>
 
-            {/* Viewer Header - Auto Hides */}
-            <div className={`absolute top-0 left-0 right-0 p-4 md:p-6 flex justify-between items-center text-white z-50 bg-gradient-to-b from-black/80 to-transparent transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                <div className="flex items-center gap-3 pointer-events-auto">
-                    <BookOpen className="text-brand-gold" />
-                    <div>
-                        <h3 className="font-serif text-lg leading-none">{catalogue.title}</h3>
-                        <p className="text-xs text-stone-400 mt-1">Interactive 3D Preview</p>
-                    </div>
-                </div>
-                <div className="flex items-center gap-4 pointer-events-auto">
-                    <div className="hidden md:flex items-center gap-2 text-xs text-stone-500 mr-4 border border-stone-700 px-3 py-1 rounded-full">
-                        <Keyboard size={12} /> Arrow Keys
-                    </div>
-                    <Button variant="primary" className="py-2 px-6 text-xs" onClick={(e) => { e.stopPropagation(); window.open(catalogue.pdfUrl, '_blank'); }}>
-                        <Download size={14} className="mr-2" /> Download PDF
-                    </Button>
-                    <button onClick={onClose} className="hover:text-brand-gold transition-colors p-2">
-                        <X size={32} />
+            {/* Top Controls */}
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: showControls ? 1 : 0, y: showControls ? 0 : -20 }}
+                className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-40 bg-gradient-to-b from-black/60 to-transparent pointer-events-none"
+            >
+                <div className="pointer-events-auto" />
+                <div className="flex items-center gap-2 pointer-events-auto">
+                    {/* Zoom Controls */}
+                    <button
+                        onClick={() => setZoom(z => Math.max(z - 0.2, 0.6))}
+                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    >
+                        <ZoomOut size={20} />
+                    </button>
+                    <span className="text-white/50 text-sm w-12 text-center">{Math.round(zoom * 100)}%</span>
+                    <button
+                        onClick={() => setZoom(z => Math.min(z + 0.2, 2))}
+                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    >
+                        <ZoomIn size={20} />
+                    </button>
+
+                    <div className="w-px h-6 bg-white/20 mx-2" />
+
+                    {/* Fullscreen */}
+                    <button
+                        onClick={toggleFullscreen}
+                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    >
+                        {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
+                    </button>
+
+                    {/* Download */}
+                    <a
+                        href={catalogue.pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all"
+                    >
+                        <Download size={20} />
+                    </a>
+
+                    {/* Close */}
+                    <button
+                        onClick={onClose}
+                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all ml-2"
+                    >
+                        <X size={24} />
                     </button>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-10 overflow-hidden pointer-events-none">
-
-                {/* Single Document Instance Wrapper */}
-                <div className="w-full h-full flex items-center justify-center pointer-events-auto">
-                    <Document
-                        file={catalogue.pdfUrl}
-                        onLoadSuccess={onDocumentLoadSuccess}
-                        onLoadError={(err) => {
-                            console.error("PDF Load Error:", err);
-                            setLoading(false);
-                            setError("Failed to load PDF. Please check if the file exists.");
-                        }}
-                        loading={
-                            <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500">
-                                <Loader2 className="animate-spin text-brand-gold" size={48} />
-                                <p className="text-stone-300 tracking-widest uppercase text-sm">Loading Catalogue...</p>
-                            </div>
-                        }
-                        className="w-full h-full flex items-center justify-center"
-                    >
-                        {!loading && !error && (
-                            <div
-                                className="relative flex items-center justify-center animate-in zoom-in-95 duration-500"
-                                onClick={(e) => e.stopPropagation()}
+            {/* Book Container */}
+            <div className="flex items-center justify-center w-full h-full p-8">
+                <Document
+                    file={catalogue.pdfUrl}
+                    onLoadSuccess={onDocumentLoadSuccess}
+                    onLoadError={(err) => { console.error(err); setError("Failed to load PDF"); setLoading(false); }}
+                    loading={null}
+                >
+                    {!loading && !error && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            {/* @ts-ignore */}
+                            <HTMLFlipBook
+                                width={bookWidth}
+                                height={bookHeight}
+                                size="fixed"
+                                minWidth={200}
+                                maxWidth={2000}
+                                minHeight={300}
+                                maxHeight={2500}
+                                maxShadowOpacity={0.4}
+                                showCover={true}
+                                mobileScrollSupport={false}
+                                usePortrait={false}
+                                autoSize={false}
+                                onFlip={(e: any) => setCurrentPage(e.data)}
+                                ref={book}
+                                className="shadow-2xl"
                             >
-                                {/* @ts-ignore - React PageFlip types are sometimes loose */}
-                                <HTMLFlipBook
-                                    width={bookDimensions.width}
-                                    height={bookDimensions.height}
-                                    size="fixed"
-                                    minWidth={200}
-                                    maxWidth={2000}
-                                    minHeight={300}
-                                    maxHeight={2500}
-                                    maxShadowOpacity={0.5}
-                                    showCover={true}
-                                    mobileScrollSupport={true}
-                                    usePortrait={false}
-                                    startZIndex={0}
-                                    autoSize={false}
-                                    onFlip={onFlip}
-                                    ref={book}
-                                    className="flip-book shadow-2xl"
-                                    style={{ margin: '0 auto' }}
-                                >
-                                    {/* Generate Pages */}
-                                    {Array.from(new Array(numPages), (el, index) => (
-                                        <div key={index} className={`bg-white overflow-hidden shadow-inner border-r border-stone-100 flex items-center justify-center ${index === 0 ? 'border-l-4 border-stone-300' : ''}`}>
-                                            <div className="w-full h-full flex items-center justify-center bg-white overflow-hidden relative">
-
-                                                <Page
-                                                    pageNumber={index + 1}
-                                                    width={bookDimensions.width}
-                                                    renderTextLayer={false}
-                                                    renderAnnotationLayer={false}
-                                                    className="shadow-sm flex items-center justify-center"
-                                                    loading={
-                                                        <div className="w-full h-full flex items-center justify-center bg-stone-50">
-                                                            <Loader2 className="animate-spin text-stone-200" size={32} />
-                                                        </div>
-                                                    }
-                                                />
-
-                                                {/* Enhanced Spine/Shadow Effects - Same as before */}
-                                                {index === 0 ? (
-                                                    // HARD COVER PREMIUM EFFECT
-                                                    <>
-                                                        <div className="absolute inset-0 pointer-events-none z-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')] opacity-20 mix-blend-multiply"></div>
-                                                        <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white/30 to-transparent pointer-events-none z-20 mix-blend-overlay"></div>
-                                                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none z-20"></div>
-                                                        <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-brand-gold/10 to-transparent pointer-events-none z-10 mix-blend-color-dodge"></div>
-                                                    </>
-                                                ) : (
-                                                    // Standard Page Lighting
-                                                    <>
-                                                        <div className={`absolute top-0 bottom-0 w-12 pointer-events-none z-20 ${index % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/15 to-transparent`}></div>
-                                                        <div className="absolute inset-0 pointer-events-none z-10 bg-stone-50/30 mix-blend-multiply"></div>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </HTMLFlipBook>
-                            </div>
-                        )}
-                    </Document>
-                    {error && (
-                        <div className="text-white flex flex-col items-center gap-4 animate-in fade-in duration-500 pointer-events-auto">
-                            <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-center">
-                                <p className="text-red-200 font-medium mb-2">Error Loading Catalogue</p>
-                                <p className="text-sm text-red-300/80">{error}</p>
-                            </div>
-                            <Button variant="secondary" className="mt-4" onClick={onClose}>Close Viewer</Button>
-                        </div>
+                                {Array.from({ length: numPages }, (_, i) => (
+                                    <div key={i} className="bg-white overflow-hidden">
+                                        <Page
+                                            pageNumber={i + 1}
+                                            width={bookWidth}
+                                            renderTextLayer={false}
+                                            renderAnnotationLayer={false}
+                                            onLoadSuccess={onPageLoadSuccess}
+                                            loading={
+                                                <div className="w-full h-full bg-stone-100 animate-pulse" />
+                                            }
+                                        />
+                                        {/* Page shadow effect */}
+                                        <div className={`absolute top-0 bottom-0 w-8 pointer-events-none ${i % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`} />
+                                    </div>
+                                ))}
+                            </HTMLFlipBook>
+                        </motion.div>
                     )}
-                </div>
+                </Document>
+
+                {error && (
+                    <div className="text-center">
+                        <p className="text-red-400 mb-4">{error}</p>
+                        <button onClick={onClose} className="text-white underline">Close</button>
+                    </div>
+                )}
             </div>
 
-            {/* Navigation Controls - Auto Hides */}
-            {!loading && (
-                <div className={`absolute bottom-8 left-0 right-0 flex justify-center items-center gap-8 text-white z-50 transition-opacity duration-500 ${isIdle ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                    <div className="flex items-center gap-6 bg-brand-charcoal/90 backdrop-blur-md px-8 py-3 rounded-full pointer-events-auto border border-stone-600 shadow-2xl transition-transform hover:scale-105">
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                book.current?.pageFlip()?.flipPrev();
-                                playSound();
-                            }}
-                            className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
-                            aria-label="Previous Page"
-                        >
-                            <ChevronLeft size={24} />
-                        </button>
+            {/* Bottom Navigation */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: showControls ? 1 : 0, y: showControls ? 0 : 20 }}
+                className="absolute bottom-0 left-0 right-0 p-6 flex justify-center z-40 pointer-events-none"
+            >
+                <div className="flex items-center gap-4 bg-black/50 backdrop-blur-md px-6 py-3 rounded-full pointer-events-auto">
+                    <button
+                        onClick={() => { book.current?.pageFlip()?.flipPrev(); playSound(); }}
+                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all"
+                    >
+                        <ChevronLeft size={24} />
+                    </button>
 
-                        <span className="text-sm font-medium tracking-widest text-stone-200 select-none min-w-[100px] text-center font-serif">
-                            {currentPage + 1} <span className="text-stone-500 mx-1">/</span> {numPages}
-                        </span>
+                    <span className="text-white/70 text-sm font-medium min-w-[80px] text-center">
+                        {currentPage + 1} / {numPages}
+                    </span>
 
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                book.current?.pageFlip()?.flipNext();
-                                playSound();
-                            }}
-                            className="p-2 rounded-full hover:bg-brand-gold hover:text-brand-charcoal transition-all"
-                            aria-label="Next Page"
-                        >
-                            <ChevronRight size={24} />
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => { book.current?.pageFlip()?.flipNext(); playSound(); }}
+                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all"
+                    >
+                        <ChevronRight size={24} />
+                    </button>
                 </div>
-            )}
+            </motion.div>
         </div>
     );
 };

@@ -88,38 +88,43 @@ export const Catalogues: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
               {filteredCatalogues.map((cat, idx) => (
                 <FadeIn key={cat.title} delay={idx * 0.1}>
-                  <div className="group cursor-pointer relative" onClick={() => setSelectedCatalogue(cat)}>
+                  <div className="group cursor-pointer" onClick={() => setSelectedCatalogue(cat)}>
                     {/* Book Container */}
-                    <div className="relative w-[260px] h-[360px] mx-auto transition-transform duration-500 ease-out group-hover:-translate-y-2">
+                    <div className="relative w-[240px] h-[340px] mx-auto transition-transform duration-300 group-hover:-translate-y-2">
 
                       {/* Front Cover */}
-                      <div className="absolute inset-0 bg-white rounded-r-md shadow-xl overflow-hidden flex flex-col border-l-4 border-stone-700">
-                        <div className="h-full relative">
-                          <CatalogueThumbnail url={cat.pdfUrl} color={cat.color} title={cat.title} />
+                      <div className="absolute inset-0 bg-white rounded-r-md shadow-xl overflow-hidden border-l-[6px] border-stone-800">
+                        <CatalogueThumbnail url={cat.pdfUrl} color={cat.color} title="" />
 
-                          {/* Spine Shadow */}
-                          <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black/20 to-transparent pointer-events-none z-10"></div>
-                        </div>
+                        {/* Spine shadow */}
+                        <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black/20 to-transparent"></div>
 
-                        {/* Info Overlay on Hover */}
-                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-sm transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 border-t border-stone-100 z-20">
-                          <h3 className="font-serif text-lg text-brand-charcoal leading-tight mb-1">{cat.title}</h3>
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-stone-500 font-medium">{cat.size} PDF</span>
-                            <Eye size={16} className="text-brand-gold" />
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 bg-brand-charcoal/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="flex items-center gap-2 text-white font-medium">
+                            <Eye size={18} />
+                            View Catalogue
                           </div>
                         </div>
                       </div>
 
-                      {/* Book Spine Effect (Left side) */}
-                      <div className="absolute left-[-12px] top-1 bottom-1 w-3 bg-stone-800 rounded-l-sm shadow-lg"></div>
+                      {/* Book Spine */}
+                      <div className="absolute left-[-10px] top-1 bottom-1 w-[10px] bg-gradient-to-r from-stone-900 to-stone-700 rounded-l-sm shadow-lg"></div>
 
-                      {/* Pages Effect (Right side) */}
-                      <div className="absolute right-0 top-2 bottom-2 w-3 bg-white border-r border-stone-200 shadow-sm translate-x-[2px] z-[-1]"></div>
-                      <div className="absolute right-0 top-2 bottom-2 w-3 bg-stone-100 border-r border-stone-200 shadow-sm translate-x-[4px] z-[-2]"></div>
+                      {/* Pages Effect */}
+                      <div className="absolute right-0 top-2 bottom-2 w-3 bg-white border-r border-stone-200 translate-x-[2px] z-[-1]"></div>
+                      <div className="absolute right-0 top-2 bottom-2 w-3 bg-stone-100 translate-x-[4px] z-[-2]"></div>
 
-                      {/* Shadow under book */}
-                      <div className="absolute -bottom-6 left-4 right-4 h-4 bg-black/20 blur-lg rounded-[100%] transition-all duration-500 group-hover:scale-x-110 group-hover:bg-black/30"></div>
+                      {/* Shadow */}
+                      <div className="absolute -bottom-5 left-4 right-4 h-4 bg-black/20 blur-lg rounded-[100%] transition-all group-hover:bg-black/30"></div>
+                    </div>
+
+                    {/* Title Below */}
+                    <div className="text-center mt-6">
+                      <h3 className="font-serif text-lg text-brand-charcoal group-hover:text-brand-gold transition-colors">
+                        {cat.title}
+                      </h3>
+                      <p className="text-xs text-stone-400 mt-1">{cat.size}</p>
                     </div>
                   </div>
                 </FadeIn>
