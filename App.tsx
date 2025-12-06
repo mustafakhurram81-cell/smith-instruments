@@ -13,7 +13,6 @@ import { QuoteCart } from './pages/QuoteCart';
 import { AdminLayout } from './pages/admin/AdminLayout';
 import { Dashboard } from './pages/admin/Dashboard';
 import { Login } from './pages/admin/Login';
-import { Migration } from './pages/admin/Migration';
 import { AuthProvider } from './components/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { CartProvider } from './components/CartProvider';
@@ -57,7 +56,6 @@ const AppContent: React.FC = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
-              <Route path="migrate" element={<Migration />} />
             </Route>
           </Route>
         </Routes>
