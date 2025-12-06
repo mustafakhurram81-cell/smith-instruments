@@ -5,11 +5,13 @@ import { SEO } from '../../components/SEO';
 import { getProductBySku, getProductsBySubcategory, Product } from '../../lib/database';
 import { ChevronRight, Package, Loader2, MessageCircle, Mail, ArrowRight, X, ZoomIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '../../components/CartProvider';
 
 export const ProductDetail: React.FC = () => {
     const { productId } = useParams<{ productId: string }>();
     const sku = decodeURIComponent(productId || '');
     const navigate = useNavigate();
+    const { addToCart } = useCart();
 
     const [product, setProduct] = useState<Product | null>(null);
     const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
@@ -149,26 +151,37 @@ export const ProductDetail: React.FC = () => {
 
                             {/* CTA Buttons */}
                             <div className="pt-6 border-t border-stone-200 space-y-4">
-                                <h3 className="text-lg font-medium text-brand-charcoal">Request Quote</h3>
+                                <h3 className="text-lg font-medium text-brand-charcoal">Interested?</h3>
                                 <div className="flex flex-col sm:flex-row gap-4">
+                                    <Button
+                                        variant="primary"
+                                        className="flex-1 py-3"
+                                        onClick={() => {
+                                            if (product) {
+                                                addToCart(product);
+                                                // Optional: show toast or navigate
+                                            }
+                                        }}
+                                    >
+                                        <Package size={18} className="mr-2" />
+                                        Add to Quote Cart
+                                    </Button>
+
                                     <a
                                         href={whatsappUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex-1"
                                     >
-                                        <Button variant="primary" className="w-full py-3">
-                                            <MessageCircle size={18} className="mr-2" />
-                                            WhatsApp Inquiry
-                                        </Button>
-                                    </a>
-                                    <a href={emailUrl} className="flex-1">
                                         <Button variant="outline" className="w-full py-3">
-                                            <Mail size={18} className="mr-2" />
-                                            Email Inquiry
+                                            <MessageCircle size={18} className="mr-2" />
+                                            WhatsApp Chat
                                         </Button>
                                     </a>
                                 </div>
+                                <p className="text-xs text-stone-400">
+                                    Add items to your cart and submit a single request for all prices.
+                                </p>
                             </div>
                         </div>
                     </div>

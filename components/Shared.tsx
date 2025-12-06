@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Facebook, Instagram, Mail, Phone, MapPin, ArrowRight, MessageCircle, ArrowUp } from 'lucide-react';
-import { motion, AnimatePresence, useInView, animate, useScroll, useAnimation } from 'framer-motion';
+import { Menu, X, Facebook, Instagram, Mail, Phone, MapPin, ArrowRight, MessageCircle, ArrowUp, ShoppingCart, Search as SearchIcon, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence, useInView, animate } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { getCategoryDetails, searchProducts, Product } from '../lib/database';
+import { useCart } from './CartProvider';
 
 // --- ANIMATED COUNTER ---
 export const AnimatedCounter: React.FC<{ from?: number; to: number; duration?: number }> = ({ from = 0, to, duration = 2 }) => {
@@ -77,9 +81,7 @@ export const Button: React.FC<ButtonProps> = ({ variant = 'primary', className =
   const baseStyles = "inline-flex items-center justify-center px-8 py-3 text-sm font-medium tracking-wide transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-gold disabled:opacity-50 disabled:cursor-not-allowed rounded-full";
 
   const variants = {
-    // Primary: Gold BG, Charcoal Text (Luxury Standard)
     primary: "bg-brand-gold text-brand-charcoal hover:bg-stone-200 hover:shadow-md shadow-sm border border-transparent",
-    // Secondary: Charcoal BG, Gold Text (High Contrast Premium)
     secondary: "bg-brand-charcoal text-brand-gold hover:bg-stone-800 hover:shadow-md shadow-sm border border-transparent",
     outline: "bg-transparent text-brand-charcoal border border-brand-charcoal hover:bg-brand-charcoal hover:text-brand-gold",
     text: "bg-transparent text-brand-charcoal hover:text-stone-600 underline-offset-4 hover:underline padding-0 rounded-none",
@@ -109,13 +111,6 @@ export const WhatsAppFloat: React.FC = () => {
     </motion.a>
   );
 };
-
-import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from './LanguageSwitcher';
-
-// --- IMPORTS ---
-import { getCategoryDetails, searchProducts, Product } from '../lib/database';
-import { Search as SearchIcon, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
 
 // --- SEARCH OVERLAY ---
 export const SearchOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
@@ -246,14 +241,13 @@ export const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { cartCount } = useCart();
 
-  // Fetch categories for dropdown
   useEffect(() => {
     const loadCats = async () => {
-      // Just need names for the dropdown
       try {
         const cats = await getCategoryDetails();
-        setCategories(cats.slice(0, 8)); // Top 8 categories
+        setCategories(cats.slice(0, 8));
       } catch (e) { console.error(e); }
     };
     loadCats();
@@ -279,7 +273,6 @@ export const Header: React.FC = () => {
         <div className="container mx-auto px-6 flex items-center justify-between">
 
           <div className="flex items-center gap-6">
-            {/* Logo Section */}
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
               <div className="h-12 w-32 relative overflow-hidden">
                 <img
@@ -294,18 +287,15 @@ export const Header: React.FC = () => {
             </div>
           </div>
 
-          {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
             <NavLink to="/" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
               {t('nav.home')}
             </NavLink>
 
-            {/* Products Dropdown */}
             <div className="relative group">
               <NavLink to="/products" className={({ isActive }) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
                 {t('nav.products')} <ChevronDown size={14} />
               </NavLink>
-              {/* Dropdown Menu */}
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top translate-y-2 group-hover:translate-y-0 text-brand-charcoal border border-stone-100">
                 <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-l border-t border-stone-100"></div>
                 {categories.map(cat => (
@@ -336,7 +326,6 @@ export const Header: React.FC = () => {
             </NavLink>
           </nav>
 
-          {/* CTA & Mobile Toggle */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSearchOpen(true)}
@@ -345,12 +334,24 @@ export const Header: React.FC = () => {
               <SearchIcon size={20} />
             </button>
 
+            <NavLink
+              to="/quote-cart"
+              className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled || !isHome ? 'text-brand-charcoal' : 'text-white hover:bg-white/10'}`}
+            >
+              <ShoppingCart size={20} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-brand-gold text-brand-charcoal text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm">
+                  {cartCount}
+                </span>
+              )}
+            </NavLink>
+
             <Button
               variant={isScrolled || !isHome ? 'secondary' : 'primary'}
               className="hidden md:inline-flex text-xs uppercase tracking-widest px-6"
               onClick={() => navigate('/contact')}
             >
-              Get Quote
+              Contact Us
             </Button>
             <button
               className={`md:hidden focus:outline-none ${isScrolled || !isHome ? 'text-brand-charcoal' : 'text-white'}`}
@@ -361,7 +362,6 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         <AnimatePresence>
           {isMobileOpen && (
             <motion.div
@@ -377,12 +377,16 @@ export const Header: React.FC = () => {
                     placeholder="Search products..."
                     className="w-full bg-white border border-stone-200 rounded-full py-3 px-5 pl-12 text-sm outline-none focus:border-brand-gold"
                     onClick={() => { setIsMobileOpen(false); setIsSearchOpen(true); }}
-                    readOnly // It opens the overlay
+                    readOnly
                   />
                   <SearchIcon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
                 </div>
 
                 <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.home')}</NavLink>
+                <NavLink to="/quote-cart" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif flex items-center justify-between ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>
+                  Quote Cart
+                  {cartCount > 0 && <span className="bg-brand-gold text-brand-charcoal text-xs px-2 py-0.5 rounded-full">{cartCount}</span>}
+                </NavLink>
 
                 <div className="space-y-2">
                   <NavLink to="/products" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.products')}</NavLink>
@@ -400,7 +404,7 @@ export const Header: React.FC = () => {
                 <NavLink to="/blog" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.blog')}</NavLink>
                 <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.contact')}</NavLink>
 
-                <Button variant="secondary" onClick={() => navigate('/contact')} className="w-full mt-4">Get Quote</Button>
+                <Button variant="secondary" onClick={() => navigate('/contact')} className="w-full mt-4">Contact Us</Button>
               </nav>
             </motion.div>
           )}

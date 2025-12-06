@@ -9,12 +9,14 @@ import { ProductsIndex } from './pages/products/ProductsIndex';
 import { CategoryView } from './pages/products/CategoryView';
 import { SubcategoryView } from './pages/products/SubcategoryView';
 import { ProductDetail } from './pages/products/ProductDetail';
+import { QuoteCart } from './pages/QuoteCart';
 import { AdminLayout } from './pages/admin/AdminLayout';
 import { Dashboard } from './pages/admin/Dashboard';
 import { Login } from './pages/admin/Login';
 import { Migration } from './pages/admin/Migration';
 import { AuthProvider } from './components/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { CartProvider } from './components/CartProvider';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -40,6 +42,7 @@ const AppContent: React.FC = () => {
           <Route path="/catalogues" element={<Catalogues />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/quote-cart" element={<QuoteCart />} />
 
           {/* Product Routes */}
           <Route path="/products" element={<ProductsIndex />} />
@@ -68,10 +71,12 @@ const AppContent: React.FC = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <ScrollToTop />
-        <AppContent />
-      </Router>
+      <CartProvider>
+        <Router>
+          <ScrollToTop />
+          <AppContent />
+        </Router>
+      </CartProvider>
     </AuthProvider>
   );
 }
