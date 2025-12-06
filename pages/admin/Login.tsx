@@ -1,55 +1,88 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
+import { Lock, Mail, Loader2, AlertCircle } from 'lucide-react';
+import { Button } from '../../components/Shared';
 
 export const Login: React.FC = () => {
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Simple client-side auth for MVP
-        // In production, use Supabase Auth or proper backend verification
-        if (password === 'smith123') {
-            localStorage.setItem('admin_authenticated', 'true');
+        setLoading(true);
+        setError('');
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) {
+            setError(error.message);
+            setLoading(false);
+        } else if (data.session) {
             navigate('/admin');
-        } else {
-            setError(true);
         }
     };
 
     return (
-        <div className="min-h-screen bg-stone-100 flex items-center justify-center p-6">
-            <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-                <div className="flex justify-center mb-6">
-                    <div className="p-4 bg-brand-charcoal rounded-full text-brand-gold">
-                        <Lock size={32} />
-                    </div>
+        <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+                <div className="bg-brand-charcoal p-8 text-center border-b border-brand-gold/20">
+                    <h1 className="font-serif text-2xl text-white mb-2">Smith Instruments</h1>
+                    <p className="text-stone-400 text-sm">Secure Admin Access</p>
                 </div>
 
-                <h1 className="text-2xl font-serif text-center text-brand-charcoal mb-2">Admin Access</h1>
-                <p className="text-center text-stone-500 mb-8">Please enter the password to continue.</p>
+                <form onSubmit={handleLogin} className="p-8 space-y-6">
+                    {error && (
+                        <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm flex items-center gap-2">
+                            <AlertCircle size={16} />
+                            {error}
+                        </div>
+                    )}
 
-                <form onSubmit={handleLogin} className="space-y-4">
-                    <div>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => { setPassword(e.target.value); setError(false); }}
-                            placeholder="Password"
-                            className={`w-full p-4 rounded-lg bg-stone-50 border ${error ? 'border-red-500 focus:border-red-500' : 'border-stone-200 focus:border-brand-gold'} outline-none transition-colors`}
-                            autoFocus
-                        />
-                        {error && <p className="text-red-500 text-sm mt-2 ml-1">Incorrect password</p>}
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-stone-700">Email Address</label>
+                        <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
+                            <input
+                                type="email"
+                                required
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:border-brand-gold outline-none transition-colors"
+                                placeholder="admin@smith-instruments.com"
+                            />
+                        </div>
                     </div>
 
-                    <button
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-stone-700">Password</label>
+                        <div className="relative">
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
+                            <input
+                                type="password"
+                                required
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:border-brand-gold outline-none transition-colors"
+                                placeholder="••••••••"
+                            />
+                        </div>
+                    </div>
+
+                    <Button
                         type="submit"
-                        className="w-full py-4 bg-brand-charcoal text-white font-medium rounded-lg hover:bg-stone-800 transition-colors shadow-lg hover:shadow-xl"
+                        variant="primary"
+                        className="w-full justify-center"
+                        disabled={loading}
                     >
-                        Login
-                    </button>
+                        {loading ? <Loader2 className="animate-spin" size={20} /> : 'Sign In'}
+                    </Button>
                 </form>
             </div>
         </div>
