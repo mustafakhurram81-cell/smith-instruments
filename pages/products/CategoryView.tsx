@@ -28,9 +28,9 @@ async function getSubcategoryImages(category: string, subcategories: string[]): 
 }
 
 export const CategoryView: React.FC = () => {
-    const { categoryId } = useParams<{ categoryId: string }>();
+    const { categoryName } = useParams<{ categoryName: string }>();
     const navigate = useNavigate();
-    const category = decodeURIComponent(categoryId || '');
+    const category = decodeURIComponent(categoryName || '');
 
     const [subcategories, setSubcategories] = useState<string[]>([]);
     const [subcategoryImages, setSubcategoryImages] = useState<Record<string, string>>({});

@@ -6,11 +6,11 @@ import { getProductsBySubcategory, Product } from '../../lib/database';
 import { ChevronRight, Package, Loader2, Grid, LayoutGrid } from 'lucide-react';
 
 export const SubcategoryView: React.FC = () => {
-    const { categoryId, subcategoryId } = useParams<{ categoryId: string; subcategoryId: string }>();
+    const { categoryName, subcategoryName } = useParams<{ categoryName: string; subcategoryName: string }>();
     const navigate = useNavigate();
 
-    const category = decodeURIComponent(categoryId || '');
-    const subcategory = decodeURIComponent(subcategoryId || '');
+    const category = decodeURIComponent(categoryName || '');
+    const subcategory = decodeURIComponent(subcategoryName || '');
 
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);

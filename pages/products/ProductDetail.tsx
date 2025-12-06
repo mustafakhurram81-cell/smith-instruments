@@ -8,8 +8,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../components/CartProvider';
 
 export const ProductDetail: React.FC = () => {
-    const { productId } = useParams<{ productId: string }>();
-    const sku = decodeURIComponent(productId || '');
+    // Handle both /product/:productId and /products/:category/:subcategory/:productSKU
+    const { productId, productSKU } = useParams<{ productId?: string; productSKU?: string }>();
+    const sku = decodeURIComponent(productId || productSKU || '');
     const navigate = useNavigate();
     const { addToCart } = useCart();
 
