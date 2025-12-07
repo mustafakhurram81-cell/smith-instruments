@@ -174,25 +174,33 @@ export async function getCategoryDetails(): Promise<{ name: string; count: numbe
     let allCategories: { category: string }[] = [];
     let from = 0;
     let hasMore = true;
+    let safetyCounter = 0;
 
-    while (hasMore) {
-        const { data, error } = await supabase
-            .from('products')
-            .select('category')
-            .range(from, from + PAGE_SIZE - 1);
+    try {
+        while (hasMore && safetyCounter < 20) { // Safety limit: 20k items max
+            const { data, error } = await supabase
+                .from('products')
+                .select('category')
+                .range(from, from + PAGE_SIZE - 1);
 
-        if (error) {
-            console.error('Error fetching categories:', error);
-            break;
+            if (error) {
+                console.error('Error fetching categories:', error);
+                throw error;
+            }
+
+            if (data && data.length > 0) {
+                allCategories = [...allCategories, ...data];
+                from += PAGE_SIZE;
+                hasMore = data.length === PAGE_SIZE;
+            } else {
+                hasMore = false;
+            }
+            safetyCounter++;
         }
-
-        if (data && data.length > 0) {
-            allCategories = [...allCategories, ...data];
-            from += PAGE_SIZE;
-            hasMore = data.length === PAGE_SIZE;
-        } else {
-            hasMore = false;
-        }
+    } catch (err) {
+        console.error("Critical error in getCategoryDetails loop:", err);
+        // Continue with what we have if possible?
+        if (allCategories.length === 0) return [];
     }
 
     console.log(`Total products fetched for counts: ${allCategories.length}`);
@@ -208,21 +216,32 @@ export async function getCategoryDetails(): Promise<{ name: string; count: numbe
         }
     });
 
-    // 2. Fetch one image for each category in parallel
+    // 2. Fetch one image for each category in parallel with timeout/safety
     const details = await Promise.all(Array.from(uniqueCategories).map(async (cat) => {
-        // Fetch 1 product with an image for this category
-        const { data } = await supabase
-            .from('products')
-            .select('image_url')
-            .eq('category', cat)
-            .neq('image_url', '') // Ensure it has an image
-            .limit(1);
+        try {
+            // Fetch 1 product with an image for this category
+            const { data, error } = await supabase
+                .from('products')
+                .select('image_url')
+                .eq('category', cat)
+                .neq('image_url', '') // Ensure it has an image
+                .limit(1);
 
-        return {
-            name: cat,
-            count: counts[cat],
-            image: data?.[0]?.image_url || ''
-        };
+            if (error) throw error;
+
+            return {
+                name: cat,
+                count: counts[cat],
+                image: data?.[0]?.image_url || ''
+            };
+        } catch (e) {
+            console.error(`Error fetching image for category ${cat}:`, e);
+            return {
+                name: cat,
+                count: counts[cat],
+                image: ''
+            };
+        }
     }));
 
     return details.sort((a, b) => b.count - a.count);

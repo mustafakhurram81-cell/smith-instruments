@@ -59,31 +59,31 @@ export const Home: React.FC = () => {
         description="Smith Instruments: Premium manufacturer of precision surgical instruments. ISO certified, global shipping, and custom OEM solutions for healthcare professionals."
       />
       {/* HERO */}
-      {/* HERO */}
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
+      <section className="relative h-screen flex items-center bg-brand-charcoal">
         <div className="absolute inset-0 z-0">
           <img
             src={heroMethods}
             alt="Surgical Instruments Background"
             className="w-full h-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/70 to-transparent"></div>
+          {/* Subtle overlay for extra contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal/60 via-transparent to-transparent" />
         </div>
 
-        <div className="container mx-auto px-6 relative z-10 py-20 md:py-0">
-          <div className="max-w-4xl">
+        <div className="container mx-auto px-6 relative z-10 pt-20">
+          <div className="max-w-2xl">
             <FadeIn>
-              <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-brand-charcoal leading-[1.1] mb-6 md:mb-8 drop-shadow-sm">
+              <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.1] mb-6 md:mb-8">
                 We Mold the Metal <span className="block md:inline italic font-light text-brand-gold">to Serve Life.</span>
               </h1>
-              <p className="max-w-xl text-stone-600 text-base sm:text-lg md:text-xl font-light leading-relaxed mb-8 md:mb-12">
+              <p className="max-w-xl text-stone-300 text-base sm:text-lg md:text-xl font-light leading-relaxed mb-8 md:mb-12">
                 Crafting precision surgical instruments with unwavering commitment to quality and innovation for healthcare professionals worldwide.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-4 sm:gap-6">
                 <Button onClick={() => navigate('/catalogues')} variant="primary" className="shadow-lg shadow-brand-gold/20 px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
                   Explore Catalogue <ArrowRight size={16} className="ml-2 flex-shrink-0" />
                 </Button>
-                <Button onClick={() => navigate('/about')} variant="outline" className="text-brand-charcoal border-brand-charcoal hover:bg-brand-charcoal hover:text-white px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
+                <Button onClick={() => navigate('/about')} variant="outline" className="text-white border-white hover:bg-white hover:text-brand-charcoal px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
                   Our Story
                 </Button>
               </div>
@@ -91,9 +91,9 @@ export const Home: React.FC = () => {
           </div>
         </div>
 
-        <div className="absolute bottom-10 left-10 animate-pulse text-stone-400 flex items-center gap-4">
-          <div className="w-12 h-[1px] bg-brand-charcoal/20"></div>
-          <span className="text-xs uppercase tracking-widest text-brand-charcoal/50">Scroll</span>
+        <div className="absolute bottom-10 left-10 animate-pulse flex items-center gap-4">
+          <div className="w-12 h-[1px] bg-white/30" />
+          <span className="text-xs uppercase tracking-widest text-white/50">Scroll</span>
         </div>
       </section>
 

@@ -46,7 +46,11 @@ const translatePage = (langCode: string) => {
     window.location.reload();
 };
 
-export const LanguageSwitcher: React.FC = () => {
+interface LanguageSwitcherProps {
+    isTransparent?: boolean;
+}
+
+export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ isTransparent = false }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentLang, setCurrentLang] = useState('en');
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -83,34 +87,36 @@ export const LanguageSwitcher: React.FC = () => {
             {/* Hidden Google Translate element */}
             <div id="google_translate_element" className="hidden" />
 
-            {/* Custom Professional UI */}
+            {/* Compact Professional UI */}
             <div ref={dropdownRef} className="relative z-50">
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-full border border-stone-600 hover:border-brand-gold text-stone-300 hover:text-white transition-all duration-200 bg-brand-charcoal/50 backdrop-blur-sm"
+                    className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors ${isTransparent
+                            ? 'text-white hover:bg-white/10'
+                            : 'text-stone-600 hover:bg-stone-100 hover:text-brand-charcoal'
+                        }`}
+                    title={`Language: ${currentLanguage.name}`}
                 >
-                    <Globe size={16} />
-                    <span className="text-sm font-medium">{currentLanguage.flag} {currentLanguage.name}</span>
-                    <ChevronDown size={14} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                    <Globe size={18} />
                 </button>
 
                 {/* Dropdown */}
                 {isOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl py-2 border border-stone-100 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl py-1.5 border border-stone-100 overflow-hidden">
                         {LANGUAGES.map((lang) => (
                             <button
                                 key={lang.code}
                                 onClick={() => handleLanguageChange(lang.code)}
-                                className={`flex items-center justify-between w-full px-4 py-3 text-sm transition-colors ${currentLang === lang.code
-                                        ? 'bg-brand-gold/10 text-brand-gold font-medium'
-                                        : 'text-stone-700 hover:bg-stone-50'
+                                className={`flex items-center justify-between w-full px-3 py-2 text-xs transition-colors ${currentLang === lang.code
+                                    ? 'bg-brand-gold/10 text-brand-gold font-medium'
+                                    : 'text-stone-600 hover:bg-stone-50 hover:text-stone-800'
                                     }`}
                             >
-                                <span className="flex items-center gap-3">
-                                    <span className="text-lg">{lang.flag}</span>
+                                <span className="flex items-center gap-2">
+                                    <span className="text-sm">{lang.flag}</span>
                                     <span>{lang.name}</span>
                                 </span>
-                                {currentLang === lang.code && <Check size={16} />}
+                                {currentLang === lang.code && <Check size={12} />}
                             </button>
                         ))}
                     </div>

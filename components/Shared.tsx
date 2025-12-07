@@ -6,7 +6,7 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { searchProducts, Product } from '../lib/database';
 import { useCart } from './CartProvider';
 import { useCategoryDetails } from '../lib/queries';
-import logoFull from '../assets/smith-logo-full.jpg';
+import logoOriginal from '../assets/smith-logo-original.jpg';
 
 // Re-export UI components for backwards compatibility
 export { Button } from './ui/Button';
@@ -54,8 +54,8 @@ export const SearchOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> =
     return () => clearTimeout(timeout);
   }, [query]);
 
-  const handleSelect = (id: string) => {
-    navigate(`/product/${id}`);
+  const handleSelect = (sku: string) => {
+    navigate(`/product/${encodeURIComponent(sku)}`);
     onClose();
   };
 
@@ -101,7 +101,7 @@ export const SearchOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> =
                   {results.map(prod => (
                     <div
                       key={prod.id}
-                      onClick={() => handleSelect(prod.id)}
+                      onClick={() => handleSelect(prod.sku)}
                       className="flex items-center gap-4 p-3 hover:bg-stone-50 rounded-lg cursor-pointer transition-colors group"
                     >
                       <div className="w-12 h-12 bg-stone-200 rounded-md overflow-hidden flex-shrink-0 border border-stone-200">
@@ -158,34 +158,50 @@ export const Header: React.FC = () => {
   }, [location]);
 
   const isHome = location.pathname === '/';
+  const isTransparent = isHome && !isScrolled;
 
   return (
     <>
       <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
-      <header className="fixed top-0 left-0 right-0 z-40 transition-all duration-500 bg-white/95 backdrop-blur-md shadow-sm py-4">
+      <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 py-4 ${isTransparent
+        ? 'bg-transparent'
+        : 'bg-white/95 backdrop-blur-md shadow-sm'
+        }`}>
         <div className="container mx-auto px-6 flex items-center justify-between">
 
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
-              <div className="h-12 w-32 relative overflow-hidden">
+              <div className="h-12 w-48 relative overflow-hidden flex items-center">
                 <img
-                  src={logoFull}
+                  src={logoOriginal}
                   alt="Smith Instruments"
-                  className="w-full h-full object-contain filter-none"
+                  // Use CSS filters to create the white version from the original:
+                  // 1. Invert: White BG -> Black, Dark Text -> White, Gold -> Blue
+                  // 2. Hue-rotate 180deg: Blue -> Gold (restores the monogram color), Black -> Black, White -> White
+                  // 3. Mix-blend-mode screen: Black BG becomes transparent
+                  className={`w-full h-full object-contain transition-all duration-300 ${isTransparent
+                      ? 'filter invert hue-rotate-180 mix-blend-screen'
+                      : 'mix-blend-multiply'
+                    }`}
                 />
               </div>
             </div>
-            {/* LanguageSwitcher removed as per request */}
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            <NavLink to="/" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
+            <NavLink to="/" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+              ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
+              : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
+              }`}>
               Home
             </NavLink>
 
             <div className="relative group">
-              <NavLink to="/products" className={({ isActive }) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
+              <NavLink to="/products" className={({ isActive }) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+                ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
+                : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
+                }`}>
                 Products <ChevronDown size={14} />
               </NavLink>
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top translate-y-2 group-hover:translate-y-0 text-brand-charcoal border border-stone-100">
@@ -204,31 +220,47 @@ export const Header: React.FC = () => {
               </div>
             </div>
 
-            <NavLink to="/catalogues" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
+            <NavLink to="/catalogues" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+              ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
+              : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
+              }`}>
               Catalogues
             </NavLink>
-            <NavLink to="/about" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
+            <NavLink to="/about" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+              ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
+              : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
+              }`}>
               About Us
             </NavLink>
-            <NavLink to="/blog" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
+            <NavLink to="/blog" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+              ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
+              : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
+              }`}>
               Blog
             </NavLink>
-            <NavLink to="/contact" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
+            <NavLink to="/contact" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+              ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
+              : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
+              }`}>
               Contact
             </NavLink>
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher isTransparent={isTransparent} />
+
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="p-2 rounded-full hover:bg-stone-100 transition-colors text-brand-charcoal"
+              className={`p-2 rounded-full transition-colors ${isTransparent ? 'text-white hover:bg-white/10' : 'text-brand-charcoal hover:bg-stone-100'
+                }`}
             >
               <SearchIcon size={20} />
             </button>
 
             <NavLink
               to="/quote-cart"
-              className="relative p-2 rounded-full hover:bg-stone-100 transition-colors text-brand-charcoal"
+              className={`relative p-2 rounded-full transition-colors ${isTransparent ? 'text-white hover:bg-white/10' : 'text-brand-charcoal hover:bg-stone-100'
+                }`}
             >
               <ShoppingCart size={20} />
               {cartCount > 0 && (
@@ -239,7 +271,7 @@ export const Header: React.FC = () => {
             </NavLink>
 
             <button
-              className="md:hidden focus:outline-none text-brand-charcoal"
+              className={`md:hidden focus:outline-none ${isTransparent ? 'text-white' : 'text-brand-charcoal'}`}
               onClick={() => setIsMobileOpen(!isMobileOpen)}
             >
               {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
@@ -296,76 +328,78 @@ export const Header: React.FC = () => {
     </>
   );
 };
-
 // --- FOOTER ---
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-brand-charcoal text-stone-300 pt-20 pb-10 border-t border-stone-800">
-      <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-stone-800 pb-16">
+    <footer className="bg-brand-charcoal text-stone-300 pt-16 pb-8">
+      <div className="container mx-auto px-6">
+        {/* Main Footer Content - 3 Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-stone-700">
 
-        {/* Brand */}
-        <div className="space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="h-12 w-32 relative overflow-hidden">
+          {/* Brand */}
+          <div className="space-y-5">
+            <div className="h-10 w-36 relative overflow-hidden">
               <img
-                src={logoFull}
+                src={logoOriginal}
                 alt="Smith Instruments"
-                className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
+                className="w-full h-full object-contain filter invert hue-rotate-180 mix-blend-screen opacity-90"
               />
             </div>
+            <p className="text-sm font-light leading-relaxed text-stone-400">
+              Precision engineered surgical instruments for the modern medical world.
+            </p>
+            <div className="flex gap-3">
+              <a href="https://www.facebook.com/smithinstrumentsusa" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-stone-700 hover:bg-brand-gold flex items-center justify-center transition-colors">
+                <Facebook size={16} />
+              </a>
+              <a href="https://www.instagram.com/smithinstruments/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-stone-700 hover:bg-brand-gold flex items-center justify-center transition-colors">
+                <Instagram size={16} />
+              </a>
+            </div>
           </div>
-          <p className="text-sm font-light leading-relaxed max-w-xs text-stone-400">
-            Molding the metal to serve life. Precision engineered surgical instruments for the modern medical world.
+
+          {/* Quick Links - Two Columns */}
+          <div>
+            <h3 className="text-white font-medium text-sm uppercase tracking-wider mb-5">Explore</h3>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+              <NavLink to="/" className="text-sm text-stone-400 hover:text-white transition-colors">Home</NavLink>
+              <NavLink to="/about" className="text-sm text-stone-400 hover:text-white transition-colors">About Us</NavLink>
+              <NavLink to="/products" className="text-sm text-stone-400 hover:text-white transition-colors">Products</NavLink>
+              <NavLink to="/blog" className="text-sm text-stone-400 hover:text-white transition-colors">Blog</NavLink>
+              <NavLink to="/catalogues" className="text-sm text-stone-400 hover:text-white transition-colors">Catalogues</NavLink>
+              <NavLink to="/contact" className="text-sm text-stone-400 hover:text-white transition-colors">Contact</NavLink>
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-white font-medium text-sm uppercase tracking-wider mb-5">Contact</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Mail size={14} className="text-brand-gold flex-shrink-0" />
+                <span className="text-sm text-stone-400">sales@smithinstruments.com</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone size={14} className="text-brand-gold flex-shrink-0" />
+                <span className="text-sm text-stone-400">+92 330 2449855</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <MapPin size={14} className="text-brand-gold flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-stone-400">123 Medical Park Blvd,<br />New York, NY 10012, USA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Copyright Bar with Legal Links */}
+        <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-stone-500">
+            © {new Date().getFullYear()} Smith Instruments. All Rights Reserved.
           </p>
-          <div className="flex gap-4">
-            <a href="https://www.facebook.com/smithinstrumentsusa" target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-brand-gold transition-colors"><Facebook size={20} /></a>
-            <a href="https://www.instagram.com/smithinstruments/" target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-brand-gold transition-colors"><Instagram size={20} /></a>
+          <div className="flex items-center gap-6 text-xs text-stone-500">
+            <NavLink to="/privacy-policy" className="hover:text-stone-300 transition-colors">Privacy Policy</NavLink>
+            <NavLink to="/terms-of-service" className="hover:text-stone-300 transition-colors">Terms of Service</NavLink>
           </div>
-        </div>
-
-        {/* Links */}
-        <div className="flex flex-col space-y-4">
-          <h3 className="text-white font-serif text-lg mb-2">Explore</h3>
-          <NavLink to="/" className="hover:text-white transition-colors text-sm">Home</NavLink>
-          <NavLink to="/products" className="hover:text-white transition-colors text-sm">Products</NavLink>
-          <NavLink to="/catalogues" className="hover:text-white transition-colors text-sm">Catalogues</NavLink>
-          <NavLink to="/about" className="hover:text-white transition-colors text-sm">About Us</NavLink>
-          <NavLink to="/blog" className="hover:text-white transition-colors text-sm">Blog</NavLink>
-          <NavLink to="/contact" className="hover:text-white transition-colors text-sm">Contact</NavLink>
-        </div>
-
-        {/* Contact */}
-        <div className="space-y-4">
-          <h3 className="text-white font-serif text-lg mb-2">Connect</h3>
-          <div className="flex items-start gap-3">
-            <Mail size={16} className="mt-1 text-brand-gold" />
-            <span className="text-sm">sales@smithinstruments.com</span>
-          </div>
-          <div className="flex items-start gap-3">
-            <Phone size={16} className="mt-1 text-brand-gold" />
-            <span className="text-sm">+92 330 2449855</span>
-          </div>
-          <div className="flex items-start gap-3">
-            <MapPin size={16} className="mt-1 text-brand-gold" />
-            <span className="text-sm">123 Medical Park Blvd,<br />New York, NY 10012, USA</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-stone-500">
-        <div className="flex flex-col items-center md:items-start gap-1">
-          <p className="flex items-center gap-2">
-            <span className="text-brand-gold">✦</span>
-            <span>&copy; {new Date().getFullYear()} Smith Instruments</span>
-            <span className="text-stone-600">•</span>
-            <span className="italic text-stone-400">Est. 2002</span>
-            <span className="text-brand-gold">✦</span>
-          </p>
-          <p className="text-stone-600 text-[10px] tracking-widest uppercase">Precision Crafted in the USA</p>
-        </div>
-        <div className="flex gap-6 mt-4 md:mt-0">
-          <NavLink to="/privacy-policy" className="hover:text-stone-300">Privacy Policy</NavLink>
-          <NavLink to="/terms-of-service" className="hover:text-stone-300">Terms of Service</NavLink>
         </div>
       </div>
     </footer>

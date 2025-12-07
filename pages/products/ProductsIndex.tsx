@@ -8,7 +8,7 @@ import { ArrowRight } from 'lucide-react';
 
 export const ProductsIndex: React.FC = () => {
     const navigate = useNavigate();
-    const { data: categories = [], isLoading } = useCategoryDetails();
+    const { data: categories = [], isLoading, error } = useCategoryDetails();
 
     const totalProducts = categories.reduce((acc, c) => acc + c.count, 0);
 
@@ -43,6 +43,10 @@ export const ProductsIndex: React.FC = () => {
                 <div className="container mx-auto px-6">
                     {isLoading ? (
                         <CategoryGridSkeleton count={8} />
+                    ) : error ? (
+                        <div className="text-center py-10 text-red-500">
+                            Failed to load products. please try again later. {(error as any).message}
+                        </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {categories.map((cat, idx) => (
