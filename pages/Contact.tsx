@@ -3,6 +3,7 @@ import { Section, Button, FadeIn } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { Plus, Minus, Phone, Mail, MapPin, MessageCircle, Clock, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const FAQS = [
   { q: "What materials are used in your instruments?", a: "We strictly use high-grade German Stainless Steel (AISI 410, 420, 304) depending on the instrument type, ensuring corrosion resistance and longevity." },
@@ -34,17 +35,32 @@ const AccordionItem: React.FC<{ item: { q: string, a: string } }> = ({ item }) =
   );
 };
 
+// reCAPTCHA site key - Replace with your actual site key from https://www.google.com/recaptcha/admin
+const RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // Test key - replace in production
+
 export const Contact: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [captchaVerified, setCaptchaVerified] = useState(false);
 
   // TODO: Replace these with your actual EmailJS credentials
   const SERVICE_ID = 'service_dzj0fa2';
   const TEMPLATE_ID = 'template_3kqu18e';
   const PUBLIC_KEY = 'JVcDcowpyoY1HnUQO';
 
+  const handleCaptchaChange = (token: string | null) => {
+    setCaptchaVerified(!!token);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!captchaVerified) {
+      alert('Please complete the CAPTCHA verification');
+      return;
+    }
+
     setFormStatus('sending');
 
     if (form.current) {
@@ -52,6 +68,8 @@ export const Contact: React.FC = () => {
         .then((result) => {
           console.log(result.text);
           setFormStatus('success');
+          setCaptchaVerified(false);
+          recaptchaRef.current?.reset();
           // Reset form status after 5 seconds to allow sending another
           setTimeout(() => setFormStatus('idle'), 5000);
         }, (error) => {
@@ -227,8 +245,18 @@ export const Contact: React.FC = () => {
                       <p className="text-xs text-stone-400 mt-2 text-right">0/1000 characters</p>
                     </div>
 
+                    {/* reCAPTCHA */}
+                    <div className="flex justify-center">
+                      <ReCAPTCHA
+                        ref={recaptchaRef}
+                        sitekey={RECAPTCHA_SITE_KEY}
+                        onChange={handleCaptchaChange}
+                        theme="light"
+                      />
+                    </div>
+
                     <div className="pt-4">
-                      <Button type="submit" variant="secondary" disabled={formStatus === 'sending'} className="w-full md:w-auto px-10 flex items-center gap-2">
+                      <Button type="submit" variant="secondary" disabled={formStatus === 'sending' || !captchaVerified} className="w-full md:w-auto px-10 flex items-center gap-2">
                         {formStatus === 'sending' ? (
                           <>
                             <Loader2 className="animate-spin" size={18} /> Sending...

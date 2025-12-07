@@ -168,11 +168,14 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
               <div className="h-12 w-32 relative overflow-hidden">
-                <img
-                  src="/smith-logo-full.jpg"
-                  alt="Smith Instruments"
-                  className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
-                />
+                <picture>
+                  <source srcSet="/smith-logo-full.webp" type="image/webp" />
+                  <img
+                    src="/smith-logo-full.jpg"
+                    alt="Smith Instruments"
+                    className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
+                  />
+                </picture>
               </div>
             </div>
             <div className="hidden md:block">
@@ -308,11 +311,14 @@ export const Footer: React.FC = () => {
         <div className="space-y-6">
           <div className="flex items-center gap-3">
             <div className="h-12 w-32 relative overflow-hidden">
-              <img
-                src="/smith-logo-full.jpg"
-                alt="Smith Instruments"
-                className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
-              />
+              <picture>
+                <source srcSet="/smith-logo-full.webp" type="image/webp" />
+                <img
+                  src="/smith-logo-full.jpg"
+                  alt="Smith Instruments"
+                  className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
+                />
+              </picture>
             </div>
           </div>
           <p className="text-sm font-light leading-relaxed max-w-xs text-stone-400">
@@ -356,8 +362,8 @@ export const Footer: React.FC = () => {
       <div className="container mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-stone-500">
         <p>&copy; {new Date().getFullYear()} Smith Instruments. All rights reserved.</p>
         <div className="flex gap-6 mt-4 md:mt-0">
-          <a href="#" className="hover:text-stone-300">Privacy Policy</a>
-          <a href="#" className="hover:text-stone-300">Terms of Service</a>
+          <NavLink to="/privacy-policy" className="hover:text-stone-300">Privacy Policy</NavLink>
+          <NavLink to="/terms-of-service" className="hover:text-stone-300">Terms of Service</NavLink>
         </div>
       </div>
     </footer>

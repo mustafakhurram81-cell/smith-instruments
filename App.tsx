@@ -5,6 +5,9 @@ import { Home } from './pages/Home';
 import { Catalogues } from './pages/Catalogues';
 import { About } from './pages/About';
 import { Contact } from './pages/Contact';
+import { Blog } from './pages/Blog';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsOfService } from './pages/TermsOfService';
 import { ProductsIndex } from './pages/products/ProductsIndex';
 import { CategoryView } from './pages/products/CategoryView';
 import { SubcategoryView } from './pages/products/SubcategoryView';
@@ -41,7 +44,10 @@ const AppContent: React.FC = () => {
           <Route path="/catalogues" element={<Catalogues />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="/quote-cart" element={<QuoteCart />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
 
           {/* Product Routes */}
           <Route path="/products" element={<ProductsIndex />} />
