@@ -32,17 +32,33 @@ export async function getCategories(): Promise<string[]> {
     return categories;
 }
 
-// Get subcategories for a category with counts and images
+// Get subcategories for a category with counts and images - with pagination
 export async function getSubcategoryDetails(category: string): Promise<{ name: string; count: number; image: string }[]> {
-    // 1. Get all products for this category to count per subcategory
-    const { data: products, error } = await supabase
-        .from('products')
-        .select('subcategory, image_url')
-        .eq('category', category);
+    // Paginate to get ALL products for this category
+    const PAGE_SIZE = 1000;
+    let allProducts: { subcategory: string; image_url: string }[] = [];
+    let from = 0;
+    let hasMore = true;
 
-    if (error) {
-        console.error('Error fetching subcategory details:', error);
-        return [];
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('subcategory, image_url')
+            .eq('category', category)
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching subcategory details:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
     }
 
     // Calculate counts and get one image per subcategory
@@ -50,7 +66,7 @@ export async function getSubcategoryDetails(category: string): Promise<{ name: s
     const images: Record<string, string> = {};
     const uniqueSubcategories = new Set<string>();
 
-    products.forEach(p => {
+    allProducts.forEach(p => {
         if (p.subcategory && p.subcategory !== 'General') {
             counts[p.subcategory] = (counts[p.subcategory] || 0) + 1;
             uniqueSubcategories.add(p.subcategory);
@@ -70,19 +86,35 @@ export async function getSubcategoryDetails(category: string): Promise<{ name: s
     return details.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-// Get products by category (no limit to ensure accurate counts)
+// Get products by category - with pagination to get ALL
 export async function getProductsByCategory(category: string): Promise<Product[]> {
-    const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('category', category);
+    const PAGE_SIZE = 1000;
+    let allProducts: Product[] = [];
+    let from = 0;
+    let hasMore = true;
 
-    if (error) {
-        console.error('Error fetching products:', error);
-        return [];
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('category', category)
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching products:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
     }
 
-    return data || [];
+    return allProducts;
 }
 
 // Get products by category and subcategory
@@ -133,27 +165,47 @@ export async function searchProducts(query: string): Promise<Product[]> {
     return data || [];
 }
 
-// Get detailed category info (count + image)
+// Get detailed category info (count + image) - with pagination to get ALL products
 export async function getCategoryDetails(): Promise<{ name: string; count: number; image: string }[]> {
     console.log('Fetching category details...');
 
-    // 1. Get counts using a light query (headless)
-    const { data: categories, error } = await supabase
-        .from('products')
-        .select('category');
+    // Paginate to get ALL products (Supabase defaults to 1000 max)
+    const PAGE_SIZE = 1000;
+    let allCategories: { category: string }[] = [];
+    let from = 0;
+    let hasMore = true;
 
-    if (error) {
-        console.error('Error fetching categories:', error);
-        return [];
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('category')
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching categories:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allCategories = [...allCategories, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
     }
+
+    console.log(`Total products fetched for counts: ${allCategories.length}`);
 
     // Calculate counts locally
     const counts: Record<string, number> = {};
     const uniqueCategories = new Set<string>();
 
-    categories.forEach(p => {
-        counts[p.category] = (counts[p.category] || 0) + 1;
-        uniqueCategories.add(p.category);
+    allCategories.forEach(p => {
+        if (p.category) {
+            counts[p.category] = (counts[p.category] || 0) + 1;
+            uniqueCategories.add(p.category);
+        }
     });
 
     // 2. Fetch one image for each category in parallel
