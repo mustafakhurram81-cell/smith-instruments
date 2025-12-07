@@ -10,27 +10,38 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
-                serif: ['Playfair Display', 'serif'],
+                serif: ['Manrope', 'sans-serif'], // Replacing Playfair with Manrope for modern engineered look
+            },
+            borderRadius: {
+                'none': '0',
+                'sm': '0', // Force sharp corners even on small radii
+                'DEFAULT': '0',
+                'md': '0',
+                'lg': '0',
+                'xl': '0',
+                '2xl': '0',
+                '3xl': '0',
+                'full': '9999px',
             },
             colors: {
                 stone: {
-                    50: '#fafafa', // Clinical White
-                    100: '#f4f4f5', // Zinc 100
-                    200: '#e4e4e7', // Zinc 200 (Steel)
-                    300: '#d4d4d8',
-                    400: '#a1a1aa',
-                    500: '#71717a',
-                    600: '#52525b',
-                    700: '#3f3f46',
-                    800: '#27272a',
-                    900: '#18181b', // Cool Charcoal
-                    950: '#09090b',
+                    50: '#ffffff', // Pure White for blending product images
+                    100: '#f8fafc', // Ultra light slate
+                    200: '#e2e8f0', // Slight separation
+                    300: '#cbd5e1',
+                    400: '#94a3b8',
+                    500: '#64748b',
+                    600: '#475569',
+                    700: '#334155',
+                    800: '#1e293b',
+                    900: '#0f172a', // Deep Navy/Slate (The new "Black")
+                    950: '#020617',
                 },
                 brand: {
-                    gold: '#C5B495', // Muted Gold/Beige
-                    charcoal: '#262626', // Deep Rich Charcoal
-                    dark: '#1c1917', // Stone 900
-                    light: '#faf9f6', // Stone 50
+                    gold: '#c5a059', // Metallic Matte Gold
+                    charcoal: '#0f172a', // Align with Slate 900
+                    dark: '#0f172a',
+                    light: '#ffffff',
                 }
             }
         },
