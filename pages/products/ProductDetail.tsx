@@ -104,7 +104,7 @@ export const ProductDetail: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {/* Image with Zoom */}
                         <div
-                            className="bg-stone-100 rounded-2xl overflow-hidden aspect-square flex items-center justify-center relative cursor-zoom-in group"
+                            className="bg-white overflow-hidden aspect-square flex items-center justify-center relative cursor-zoom-in group"
                             onClick={() => product.image_url && setIsZoomed(true)}
                         >
                             {product.image_url ? (

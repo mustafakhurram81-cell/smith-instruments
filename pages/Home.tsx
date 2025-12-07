@@ -167,51 +167,8 @@ export const Home: React.FC = () => {
         </div>
       </Section>
 
-      {/* PRECISION ENGINEERING SHOWCASE */}
-      <Section className="bg-white py-0 pb-20">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <FadeIn>
-              <div className="relative rounded-sm overflow-hidden shadow-2xl">
-                <img
-                  src={featureInstruments}
-                  alt="Macro view of surgical instrument precision"
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute inset-0 bg-brand-charcoal/10 mix-blend-multiply"></div>
-              </div>
-            </FadeIn>
-            <FadeIn delay={0.2}>
-              <div>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="h-[1px] w-12 bg-brand-gold"></div>
-                  <span className="text-brand-gold uppercase tracking-widest text-xs font-bold">Uncompromising Quality</span>
-                </div>
-                <h2 className="font-serif text-4xl lg:text-5xl text-brand-charcoal mb-6 leading-tight">
-                  Precision in <br />Every Micro-Detail.
-                </h2>
-                <p className="text-stone-600 font-light text-lg mb-6 leading-relaxed">
-                  Our instruments are not just tools; they are extensions of the surgeon's hands. We use high-grade German Stainless Steel and Tungsten Carbide inserts to ensure longevity, perfect balance, and corrosion resistance.
-                </p>
-                <ul className="space-y-4 mb-8">
-                  {['Tungsten Carbide Inserts', 'German Stainless Steel (AISI 410/420)', 'Hand-Finished Calibration', 'Corrosion Resistant Coating'].map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-stone-700">
-                      <ShieldCheck size={18} className="text-brand-gold" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <Button onClick={() => navigate('/about')} variant="secondary" className="px-8">
-                  Learn About Our Process
-                </Button>
-              </div>
-            </FadeIn>
-          </div>
-        </div>
-      </Section>
-
       {/* PRODUCTS CAROUSEL */}
-      <Section className="bg-stone-100 overflow-hidden relative">
+      <Section className="bg-white overflow-hidden relative">
         <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-2xl">
             <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Our Products</h2>

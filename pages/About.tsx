@@ -75,35 +75,35 @@ export const About: React.FC = () => {
       </section>
 
       {/* 3. THE TRUST MODEL */}
-      <section className="bg-brand-charcoal py-32 text-white relative overflow-hidden">
+      <section className="bg-stone-100 py-32 text-stone-600 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
-          <div className="w-96 h-96 border-[40px] border-white rounded-full absolute -top-20 -left-20"></div>
-          <div className="w-96 h-96 border-[40px] border-white rounded-full absolute -bottom-20 -right-20"></div>
+          <div className="w-96 h-96 border-[40px] border-brand-charcoal rounded-full absolute -top-20 -left-20"></div>
+          <div className="w-96 h-96 border-[40px] border-brand-charcoal rounded-full absolute -bottom-20 -right-20"></div>
         </div>
 
         <div className="container mx-auto px-6 relative z-10 text-center">
           <FadeIn>
             <Handshake className="w-20 h-20 text-brand-gold mx-auto mb-8" strokeWidth={1} />
-            <h2 className="font-serif text-4xl md:text-6xl mb-8">Our Philosophy: <br />Trust Before Payment.</h2>
-            <p className="text-xl md:text-2xl font-light text-stone-300 max-w-3xl mx-auto leading-relaxed mb-12">
+            <h2 className="font-serif text-4xl md:text-6xl text-brand-charcoal mb-8">Our Philosophy: <br />Trust Before Payment.</h2>
+            <p className="text-xl md:text-2xl font-light text-stone-500 max-w-3xl mx-auto leading-relaxed mb-12">
               What truly sets us apart is our belief in earning your trust. <br />
-              <span className="text-white font-normal border-b border-brand-gold pb-1">You only pay after receiving your instruments and being completely satisfied.</span>
+              <span className="text-brand-charcoal font-normal border-b border-brand-gold pb-1">You only pay after receiving your instruments and being completely satisfied.</span>
             </p>
             <div className="grid md:grid-cols-3 gap-8 text-left max-w-4xl mx-auto mt-16">
-              <div className="bg-white/5 p-8 border border-white/10 rounded-sm">
+              <div className="bg-white p-8 border border-stone-200 shadow-sm rounded-sm">
                 <CheckCircle2 className="text-brand-gold mb-4" />
-                <h4 className="font-serif text-xl mb-2">Inspect First</h4>
-                <p className="text-sm text-stone-400">Receive your order and inspect the quality firsthand in your own facility.</p>
+                <h4 className="font-serif text-xl text-brand-charcoal mb-2">Inspect First</h4>
+                <p className="text-sm text-stone-500">Receive your order and inspect the quality firsthand in your own facility.</p>
               </div>
-              <div className="bg-white/5 p-8 border border-white/10 rounded-sm">
+              <div className="bg-white p-8 border border-stone-200 shadow-sm rounded-sm">
                 <ShieldCheck className="text-brand-gold mb-4" />
-                <h4 className="font-serif text-xl mb-2">Zero Risk</h4>
-                <p className="text-sm text-stone-400">If it doesn't meet your standards, simply return it. No questions asked.</p>
+                <h4 className="font-serif text-xl text-brand-charcoal mb-2">Zero Risk</h4>
+                <p className="text-sm text-stone-500">If it doesn't meet your standards, simply return it. No questions asked.</p>
               </div>
-              <div className="bg-white/5 p-8 border border-white/10 rounded-sm">
+              <div className="bg-white p-8 border border-stone-200 shadow-sm rounded-sm">
                 <Heart className="text-brand-gold mb-4" />
-                <h4 className="font-serif text-xl mb-2">Long-term Partners</h4>
-                <p className="text-sm text-stone-400">This model reflects our confidence in our quality and our commitment to you.</p>
+                <h4 className="font-serif text-xl text-brand-charcoal mb-2">Long-term Partners</h4>
+                <p className="text-sm text-stone-500">This model reflects our confidence in our quality and our commitment to you.</p>
               </div>
             </div>
           </FadeIn>
