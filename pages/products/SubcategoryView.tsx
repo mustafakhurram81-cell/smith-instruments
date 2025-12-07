@@ -83,9 +83,9 @@ export const SubcategoryView: React.FC = () => {
                                     <FadeIn key={product.sku} delay={Math.min(idx * 0.02, 0.5)}>
                                         <div
                                             onClick={() => navigate(`/product/${encodeURIComponent(product.sku)}`)}
-                                            className="group cursor-pointer bg-white transition-all duration-300"
+                                            className="group cursor-pointer bg-white border border-stone-100 hover:border-stone-200 hover:shadow-md transition-all duration-300"
                                         >
-                                            <div className={`bg-white relative overflow-hidden ${viewMode === 'grid' ? 'aspect-square' : 'aspect-square'}`}>
+                                            <div className={`bg-stone-50 relative overflow-hidden ${viewMode === 'grid' ? 'aspect-square' : 'aspect-square'}`}>
                                                 {product.image_url ? (
                                                     <img
                                                         src={product.image_url}

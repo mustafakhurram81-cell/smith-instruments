@@ -149,11 +149,11 @@ export const Catalogues: React.FC = () => {
       </Section>
 
       {/* Custom Solution CTA */}
-      <section className="py-24 bg-brand-charcoal text-stone-100">
+      <section className="py-24 bg-brand-gold/5 bg-noise">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="font-serif text-3xl md:text-4xl mb-6 text-white">Can't find what you need?</h2>
-          <p className="mb-10 text-stone-400 font-light text-lg">We offer OEM manufacturing and custom instrument modification.</p>
-          <Button variant="secondary" className="text-brand-gold border-brand-gold border hover:bg-brand-gold hover:text-brand-charcoal" onClick={() => navigate('/contact')}>
+          <h2 className="font-serif text-3xl md:text-4xl mb-6 text-brand-charcoal">Can't find what you need?</h2>
+          <p className="mb-10 text-stone-500 font-light text-lg">We offer OEM manufacturing and custom instrument modification.</p>
+          <Button variant="primary" onClick={() => navigate('/contact')}>
             Request Custom Solution
           </Button>
         </div>

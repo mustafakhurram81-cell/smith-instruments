@@ -151,9 +151,9 @@ export const CategoryView: React.FC = () => {
                                     <FadeIn key={product.sku} delay={idx * 0.02}>
                                         <div
                                             onClick={() => navigate(`/product/${product.sku}`)}
-                                            className="group cursor-pointer bg-white transition-all"
+                                            className="group cursor-pointer bg-white border border-stone-100 hover:border-stone-200 hover:shadow-md transition-all"
                                         >
-                                            <div className="aspect-square bg-white relative overflow-hidden">
+                                            <div className="aspect-square bg-stone-50 relative overflow-hidden">
                                                 {product.image_url ? (
                                                     <img
                                                         src={product.image_url}

@@ -215,9 +215,9 @@ export const ProductDetail: React.FC = () => {
                                 <FadeIn key={prod.id} delay={idx * 0.1}>
                                     <div
                                         onClick={() => navigate(`/product/${encodeURIComponent(prod.sku)}`)}
-                                        className="group cursor-pointer bg-white rounded-xl overflow-hidden border border-stone-200 hover:shadow-lg hover:border-brand-gold/30 transition-all duration-300"
+                                        className="group cursor-pointer bg-white overflow-hidden border border-stone-100 hover:shadow-lg hover:border-brand-gold/30 transition-all duration-300"
                                     >
-                                        <div className="aspect-square bg-stone-100 overflow-hidden">
+                                        <div className="aspect-square bg-stone-50 overflow-hidden">
                                             {prod.image_url ? (
                                                 <img
                                                     src={prod.image_url}
