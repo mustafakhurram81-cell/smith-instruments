@@ -14,17 +14,20 @@ export const About: React.FC = () => {
         description="Learn about Smith Instruments' 20+ years of heritage in manufacturing precision surgical tools using German stainless steel."
       />
       {/* 1. CINEMATIC HERO */}
-      <div className="relative h-[80vh] flex items-center justify-center bg-brand-charcoal overflow-hidden">
-        <div className="absolute inset-0 opacity-50">
-          <img src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&q=80&w=2000" alt="Steel Texture" className="w-full h-full object-cover" />
+      <div className="relative h-[60vh] flex items-center justify-center bg-white overflow-hidden">
+        <div className="absolute inset-0">
+          <picture>
+            <source srcSet="/about-clinic.webp" type="image/webp" />
+            <img src="/about-clinic.png" alt="Modern Medical Facility" className="w-full h-full object-cover" />
+          </picture>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-charcoal/60 via-brand-charcoal/80 to-stone-50"></div>
+        <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]"></div>
 
         <div className="relative z-10 container mx-auto px-6 text-center mt-20">
           <FadeIn>
-            <span className="text-brand-gold uppercase tracking-[0.3em] text-sm font-bold mb-4 block">Est. 2002 • USA Based</span>
-            <h1 className="font-serif text-6xl md:text-8xl text-white mb-6 tracking-tight">Defining Precision</h1>
-            <p className="text-xl md:text-2xl font-light tracking-wide text-brand-gold opacity-90 max-w-2xl mx-auto">
+            <span className="text-brand-charcoal uppercase tracking-[0.3em] text-sm font-bold mb-4 block">Est. 2002 • USA Based</span>
+            <h1 className="font-serif text-5xl md:text-7xl text-brand-charcoal mb-6 tracking-tight drop-shadow-sm">Defining Precision</h1>
+            <p className="text-xl md:text-2xl font-light tracking-wide text-stone-600 max-w-2xl mx-auto">
               In-house manufacturing. 50+ Artisans. One standard of excellence.
             </p>
           </FadeIn>

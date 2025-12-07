@@ -57,33 +57,37 @@ export const Home: React.FC = () => {
         description="Smith Instruments: Premium manufacturer of precision surgical instruments. ISO certified, global shipping, and custom OEM solutions for healthcare professionals."
       />
       {/* HERO */}
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-brand-charcoal">
+      {/* HERO */}
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
         <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1626315869436-d6781ba69d6e?q=80&w=2070&auto=format&fit=crop"
-            alt="Surgical Instruments Background"
-            className="w-full h-full object-cover object-center opacity-60"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal via-brand-charcoal/80 to-transparent"></div>
+          <picture>
+            <source srcSet="/hero-instruments.webp" type="image/webp" />
+            <img
+              src="/hero-instruments.png"
+              alt="Surgical Instruments Background"
+              className="w-full h-full object-cover object-center"
+            />
+          </picture>
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/70 to-transparent"></div>
         </div>
 
         <div className="container mx-auto px-6 relative z-10 py-20 md:py-0">
           <div className="max-w-4xl">
             <FadeIn>
-              <div className="inline-block border border-brand-gold/50 px-4 py-1 mb-6 md:mb-8 rounded-full backdrop-blur-sm">
-                <span className="text-brand-gold text-xs tracking-[0.2em] uppercase font-bold">Premium Surgical Solutions</span>
+              <div className="inline-block border border-brand-charcoal/30 px-4 py-1 mb-6 md:mb-8 rounded-full backdrop-blur-sm bg-white/50">
+                <span className="text-brand-charcoal text-xs tracking-[0.2em] uppercase font-bold">Premium Surgical Solutions</span>
               </div>
-              <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[1.1] mb-6 md:mb-8 drop-shadow-lg">
-                We Mold the Metal <span className="block md:inline italic font-light text-stone-300">to Serve Life.</span>
+              <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-brand-charcoal leading-[1.1] mb-6 md:mb-8 drop-shadow-sm">
+                We Mold the Metal <span className="block md:inline italic font-light text-brand-gold">to Serve Life.</span>
               </h1>
-              <p className="max-w-xl text-stone-200 text-base sm:text-lg md:text-xl font-light leading-relaxed mb-8 md:mb-12 drop-shadow-md">
+              <p className="max-w-xl text-stone-600 text-base sm:text-lg md:text-xl font-light leading-relaxed mb-8 md:mb-12">
                 Crafting precision surgical instruments with unwavering commitment to quality and innovation for healthcare professionals worldwide.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-4 sm:gap-6">
                 <Button onClick={() => navigate('/catalogues')} variant="primary" className="shadow-lg shadow-brand-gold/20 px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
                   Explore Catalogue <ArrowRight size={16} className="ml-2 flex-shrink-0" />
                 </Button>
-                <Button onClick={() => navigate('/about')} variant="outline" className="text-white border-white hover:bg-white hover:text-brand-charcoal px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
+                <Button onClick={() => navigate('/about')} variant="outline" className="text-brand-charcoal border-brand-charcoal hover:bg-brand-charcoal hover:text-white px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
                   Our Story
                 </Button>
               </div>
@@ -92,8 +96,8 @@ export const Home: React.FC = () => {
         </div>
 
         <div className="absolute bottom-10 left-10 animate-pulse text-stone-400 flex items-center gap-4">
-          <div className="w-12 h-[1px] bg-stone-400/50"></div>
-          <span className="text-xs uppercase tracking-widest">Scroll</span>
+          <div className="w-12 h-[1px] bg-brand-charcoal/20"></div>
+          <span className="text-xs uppercase tracking-widest text-brand-charcoal/50">Scroll</span>
         </div>
       </section>
 
@@ -164,8 +168,54 @@ export const Home: React.FC = () => {
         </div>
       </Section>
 
+      {/* PRECISION ENGINEERING SHOWCASE */}
+      <Section className="bg-stone-50 py-0 pb-20">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <FadeIn>
+              <div className="relative rounded-sm overflow-hidden shadow-2xl">
+                <picture>
+                  <source srcSet="/feature-instruments.webp" type="image/webp" />
+                  <img
+                    src="/feature-instruments.png"
+                    alt="Macro view of surgical instrument precision"
+                    className="w-full h-auto object-cover"
+                  />
+                </picture>
+                <div className="absolute inset-0 bg-brand-charcoal/10 mix-blend-multiply"></div>
+              </div>
+            </FadeIn>
+            <FadeIn delay={0.2}>
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-[1px] w-12 bg-brand-gold"></div>
+                  <span className="text-brand-gold uppercase tracking-widest text-xs font-bold">Uncompromising Quality</span>
+                </div>
+                <h2 className="font-serif text-4xl lg:text-5xl text-brand-charcoal mb-6 leading-tight">
+                  Precision in <br />Every Micro-Detail.
+                </h2>
+                <p className="text-stone-600 font-light text-lg mb-6 leading-relaxed">
+                  Our instruments are not just tools; they are extensions of the surgeon's hands. We use high-grade German Stainless Steel and Tungsten Carbide inserts to ensure longevity, perfect balance, and corrosion resistance.
+                </p>
+                <ul className="space-y-4 mb-8">
+                  {['Tungsten Carbide Inserts', 'German Stainless Steel (AISI 410/420)', 'Hand-Finished Calibration', 'Corrosion Resistant Coating'].map((item, i) => (
+                    <li key={i} className="flex items-center gap-3 text-stone-700">
+                      <ShieldCheck size={18} className="text-brand-gold" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Button onClick={() => navigate('/about')} variant="secondary" className="px-8">
+                  Learn About Our Process
+                </Button>
+              </div>
+            </FadeIn>
+          </div>
+        </div>
+      </Section>
+
       {/* PRODUCTS CAROUSEL */}
-      <Section className="bg-stone-50 overflow-hidden relative">
+      <Section className="bg-white overflow-hidden relative">
         <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-2xl">
             <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Our Products</h2>

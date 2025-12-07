@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import {
-    Package, Loader2, BarChart3, FolderOpen, Settings, Search, Edit, Trash2, X, Save,
-    RefreshCw, Plus, Upload, AlertTriangle, CheckSquare, Square, FolderEdit, ImageOff,
-    FileText, Filter, ChevronRight, ChevronDown
+    Package, Loader2, FolderOpen, Settings, Search, Edit, Trash2, X, Save,
+    Plus, Upload, CheckSquare, Square, FolderEdit,
+    Filter, ChevronRight, ChevronDown
 } from 'lucide-react';
 import { Button } from '../../components/Shared';
+import { StatsOverview, CategoryBreakdown } from '../../components/admin';
 import { Link } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {

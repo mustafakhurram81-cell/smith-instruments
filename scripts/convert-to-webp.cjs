@@ -6,7 +6,10 @@ const fs = require('fs');
 const publicDir = path.join(__dirname, '../public');
 
 async function convertToWebP() {
-    const files = ['smith-logo-full.jpg', 'smith-logo-full.png', 'smith-logo-optimized.jpg'];
+    const files = [
+        'smith-logo-full.jpg', 'smith-logo-full.png', 'smith-logo-optimized.jpg',
+        'hero-instruments.png', 'about-clinic.png', 'feature-instruments.png'
+    ];
 
     for (const file of files) {
         const inputPath = path.join(publicDir, file);
