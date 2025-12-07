@@ -10,7 +10,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
-                serif: ['Playfair Display', 'serif'], // Restore Premium Serif for Headings
+                serif: ['Manrope', 'sans-serif'], // Clean geometric font for modern look
             },
             borderRadius: {
                 'none': '0',
