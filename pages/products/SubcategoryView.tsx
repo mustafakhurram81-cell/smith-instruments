@@ -5,12 +5,10 @@ import { SEO } from '../../components/SEO';
 import { ProductGridSkeleton } from '../../components/ui/Skeleton';
 import { useProductsBySubcategory } from '../../lib/queries';
 import { ChevronRight, Package, Grid, LayoutGrid } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 
 export const SubcategoryView: React.FC = () => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string; subcategoryName: string }>();
     const navigate = useNavigate();
-    const { t } = useTranslation();
 
     const category = decodeURIComponent(categoryName || '');
     const subcategory = decodeURIComponent(subcategoryName || '');
@@ -18,7 +16,6 @@ export const SubcategoryView: React.FC = () => {
     const [displayCount, setDisplayCount] = useState(24);
     const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid');
 
-    // Use React Query for caching
     const { data: products = [], isLoading: loading } = useProductsBySubcategory(category, subcategory);
 
     const loadMore = () => {
@@ -35,12 +32,10 @@ export const SubcategoryView: React.FC = () => {
                 description={`Browse our range of ${subcategory} for ${category}.`}
             />
 
-            {/* Header */}
             <div className="bg-brand-charcoal text-white py-16 md:py-24 relative overflow-hidden">
                 <div className="container mx-auto px-6 relative z-10">
-                    {/* Breadcrumbs */}
                     <div className="flex items-center gap-2 text-xs text-stone-400 mb-4 uppercase tracking-widest flex-wrap">
-                        <Link to="/products" className="hover:text-white">{t('nav.products')}</Link>
+                        <Link to="/products" className="hover:text-white">Products</Link>
                         <ChevronRight size={12} />
                         <Link to={`/products/${encodeURIComponent(category)}`} className="hover:text-white">{category}</Link>
                         <ChevronRight size={12} />
@@ -49,7 +44,7 @@ export const SubcategoryView: React.FC = () => {
 
                     <h1 className="font-serif text-4xl md:text-6xl mb-4">{subcategory}</h1>
                     <p className="text-stone-400 font-light max-w-2xl text-lg">
-                        {!loading && <>{products.length} {t('products.availableInstruments')}</>}
+                        {!loading && <>{products.length} precision instruments available</>}
                     </p>
                 </div>
                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
@@ -63,10 +58,9 @@ export const SubcategoryView: React.FC = () => {
                         <ProductGridSkeleton count={12} />
                     ) : products.length > 0 ? (
                         <>
-                            {/* Toolbar */}
                             <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
                                 <p className="text-stone-500">
-                                    {t('products.showing')} {Math.min(displayCount, products.length)} {t('products.of')} {products.length}
+                                    Showing {Math.min(displayCount, products.length)} of {products.length}
                                 </p>
                                 <div className="flex items-center gap-2">
                                     <button
@@ -119,7 +113,7 @@ export const SubcategoryView: React.FC = () => {
                             {hasMore && (
                                 <div className="text-center mt-12">
                                     <Button variant="outline" onClick={loadMore}>
-                                        {t('products.loadMore')} ({products.length - displayCount} {t('products.remaining')})
+                                        Load More ({products.length - displayCount} remaining)
                                     </Button>
                                 </div>
                             )}
@@ -127,10 +121,10 @@ export const SubcategoryView: React.FC = () => {
                     ) : (
                         <div className="text-center py-20">
                             <Package className="mx-auto text-stone-300 mb-4" size={64} />
-                            <h3 className="text-xl font-serif text-brand-charcoal mb-2">{t('products.noProducts')}</h3>
-                            <p className="text-stone-500 mb-6">{t('products.addingSoon')}</p>
+                            <h3 className="text-xl font-serif text-brand-charcoal mb-2">No products found</h3>
+                            <p className="text-stone-500 mb-6">We are adding products to this category soon.</p>
                             <Button variant="primary" onClick={() => navigate(`/products/${encodeURIComponent(category)}`)}>
-                                {t('products.backTo')} {category}
+                                Back to {category}
                             </Button>
                         </div>
                     )}

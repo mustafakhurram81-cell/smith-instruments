@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryProvider } from './components/QueryProvider';
 import './index.css';
-import './lib/i18n';
 import App from './App';
 
 const rootElement = document.getElementById('root');

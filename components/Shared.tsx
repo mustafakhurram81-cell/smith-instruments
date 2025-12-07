@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Facebook, Instagram, Mail, Phone, MapPin, ArrowRight, ShoppingCart, Search as SearchIcon, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { searchProducts, Product } from '../lib/database';
 import { useCart } from './CartProvider';
@@ -23,7 +22,6 @@ export const SearchOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> =
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (isOpen) {
@@ -122,7 +120,7 @@ export const SearchOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> =
                 </div>
               ) : query.length > 1 ? (
                 <div className="text-center py-8 text-stone-400">
-                  {t('products.noProducts')} "{query}"
+                  No products found for "{query}"
                 </div>
               ) : (
                 <div className="text-center py-12 text-stone-300">
@@ -144,7 +142,6 @@ export const Header: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const { cartCount } = useCart();
   const { data: categoryData = [] } = useCategoryDetails();
   const categories = categoryData.slice(0, 8);
@@ -185,12 +182,12 @@ export const Header: React.FC = () => {
 
           <nav className="hidden md:flex items-center gap-8">
             <NavLink to="/" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
-              {t('nav.home')}
+              Home
             </NavLink>
 
             <div className="relative group">
               <NavLink to="/products" className={({ isActive }) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
-                {t('nav.products')} <ChevronDown size={14} />
+                Products <ChevronDown size={14} />
               </NavLink>
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top translate-y-2 group-hover:translate-y-0 text-brand-charcoal border border-stone-100">
                 <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-l border-t border-stone-100"></div>
@@ -202,23 +199,23 @@ export const Header: React.FC = () => {
                 ))}
                 <div className="border-t border-stone-100 mt-2 pt-2 px-4 pb-1">
                   <NavLink to="/products" className="text-xs font-bold text-brand-gold uppercase tracking-widest hover:underline flex items-center justify-between">
-                    {t('nav.viewAll')} <ArrowRight size={12} />
+                    View All <ArrowRight size={12} />
                   </NavLink>
                 </div>
               </div>
             </div>
 
             <NavLink to="/catalogues" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
-              {t('nav.catalogues')}
+              Catalogues
             </NavLink>
             <NavLink to="/about" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
-              {t('nav.about')}
+              About Us
             </NavLink>
             <NavLink to="/blog" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
-              {t('nav.blog')}
+              Blog
             </NavLink>
             <NavLink to="/contact" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
-              {t('nav.contact')}
+              Contact
             </NavLink>
           </nav>
 
@@ -271,14 +268,14 @@ export const Header: React.FC = () => {
                   <SearchIcon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
                 </div>
 
-                <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.home')}</NavLink>
+                <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Home</NavLink>
                 <NavLink to="/quote-cart" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif flex items-center justify-between ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>
-                  {t('nav.quote')}
+                  Request Quote
                   {cartCount > 0 && <span className="bg-brand-gold text-brand-charcoal text-xs px-2 py-0.5 rounded-full">{cartCount}</span>}
                 </NavLink>
 
                 <div className="space-y-2">
-                  <NavLink to="/products" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.products')}</NavLink>
+                  <NavLink to="/products" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Products</NavLink>
                   <div className="pl-4 border-l border-stone-200 ml-1 flex flex-col gap-2">
                     {categories.slice(0, 6).map(cat => (
                       <NavLink key={cat.name} to={`/products/${encodeURIComponent(cat.name)}`} onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400">
@@ -288,10 +285,10 @@ export const Header: React.FC = () => {
                   </div>
                 </div>
 
-                <NavLink to="/catalogues" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.catalogues')}</NavLink>
-                <NavLink to="/about" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.about')}</NavLink>
-                <NavLink to="/blog" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.blog')}</NavLink>
-                <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.contact')}</NavLink>
+                <NavLink to="/catalogues" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Catalogues</NavLink>
+                <NavLink to="/about" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>About Us</NavLink>
+                <NavLink to="/blog" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Blog</NavLink>
+                <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Contact</NavLink>
               </nav>
             </motion.div>
           )}
@@ -303,8 +300,6 @@ export const Header: React.FC = () => {
 
 // --- FOOTER ---
 export const Footer: React.FC = () => {
-  const { t } = useTranslation();
-
   return (
     <footer className="bg-brand-charcoal text-stone-300 pt-20 pb-10 border-t border-stone-800">
       <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-stone-800 pb-16">
@@ -321,7 +316,7 @@ export const Footer: React.FC = () => {
             </div>
           </div>
           <p className="text-sm font-light leading-relaxed max-w-xs text-stone-400">
-            {t('footer.tagline')}
+            Molding the metal to serve life. Precision engineered surgical instruments for the modern medical world.
           </p>
           <div className="flex gap-4">
             <a href="https://www.facebook.com/smithinstrumentsusa" target="_blank" rel="noopener noreferrer" className="hover:text-brand-gold transition-colors"><Facebook size={20} /></a>
@@ -331,18 +326,18 @@ export const Footer: React.FC = () => {
 
         {/* Links */}
         <div className="flex flex-col space-y-4">
-          <h3 className="text-white font-serif text-lg mb-2">{t('footer.explore')}</h3>
-          <NavLink to="/" className="hover:text-white transition-colors text-sm">{t('nav.home')}</NavLink>
-          <NavLink to="/products" className="hover:text-white transition-colors text-sm">{t('nav.products')}</NavLink>
-          <NavLink to="/catalogues" className="hover:text-white transition-colors text-sm">{t('nav.catalogues')}</NavLink>
-          <NavLink to="/about" className="hover:text-white transition-colors text-sm">{t('nav.about')}</NavLink>
-          <NavLink to="/blog" className="hover:text-white transition-colors text-sm">{t('nav.blog')}</NavLink>
-          <NavLink to="/contact" className="hover:text-white transition-colors text-sm">{t('nav.contact')}</NavLink>
+          <h3 className="text-white font-serif text-lg mb-2">Explore</h3>
+          <NavLink to="/" className="hover:text-white transition-colors text-sm">Home</NavLink>
+          <NavLink to="/products" className="hover:text-white transition-colors text-sm">Products</NavLink>
+          <NavLink to="/catalogues" className="hover:text-white transition-colors text-sm">Catalogues</NavLink>
+          <NavLink to="/about" className="hover:text-white transition-colors text-sm">About Us</NavLink>
+          <NavLink to="/blog" className="hover:text-white transition-colors text-sm">Blog</NavLink>
+          <NavLink to="/contact" className="hover:text-white transition-colors text-sm">Contact</NavLink>
         </div>
 
         {/* Contact */}
         <div className="space-y-4">
-          <h3 className="text-white font-serif text-lg mb-2">{t('footer.connect')}</h3>
+          <h3 className="text-white font-serif text-lg mb-2">Connect</h3>
           <div className="flex items-start gap-3">
             <Mail size={16} className="mt-1 text-brand-gold" />
             <span className="text-sm">sales@smithinstruments.com</span>
@@ -359,10 +354,10 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-stone-500">
-        <p>&copy; {new Date().getFullYear()} Smith Instruments. {t('footer.allRightsReserved')}</p>
+        <p>&copy; {new Date().getFullYear()} Smith Instruments. All rights reserved.</p>
         <div className="flex gap-6 mt-4 md:mt-0">
-          <a href="#" className="hover:text-stone-300">{t('footer.privacyPolicy')}</a>
-          <a href="#" className="hover:text-stone-300">{t('footer.termsOfService')}</a>
+          <a href="#" className="hover:text-stone-300">Privacy Policy</a>
+          <a href="#" className="hover:text-stone-300">Terms of Service</a>
         </div>
       </div>
     </footer>
