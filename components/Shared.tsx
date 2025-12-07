@@ -6,6 +6,7 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { searchProducts, Product } from '../lib/database';
 import { useCart } from './CartProvider';
 import { useCategoryDetails } from '../lib/queries';
+import logoFull from '../assets/smith-logo-full.jpg';
 
 // Re-export UI components for backwards compatibility
 export { Button } from './ui/Button';
@@ -169,7 +170,7 @@ export const Header: React.FC = () => {
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
               <div className="h-12 w-32 relative overflow-hidden">
                 <img
-                  src="/smith-logo-full.jpg"
+                  src={logoFull}
                   alt="Smith Instruments"
                   className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
                 />
@@ -309,7 +310,7 @@ export const Footer: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className="h-12 w-32 relative overflow-hidden">
               <img
-                src="/smith-logo-full.jpg"
+                src={logoFull}
                 alt="Smith Instruments"
                 className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
               />

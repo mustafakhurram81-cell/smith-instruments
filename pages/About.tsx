@@ -3,6 +3,7 @@ import { Section, FadeIn, Button } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import aboutClinic from '../assets/about-clinic.png';
 
 export const About: React.FC = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ export const About: React.FC = () => {
       {/* 1. CINEMATIC HERO */}
       <div className="relative h-[60vh] flex items-center justify-center bg-white overflow-hidden">
         <div className="absolute inset-0">
-          <img src="/about-clinic.png" alt="Modern Medical Facility" className="w-full h-full object-cover" />
+          <img src={aboutClinic} alt="Modern Medical Facility" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]"></div>
 

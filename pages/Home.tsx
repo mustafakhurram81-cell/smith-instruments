@@ -3,6 +3,8 @@ import { Section, Button, FadeIn, AnimatedCounter } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import heroMethods from '../assets/hero-instruments.png';
+import featureInstruments from '../assets/feature-instruments.png';
 
 const PRODUCTS = [
   { id: 1, name: "Plastic Surgery", icon: Scissors, desc: "Precision instruments for reconstruction" },
@@ -61,7 +63,7 @@ export const Home: React.FC = () => {
       <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
         <div className="absolute inset-0 z-0">
           <img
-            src="/hero-instruments.png"
+            src={heroMethods}
             alt="Surgical Instruments Background"
             className="w-full h-full object-cover object-center"
           />
@@ -172,7 +174,7 @@ export const Home: React.FC = () => {
             <FadeIn>
               <div className="relative rounded-sm overflow-hidden shadow-2xl">
                 <img
-                  src="/feature-instruments.png"
+                  src={featureInstruments}
                   alt="Macro view of surgical instrument precision"
                   className="w-full h-auto object-cover"
                 />
