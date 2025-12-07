@@ -25,22 +25,22 @@ export default {
             },
             colors: {
                 stone: {
-                    50: '#ffffff', // Pure White
-                    100: '#f5f5f5', // True Neutral Light Grey
-                    200: '#e5e5e5',
-                    300: '#d4d4d4',
-                    400: '#a3a3a3',
-                    500: '#737373',
-                    600: '#525252',
-                    700: '#404040',
-                    800: '#262626',
-                    900: '#171717', // True Neutral Black
-                    950: '#0a0a0a',
+                    50: '#ffffff', // Keep Pure White for seamless blending
+                    100: '#f5f5f4', // Warm Stone 100
+                    200: '#e7e5e4',
+                    300: '#d6d3d1',
+                    400: '#a8a29e',
+                    500: '#78716c',
+                    600: '#57534e',
+                    700: '#44403c',
+                    800: '#292524',
+                    900: '#1c1917', // Warm Charcoal (Restored)
+                    950: '#0c0a09',
                 },
                 brand: {
-                    gold: '#c5a059', // Metallic Matte Gold
-                    charcoal: '#0f172a', // Align with Slate 900
-                    dark: '#0f172a',
+                    gold: '#C5B495', // Restore Classic Muted Gold (Matches Warm Charcoal better)
+                    charcoal: '#1c1917', // Restore Warm Charcoal
+                    dark: '#1c1917',
                     light: '#ffffff',
                 }
             }
