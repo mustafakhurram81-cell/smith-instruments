@@ -12,13 +12,16 @@
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: #f5f5f4;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #a8a29e;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #78716c;
 }
@@ -28,7 +31,34 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
+}
+
+/* i18n text utilities - handles longer translations gracefully */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Prevent text from breaking layout with long words (common in German) */
+  .word-break-normal {
+    word-break: normal;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+}
+
+/* Language-specific adjustments */
+html[lang="de"] h1,
+html[lang="de"] h2,
+html[lang="de"] h3 {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+html[lang="zh"] {
+  font-family: "SF Pro SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }

@@ -81,23 +81,24 @@ export const Home: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal via-brand-charcoal/80 to-transparent"></div>
         </div>
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-3xl">
+        <div className="container mx-auto px-6 relative z-10 py-20 md:py-0">
+          <div className="max-w-4xl">
             <FadeIn>
-              <div className="inline-block border border-brand-gold/50 px-4 py-1 mb-8 rounded-full backdrop-blur-sm">
+              <div className="inline-block border border-brand-gold/50 px-4 py-1 mb-6 md:mb-8 rounded-full backdrop-blur-sm">
                 <span className="text-brand-gold text-xs tracking-[0.2em] uppercase font-bold">{t('home.badge')}</span>
               </div>
-              <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white leading-[1.1] mb-8 drop-shadow-lg">
-                {t('home.title')} <br /> <span className="italic font-light text-stone-300">{t('home.titleHighlight')}</span>
+              {/* Fluid typography: clamp(min, preferred, max) */}
+              <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-[1.1] mb-6 md:mb-8 drop-shadow-lg">
+                {t('home.title')} <span className="block md:inline italic font-light text-stone-300">{t('home.titleHighlight')}</span>
               </h1>
-              <p className="max-w-lg text-stone-200 text-lg md:text-xl font-light leading-relaxed mb-12 drop-shadow-md">
+              <p className="max-w-xl text-stone-200 text-base sm:text-lg md:text-xl font-light leading-relaxed mb-8 md:mb-12 drop-shadow-md">
                 {t('home.subtitle')}
               </p>
-              <div className="flex flex-col sm:flex-row items-start gap-6">
-                <Button onClick={() => navigate('/catalogues')} variant="primary" className="shadow-lg shadow-brand-gold/20 px-10">
-                  {t('home.exploreCatalogue')} <ArrowRight size={16} className="ml-2" />
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-4 sm:gap-6">
+                <Button onClick={() => navigate('/catalogues')} variant="primary" className="shadow-lg shadow-brand-gold/20 px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
+                  {t('home.exploreCatalogue')} <ArrowRight size={16} className="ml-2 flex-shrink-0" />
                 </Button>
-                <Button onClick={() => navigate('/about')} variant="outline" className="text-white border-white hover:bg-white hover:text-brand-charcoal px-10">
+                <Button onClick={() => navigate('/about')} variant="outline" className="text-white border-white hover:bg-white hover:text-brand-charcoal px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
                   {t('home.ourStory')}
                 </Button>
               </div>

@@ -2,6 +2,12 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+// Update HTML lang attribute when language changes (for CSS targeting)
+const updateHtmlLang = (lng: string) => {
+    document.documentElement.lang = lng;
+    document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr'; // For future RTL support
+};
+
 i18n
     .use(LanguageDetector)
     .use(initReactI18next)
@@ -837,5 +843,14 @@ i18n
             }
         }
     });
+
+// Set initial language on HTML element and listen for changes
+i18n.on('initialized', () => {
+    updateHtmlLang(i18n.language);
+});
+
+i18n.on('languageChanged', (lng) => {
+    updateHtmlLang(lng);
+});
 
 export default i18n;
