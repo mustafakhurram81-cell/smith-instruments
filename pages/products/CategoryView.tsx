@@ -100,7 +100,7 @@ export const CategoryView: React.FC = () => {
                                     <FadeIn key={sub} delay={idx * 0.05}>
                                         <div
                                             onClick={() => navigate(`/products/${encodeURIComponent(category)}/${encodeURIComponent(sub)}`)}
-                                            className="group cursor-pointer relative h-64 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500"
+                                            className="group cursor-pointer relative h-64 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500"
                                         >
                                             <div className="absolute inset-0 bg-stone-200">
                                                 {subcategoryImages[sub] ? (

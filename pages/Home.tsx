@@ -218,10 +218,10 @@ export const Home: React.FC = () => {
             <p className="text-stone-500 font-light text-lg">A comprehensive range of instruments for every surgical specialty.</p>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={prevSlide} className="w-12 h-12 rounded-full border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:text-white transition-colors">
+            <button onClick={prevSlide} className="w-12 h-12 border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:text-white transition-colors">
               <ChevronLeft size={20} />
             </button>
-            <button onClick={nextSlide} className="w-12 h-12 rounded-full border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:text-white transition-colors">
+            <button onClick={nextSlide} className="w-12 h-12 border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:text-white transition-colors">
               <ChevronRight size={20} />
             </button>
           </div>
@@ -240,11 +240,11 @@ export const Home: React.FC = () => {
                 className="min-w-[100%] md:min-w-[350px] shrink-0 group cursor-pointer"
                 onClick={() => navigate('/catalogues')}
               >
-                <div className="bg-white border border-stone-200 p-8 rounded-sm h-[320px] flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:border-brand-gold relative overflow-hidden">
-                  <div className="absolute -right-8 -top-8 w-32 h-32 bg-stone-50 rounded-full group-hover:bg-brand-gold/10 transition-colors duration-500"></div>
+                <div className="bg-stone-50 border-none p-8 h-[320px] flex flex-col justify-between transition-all duration-300 hover:bg-stone-100 hover:shadow-lg relative overflow-hidden">
+                  <div className="absolute -right-8 -top-8 w-32 h-32 bg-white rotate-45 group-hover:bg-white/50 transition-colors duration-500"></div>
 
                   <div>
-                    <div className="w-14 h-14 bg-stone-50 rounded-full flex items-center justify-center mb-6 border border-stone-100 group-hover:border-brand-gold/30 group-hover:bg-brand-gold/10 transition-colors">
+                    <div className="w-14 h-14 bg-white flex items-center justify-center mb-6 shadow-sm group-hover:shadow-md transition-all">
                       <product.icon size={28} className="text-brand-charcoal group-hover:text-brand-gold transition-colors duration-300" strokeWidth={1.5} />
                     </div>
                     <h3 className="font-serif text-2xl text-brand-charcoal mb-2">{product.name}</h3>

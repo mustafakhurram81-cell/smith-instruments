@@ -25,17 +25,17 @@ export default {
             },
             colors: {
                 stone: {
-                    50: '#ffffff', // Pure White for blending product images
-                    100: '#f8fafc', // Ultra light slate
-                    200: '#e2e8f0', // Slight separation
-                    300: '#cbd5e1',
-                    400: '#94a3b8',
-                    500: '#64748b',
-                    600: '#475569',
-                    700: '#334155',
-                    800: '#1e293b',
-                    900: '#0f172a', // Deep Navy/Slate (The new "Black")
-                    950: '#020617',
+                    50: '#ffffff', // Pure White
+                    100: '#f5f5f5', // True Neutral Light Grey
+                    200: '#e5e5e5',
+                    300: '#d4d4d4',
+                    400: '#a3a3a3',
+                    500: '#737373',
+                    600: '#525252',
+                    700: '#404040',
+                    800: '#262626',
+                    900: '#171717', // True Neutral Black
+                    950: '#0a0a0a',
                 },
                 brand: {
                     gold: '#c5a059', // Metallic Matte Gold
