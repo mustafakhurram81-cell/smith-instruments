@@ -99,7 +99,7 @@ export const SubcategoryView: React.FC = () => {
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className={`${viewMode === 'grid' ? 'p-4' : 'p-3'}`}>
+                                            <div className={`border-t border-stone-100 ${viewMode === 'grid' ? 'p-4' : 'p-3'}`}>
                                                 <p className={`text-brand-gold font-mono mb-1 ${viewMode === 'grid' ? 'text-xs' : 'text-[10px]'}`}>{product.sku}</p>
                                                 <h3 className={`font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors ${viewMode === 'grid' ? 'text-sm line-clamp-2' : 'text-xs line-clamp-1'}`}>
                                                     {product.name}

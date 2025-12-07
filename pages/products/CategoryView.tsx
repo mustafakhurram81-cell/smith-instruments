@@ -166,7 +166,7 @@ export const CategoryView: React.FC = () => {
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="p-4">
+                                            <div className="border-t border-stone-100 p-4">
                                                 <p className="text-xs text-brand-gold font-mono mb-1">{product.sku}</p>
                                                 <h3 className="text-sm font-medium text-brand-charcoal line-clamp-2 group-hover:text-brand-gold transition-colors">{product.name}</h3>
                                             </div>
