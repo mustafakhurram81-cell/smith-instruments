@@ -139,7 +139,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* WHY CHOOSE US */}
-      <Section className="bg-white">
+      <Section className="bg-brand-gold/5">
         <div className="container mx-auto px-6">
           <div className="mb-20 text-center">
             <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Why Choose Us?</h2>

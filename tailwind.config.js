@@ -39,7 +39,7 @@ export default {
                 },
                 brand: {
                     gold: '#C5B495', // Restore Classic Muted Gold (Matches Warm Charcoal better)
-                    charcoal: '#1c1917', // Restore Warm Charcoal
+                    charcoal: '#0a0a0a', // Almost Pure Black (Crisp Headings)
                     dark: '#1c1917',
                     light: '#ffffff',
                 }

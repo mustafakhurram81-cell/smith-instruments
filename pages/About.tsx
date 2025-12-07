@@ -75,7 +75,7 @@ export const About: React.FC = () => {
       </section>
 
       {/* 3. THE TRUST MODEL */}
-      <section className="bg-stone-100 py-32 text-stone-600 relative overflow-hidden">
+      <section className="bg-orange-50/30 py-32 text-stone-600 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
           <div className="w-96 h-96 border-[40px] border-brand-charcoal rounded-full absolute -top-20 -left-20"></div>
           <div className="w-96 h-96 border-[40px] border-brand-charcoal rounded-full absolute -bottom-20 -right-20"></div>
