@@ -353,7 +353,16 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-stone-500">
-        <p>&copy; {new Date().getFullYear()} Smith Instruments. All rights reserved.</p>
+        <div className="flex flex-col items-center md:items-start gap-1">
+          <p className="flex items-center gap-2">
+            <span className="text-brand-gold">✦</span>
+            <span>&copy; {new Date().getFullYear()} Smith Instruments</span>
+            <span className="text-stone-600">•</span>
+            <span className="italic text-stone-400">Est. 2002</span>
+            <span className="text-brand-gold">✦</span>
+          </p>
+          <p className="text-stone-600 text-[10px] tracking-widest uppercase">Precision Crafted in the USA</p>
+        </div>
         <div className="flex gap-6 mt-4 md:mt-0">
           <NavLink to="/privacy-policy" className="hover:text-stone-300">Privacy Policy</NavLink>
           <NavLink to="/terms-of-service" className="hover:text-stone-300">Terms of Service</NavLink>
