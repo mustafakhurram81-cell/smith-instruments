@@ -168,14 +168,11 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
               <div className="h-12 w-32 relative overflow-hidden">
-                <picture>
-                  <source srcSet="/smith-logo-full.webp" type="image/webp" />
-                  <img
-                    src="/smith-logo-full.jpg"
-                    alt="Smith Instruments"
-                    className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
-                  />
-                </picture>
+                <img
+                  src="/smith-logo-full.jpg"
+                  alt="Smith Instruments"
+                  className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
+                />
               </div>
             </div>
             <div className="hidden md:block">
@@ -311,14 +308,11 @@ export const Footer: React.FC = () => {
         <div className="space-y-6">
           <div className="flex items-center gap-3">
             <div className="h-12 w-32 relative overflow-hidden">
-              <picture>
-                <source srcSet="/smith-logo-full.webp" type="image/webp" />
-                <img
-                  src="/smith-logo-full.jpg"
-                  alt="Smith Instruments"
-                  className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
-                />
-              </picture>
+              <img
+                src="/smith-logo-full.jpg"
+                alt="Smith Instruments"
+                className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
+              />
             </div>
           </div>
           <p className="text-sm font-light leading-relaxed max-w-xs text-stone-400">

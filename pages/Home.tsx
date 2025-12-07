@@ -60,14 +60,11 @@ export const Home: React.FC = () => {
       {/* HERO */}
       <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
         <div className="absolute inset-0 z-0">
-          <picture>
-            <source srcSet="/hero-instruments.webp" type="image/webp" />
-            <img
-              src="/hero-instruments.png"
-              alt="Surgical Instruments Background"
-              className="w-full h-full object-cover object-center"
-            />
-          </picture>
+          <img
+            src="/hero-instruments.png"
+            alt="Surgical Instruments Background"
+            className="w-full h-full object-cover object-center"
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-white via-white/70 to-transparent"></div>
         </div>
 
@@ -174,14 +171,11 @@ export const Home: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <FadeIn>
               <div className="relative rounded-sm overflow-hidden shadow-2xl">
-                <picture>
-                  <source srcSet="/feature-instruments.webp" type="image/webp" />
-                  <img
-                    src="/feature-instruments.png"
-                    alt="Macro view of surgical instrument precision"
-                    className="w-full h-auto object-cover"
-                  />
-                </picture>
+                <img
+                  src="/feature-instruments.png"
+                  alt="Macro view of surgical instrument precision"
+                  className="w-full h-auto object-cover"
+                />
                 <div className="absolute inset-0 bg-brand-charcoal/10 mix-blend-multiply"></div>
               </div>
             </FadeIn>

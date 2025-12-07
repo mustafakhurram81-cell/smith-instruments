@@ -16,10 +16,7 @@ export const About: React.FC = () => {
       {/* 1. CINEMATIC HERO */}
       <div className="relative h-[60vh] flex items-center justify-center bg-white overflow-hidden">
         <div className="absolute inset-0">
-          <picture>
-            <source srcSet="/about-clinic.webp" type="image/webp" />
-            <img src="/about-clinic.png" alt="Modern Medical Facility" className="w-full h-full object-cover" />
-          </picture>
+          <img src="/about-clinic.png" alt="Modern Medical Facility" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]"></div>
 
