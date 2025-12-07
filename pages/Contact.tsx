@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Section, Button, FadeIn } from '../components/Shared';
+import { SEO } from '../components/SEO';
 import { Plus, Minus, Phone, Mail, MapPin, MessageCircle, Clock, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
@@ -63,6 +64,10 @@ export const Contact: React.FC = () => {
 
   return (
     <div className="pt-20 bg-stone-50 min-h-screen">
+      <SEO
+        title="Contact Us"
+        description="Get in touch with Smith Instruments for quotes, custom manufacturing inquiries, or support. Global shipping available."
+      />
 
       {/* Header */}
       <div className="bg-brand-charcoal py-20 text-center">

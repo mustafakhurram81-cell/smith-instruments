@@ -1,42 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Section, FadeIn } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
-import { getCategoryDetails } from '../../lib/database';
-import { Loader2, ArrowRight } from 'lucide-react';
+import { CategoryGridSkeleton } from '../../components/ui/Skeleton';
+import { useCategoryDetails } from '../../lib/queries';
+import { ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export const ProductsIndex: React.FC = () => {
     const navigate = useNavigate();
-    const [categories, setCategories] = useState<{ name: string; count: number; image: string }[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { t } = useTranslation();
+    const { data: categories = [], isLoading } = useCategoryDetails();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await getCategoryDetails();
-            setCategories(data);
-            setLoading(false);
-        };
-        fetchData();
-    }, []);
+    const totalProducts = categories.reduce((acc, c) => acc + c.count, 0);
 
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
             <SEO
-                title="Surgical Instruments Categories"
-                description="Browse our comprehensive range of high-quality surgical instruments."
+                title={t('products.precisionInstruments')}
+                description={t('home.ourProductsSubtitle')}
             />
 
             {/* Header */}
             <div className="bg-brand-charcoal text-white py-16 md:py-24 relative overflow-hidden">
                 <div className="container mx-auto px-6 relative z-10 text-center">
                     <span className="text-brand-gold uppercase tracking-widest text-xs font-bold mb-4 block">
-                        Our Catalog
+                        {t('products.ourCatalog')}
                     </span>
                     <h1 className="font-serif text-4xl md:text-6xl mb-6">
-                        Precision Instruments
+                        {t('products.precisionInstruments')}
                     </h1>
                     <p className="text-stone-400 font-light max-w-2xl mx-auto text-lg">
-                        Explore our extensive collection of {categories.reduce((acc, c) => acc + c.count, 0)} instruments across {categories.length} specialties.
+                        {t('home.ourProductsSubtitle')} {!isLoading && (
+                            <span className="block mt-2 text-brand-gold">
+                                {totalProducts} {t('products.instrumentsAcross')} {categories.length} {t('products.specialties')}
+                            </span>
+                        )}
                     </p>
                 </div>
                 {/* Abstract Background */}
@@ -48,11 +47,8 @@ export const ProductsIndex: React.FC = () => {
 
             <Section className="bg-stone-50">
                 <div className="container mx-auto px-6">
-                    {loading ? (
-                        <div className="flex flex-col items-center justify-center py-32">
-                            <Loader2 className="animate-spin text-brand-gold mb-4" size={48} />
-                            <p className="text-stone-500 animate-pulse">Loading catalog...</p>
-                        </div>
+                    {isLoading ? (
+                        <CategoryGridSkeleton count={6} />
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {categories.filter(c => c.name !== 'Uncategorized').map((cat, idx) => (
@@ -71,7 +67,7 @@ export const ProductsIndex: React.FC = () => {
                                                 />
                                             ) : (
                                                 <div className="w-full h-full bg-stone-300 flex items-center justify-center text-stone-400">
-                                                    No Image
+                                                    {t('common.noImage')}
                                                 </div>
                                             )}
                                         </div>
@@ -87,7 +83,7 @@ export const ProductsIndex: React.FC = () => {
                                                         {cat.name}
                                                     </h3>
                                                     <p className="text-stone-300 text-sm font-medium">
-                                                        {cat.count} Instruments
+                                                        {cat.count} {t('products.instruments')}
                                                     </p>
                                                 </div>
                                                 <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-brand-gold group-hover:text-brand-charcoal transition-all">

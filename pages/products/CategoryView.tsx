@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Section, FadeIn, Button } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
-import { getSubcategories, getProductsByCategory, Product } from '../../lib/database';
-import { ChevronRight, Package, Loader2, ArrowRight, Grid, List } from 'lucide-react';
+import { CategoryGridSkeleton, ProductGridSkeleton } from '../../components/ui/Skeleton';
+import { useSubcategories, useProductsByCategory } from '../../lib/queries';
+import { ChevronRight, Package, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
 
 // Get one image per subcategory
@@ -30,36 +33,24 @@ async function getSubcategoryImages(category: string, subcategories: string[]): 
 export const CategoryView: React.FC = () => {
     const { categoryName } = useParams<{ categoryName: string }>();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const category = decodeURIComponent(categoryName || '');
 
-    const [subcategories, setSubcategories] = useState<string[]>([]);
-    const [subcategoryImages, setSubcategoryImages] = useState<Record<string, string>>({});
-    const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
     const [displayCount, setDisplayCount] = useState(20);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (!category) return;
+    // Use React Query for data fetching with caching
+    const { data: subcategories = [], isLoading: subsLoading } = useSubcategories(category);
+    const { data: products = [], isLoading: productsLoading } = useProductsByCategory(category);
 
-            const [subs, prods] = await Promise.all([
-                getSubcategories(category),
-                getProductsByCategory(category)
-            ]);
+    // Fetch subcategory images
+    const { data: subcategoryImages = {} } = useQuery({
+        queryKey: ['subcategoryImages', category],
+        queryFn: () => getSubcategoryImages(category, subcategories),
+        enabled: subcategories.length > 0,
+        staleTime: 1000 * 60 * 10,
+    });
 
-            setSubcategories(subs);
-            setProducts(prods);
-
-            // Fetch images for subcategories
-            if (subs.length > 0) {
-                const images = await getSubcategoryImages(category, subs);
-                setSubcategoryImages(images);
-            }
-
-            setLoading(false);
-        };
-        fetchData();
-    }, [category]);
+    const loading = subsLoading || productsLoading;
 
     // Count products per subcategory
     const subcategoryCounts: Record<string, number> = {};
@@ -77,8 +68,8 @@ export const CategoryView: React.FC = () => {
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
             <SEO
-                title={`${category} Instruments`}
-                description={`Browse ${category} subcategories and instruments.`}
+                title={`${category} ${t('common.instruments')}`}
+                description={`${t('products.subcategories')} - ${category}`}
             />
 
             {/* Header */}
@@ -86,14 +77,18 @@ export const CategoryView: React.FC = () => {
                 <div className="container mx-auto px-6 relative z-10">
                     {/* Breadcrumbs */}
                     <div className="flex items-center gap-2 text-xs text-stone-400 mb-4 uppercase tracking-widest">
-                        <Link to="/products" className="hover:text-white">Products</Link>
+                        <Link to="/products" className="hover:text-white">{t('nav.products')}</Link>
                         <ChevronRight size={12} />
                         <span className="text-brand-gold">{category}</span>
                     </div>
 
                     <h1 className="font-serif text-4xl md:text-6xl mb-4">{category}</h1>
                     <p className="text-stone-400 font-light max-w-2xl text-lg">
-                        {products.length} instruments across {subcategories.length} subcategories
+                        {!loading && (
+                            <>
+                                {products.length} {t('products.instrumentsAcross')} {subcategories.length} {t('products.subcategories').toLowerCase()}
+                            </>
+                        )}
                     </p>
                 </div>
                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
@@ -104,13 +99,10 @@ export const CategoryView: React.FC = () => {
             <Section className="bg-stone-50">
                 <div className="container mx-auto px-6">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-20">
-                            <Loader2 className="animate-spin text-brand-gold mb-4" size={48} />
-                            <p className="text-stone-500">Loading...</p>
-                        </div>
+                        <CategoryGridSkeleton count={6} />
                     ) : subcategories.length > 0 ? (
                         <>
-                            <h2 className="text-2xl font-serif text-brand-charcoal mb-8">Subcategories</h2>
+                            <h2 className="text-2xl font-serif text-brand-charcoal mb-8">{t('products.subcategories')}</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {subcategories.map((sub, idx) => (
                                     <FadeIn key={sub} delay={idx * 0.05}>
@@ -144,7 +136,7 @@ export const CategoryView: React.FC = () => {
                                                             {sub}
                                                         </h3>
                                                         <p className="text-stone-300 text-sm">
-                                                            {subcategoryCounts[sub] || 0} instruments
+                                                            {subcategoryCounts[sub] || 0} {t('products.instruments')}
                                                         </p>
                                                     </div>
                                                     <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-brand-gold group-hover:text-brand-charcoal transition-all">
@@ -162,7 +154,7 @@ export const CategoryView: React.FC = () => {
                         <>
                             <div className="flex justify-between items-center mb-8">
                                 <h2 className="text-2xl font-serif text-brand-charcoal">
-                                    All Products ({products.length})
+                                    {t('products.allProducts')} ({products.length})
                                 </h2>
                             </div>
 
@@ -198,7 +190,7 @@ export const CategoryView: React.FC = () => {
                             {hasMore && (
                                 <div className="text-center mt-12">
                                     <Button variant="outline" onClick={loadMore}>
-                                        Load More ({products.length - displayCount} remaining)
+                                        {t('products.loadMore')} ({products.length - displayCount} {t('products.remaining')})
                                     </Button>
                                 </div>
                             )}

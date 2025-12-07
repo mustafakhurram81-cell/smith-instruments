@@ -1,116 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Facebook, Instagram, Mail, Phone, MapPin, ArrowRight, MessageCircle, ArrowUp, ShoppingCart, Search as SearchIcon, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence, useInView, animate } from 'framer-motion';
+import { Menu, X, Facebook, Instagram, Mail, Phone, MapPin, ArrowRight, ShoppingCart, Search as SearchIcon, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher';
-import { getCategoryDetails, searchProducts, Product } from '../lib/database';
+import { searchProducts, Product } from '../lib/database';
 import { useCart } from './CartProvider';
+import { useCategoryDetails } from '../lib/queries';
 
-// --- ANIMATED COUNTER ---
-export const AnimatedCounter: React.FC<{ from?: number; to: number; duration?: number }> = ({ from = 0, to, duration = 2 }) => {
-  const nodeRef = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(nodeRef, { once: true, margin: "-50px" });
-
-  useEffect(() => {
-    if (!isInView) return;
-    const node = nodeRef.current;
-
-    const controls = animate(from, to, {
-      duration,
-      ease: "easeOut",
-      onUpdate(value) {
-        if (node) node.textContent = Math.round(value).toString();
-      },
-    });
-
-    return () => controls.stop();
-  }, [from, to, duration, isInView]);
-
-  return <span ref={nodeRef}>{from}</span>;
-};
-
-// --- SCROLL TO TOP ---
-export const ScrollToTop: React.FC = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const toggleVisibility = () => {
-      if (window.pageYOffset > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-    window.addEventListener('scroll', toggleVisibility);
-    return () => window.removeEventListener('scroll', toggleVisibility);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
-
-  return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          onClick={scrollToTop}
-          className="fixed bottom-8 left-8 z-40 w-12 h-12 bg-brand-charcoal text-brand-gold border border-brand-gold rounded-full shadow-lg flex items-center justify-center hover:bg-brand-gold hover:text-brand-charcoal transition-all duration-300"
-          aria-label="Scroll to top"
-        >
-          <ArrowUp size={20} />
-        </motion.button>
-      )}
-    </AnimatePresence>
-  );
-};
-
-// --- BUTTON ---
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'text';
-  children: React.ReactNode;
-}
-
-export const Button: React.FC<ButtonProps> = ({ variant = 'primary', className = '', children, ...props }) => {
-  const baseStyles = "inline-flex items-center justify-center px-8 py-3 text-sm font-medium tracking-wide transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-gold disabled:opacity-50 disabled:cursor-not-allowed rounded-full";
-
-  const variants = {
-    primary: "bg-brand-gold text-brand-charcoal hover:bg-stone-200 hover:shadow-md shadow-sm border border-transparent",
-    secondary: "bg-brand-charcoal text-brand-gold hover:bg-stone-800 hover:shadow-md shadow-sm border border-transparent",
-    outline: "bg-transparent text-brand-charcoal border border-brand-charcoal hover:bg-brand-charcoal hover:text-brand-gold",
-    text: "bg-transparent text-brand-charcoal hover:text-stone-600 underline-offset-4 hover:underline padding-0 rounded-none",
-  };
-
-  return (
-    <button className={`${baseStyles} ${variants[variant]} ${className}`} {...props}>
-      {children}
-    </button>
-  );
-};
-
-// --- WHATSAPP FLOAT ---
-export const WhatsAppFloat: React.FC = () => {
-  return (
-    <motion.a
-      href="https://wa.me/923302449855?text=Hi,%20I'm%20interested%20in%20Smith%20Instruments%20products"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex items-center justify-center bg-[#25D366] text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <MessageCircle size={28} fill="white" />
-    </motion.a>
-  );
-};
+// Re-export UI components for backwards compatibility
+export { Button } from './ui/Button';
+export { FadeIn } from './ui/FadeIn';
+export { Section } from './ui/Section';
+export { AnimatedCounter } from './ui/AnimatedCounter';
+export { WhatsAppFloat } from './ui/WhatsAppFloat';
+export { ScrollToTop } from './ui/ScrollToTop';
 
 // --- SEARCH OVERLAY ---
 export const SearchOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
@@ -119,6 +23,7 @@ export const SearchOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> =
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isOpen) {
@@ -217,7 +122,7 @@ export const SearchOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> =
                 </div>
               ) : query.length > 1 ? (
                 <div className="text-center py-8 text-stone-400">
-                  No products found for "{query}"
+                  {t('products.noProducts')} "{query}"
                 </div>
               ) : (
                 <div className="text-center py-12 text-stone-300">
@@ -237,21 +142,12 @@ export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [categories, setCategories] = useState<{ name: string }[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { cartCount } = useCart();
-
-  useEffect(() => {
-    const loadCats = async () => {
-      try {
-        const cats = await getCategoryDetails();
-        setCategories(cats.slice(0, 8));
-      } catch (e) { console.error(e); }
-    };
-    loadCats();
-  }, []);
+  const { data: categoryData = [] } = useCategoryDetails();
+  const categories = categoryData.slice(0, 8);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -306,7 +202,7 @@ export const Header: React.FC = () => {
                 ))}
                 <div className="border-t border-stone-100 mt-2 pt-2 px-4 pb-1">
                   <NavLink to="/products" className="text-xs font-bold text-brand-gold uppercase tracking-widest hover:underline flex items-center justify-between">
-                    View All <ArrowRight size={12} />
+                    {t('nav.viewAll')} <ArrowRight size={12} />
                   </NavLink>
                 </div>
               </div>
@@ -346,13 +242,6 @@ export const Header: React.FC = () => {
               )}
             </NavLink>
 
-            <Button
-              variant={isScrolled || !isHome ? 'secondary' : 'primary'}
-              className="hidden md:inline-flex text-xs uppercase tracking-widest px-6"
-              onClick={() => navigate('/contact')}
-            >
-              Contact Us
-            </Button>
             <button
               className={`md:hidden focus:outline-none ${isScrolled || !isHome ? 'text-brand-charcoal' : 'text-white'}`}
               onClick={() => setIsMobileOpen(!isMobileOpen)}
@@ -384,7 +273,7 @@ export const Header: React.FC = () => {
 
                 <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.home')}</NavLink>
                 <NavLink to="/quote-cart" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif flex items-center justify-between ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>
-                  Quote Cart
+                  {t('nav.quote')}
                   {cartCount > 0 && <span className="bg-brand-gold text-brand-charcoal text-xs px-2 py-0.5 rounded-full">{cartCount}</span>}
                 </NavLink>
 
@@ -403,8 +292,6 @@ export const Header: React.FC = () => {
                 <NavLink to="/about" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.about')}</NavLink>
                 <NavLink to="/blog" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.blog')}</NavLink>
                 <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>{t('nav.contact')}</NavLink>
-
-                <Button variant="secondary" onClick={() => navigate('/contact')} className="w-full mt-4">Contact Us</Button>
               </nav>
             </motion.div>
           )}
@@ -416,6 +303,8 @@ export const Header: React.FC = () => {
 
 // --- FOOTER ---
 export const Footer: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-brand-charcoal text-stone-300 pt-20 pb-10 border-t border-stone-800">
       <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-stone-800 pb-16">
@@ -432,7 +321,7 @@ export const Footer: React.FC = () => {
             </div>
           </div>
           <p className="text-sm font-light leading-relaxed max-w-xs text-stone-400">
-            Molding the metal to serve life. Precision engineered surgical instruments for the modern medical world.
+            {t('footer.tagline')}
           </p>
           <div className="flex gap-4">
             <a href="https://www.facebook.com/smithinstrumentsusa" target="_blank" rel="noopener noreferrer" className="hover:text-brand-gold transition-colors"><Facebook size={20} /></a>
@@ -442,18 +331,18 @@ export const Footer: React.FC = () => {
 
         {/* Links */}
         <div className="flex flex-col space-y-4">
-          <h3 className="text-white font-serif text-lg mb-2">Explore</h3>
-          <NavLink to="/" className="hover:text-white transition-colors text-sm">Home</NavLink>
-          <NavLink to="/products" className="hover:text-white transition-colors text-sm">Products</NavLink>
-          <NavLink to="/catalogues" className="hover:text-white transition-colors text-sm">Catalogues</NavLink>
-          <NavLink to="/about" className="hover:text-white transition-colors text-sm">About Us</NavLink>
-          <NavLink to="/blog" className="hover:text-white transition-colors text-sm">Blog</NavLink>
-          <NavLink to="/contact" className="hover:text-white transition-colors text-sm">Contact & Support</NavLink>
+          <h3 className="text-white font-serif text-lg mb-2">{t('footer.explore')}</h3>
+          <NavLink to="/" className="hover:text-white transition-colors text-sm">{t('nav.home')}</NavLink>
+          <NavLink to="/products" className="hover:text-white transition-colors text-sm">{t('nav.products')}</NavLink>
+          <NavLink to="/catalogues" className="hover:text-white transition-colors text-sm">{t('nav.catalogues')}</NavLink>
+          <NavLink to="/about" className="hover:text-white transition-colors text-sm">{t('nav.about')}</NavLink>
+          <NavLink to="/blog" className="hover:text-white transition-colors text-sm">{t('nav.blog')}</NavLink>
+          <NavLink to="/contact" className="hover:text-white transition-colors text-sm">{t('nav.contact')}</NavLink>
         </div>
 
         {/* Contact */}
         <div className="space-y-4">
-          <h3 className="text-white font-serif text-lg mb-2">Connect</h3>
+          <h3 className="text-white font-serif text-lg mb-2">{t('footer.connect')}</h3>
           <div className="flex items-start gap-3">
             <Mail size={16} className="mt-1 text-brand-gold" />
             <span className="text-sm">sales@smithinstruments.com</span>
@@ -470,31 +359,12 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-stone-500">
-        <p>&copy; {new Date().getFullYear()} Smith Instruments. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Smith Instruments. {t('footer.allRightsReserved')}</p>
         <div className="flex gap-6 mt-4 md:mt-0">
-          <a href="#" className="hover:text-stone-300">Privacy Policy</a>
-          <a href="#" className="hover:text-stone-300">Terms of Service</a>
+          <a href="#" className="hover:text-stone-300">{t('footer.privacyPolicy')}</a>
+          <a href="#" className="hover:text-stone-300">{t('footer.termsOfService')}</a>
         </div>
       </div>
     </footer>
   );
 };
-
-// --- SECTION WRAPPER ---
-export const Section: React.FC<{ children: React.ReactNode; className?: string; id?: string }> = ({ children, className = "", id }) => (
-  <section id={id} className={`py-24 md:py-32 ${className}`}>
-    {children}
-  </section>
-);
-
-// --- ANIMATION WRAPPER ---
-export const FadeIn: React.FC<{ children: React.ReactNode; delay?: number }> = ({ children, delay = 0 }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-100px" }}
-    transition={{ duration: 0.8, delay, ease: "easeOut" }}
-  >
-    {children}
-  </motion.div>
-);

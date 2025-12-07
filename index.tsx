@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
+import { QueryProvider } from './components/QueryProvider';
 import './index.css';
 import './lib/i18n';
 import App from './App';
@@ -14,7 +15,9 @@ const root = createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <HelmetProvider>
-      <App />
+      <QueryProvider>
+        <App />
+      </QueryProvider>
     </HelmetProvider>
   </React.StrictMode>
 );

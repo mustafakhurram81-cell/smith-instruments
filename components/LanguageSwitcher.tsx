@@ -34,6 +34,12 @@ export const LanguageSwitcher: React.FC = () => {
                 >
                     Español
                 </button>
+                <button
+                    onClick={() => changeLanguage('zh')}
+                    className="block w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-stone-50 hover:text-brand-gold"
+                >
+                    中文
+                </button>
             </div>
         </div>
     );
