@@ -14,17 +14,17 @@ export default {
             },
             colors: {
                 stone: {
-                    50: '#faf9f6', // Warm Alabaster/Cream
-                    100: '#f5f5f4',
-                    200: '#e7e5e4',
-                    300: '#d6d3d1',
-                    400: '#a8a29e',
-                    500: '#78716c',
-                    600: '#57534e',
-                    700: '#44403c',
-                    800: '#292524',
-                    900: '#1c1917', // Warm Charcoal
-                    950: '#0c0a09',
+                    50: '#fafafa', // Clinical White
+                    100: '#f4f4f5', // Zinc 100
+                    200: '#e4e4e7', // Zinc 200 (Steel)
+                    300: '#d4d4d8',
+                    400: '#a1a1aa',
+                    500: '#71717a',
+                    600: '#52525b',
+                    700: '#3f3f46',
+                    800: '#27272a',
+                    900: '#18181b', // Cool Charcoal
+                    950: '#09090b',
                 },
                 brand: {
                     gold: '#C5B495', // Muted Gold/Beige
