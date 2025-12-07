@@ -168,7 +168,7 @@ export const Home: React.FC = () => {
       </Section>
 
       {/* PRECISION ENGINEERING SHOWCASE */}
-      <Section className="bg-stone-50 py-0 pb-20">
+      <Section className="bg-white py-0 pb-20">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <FadeIn>
@@ -211,7 +211,7 @@ export const Home: React.FC = () => {
       </Section>
 
       {/* PRODUCTS CAROUSEL */}
-      <Section className="bg-white overflow-hidden relative">
+      <Section className="bg-stone-100 overflow-hidden relative">
         <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-2xl">
             <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Our Products</h2>

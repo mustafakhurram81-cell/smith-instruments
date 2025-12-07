@@ -302,8 +302,8 @@ export const Header: React.FC = () => {
 // --- FOOTER ---
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-stone-50 text-stone-600 pt-20 pb-10 border-t border-stone-200">
-      <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-stone-200 pb-16">
+    <footer className="bg-brand-charcoal text-stone-300 pt-20 pb-10 border-t border-stone-800">
+      <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-stone-800 pb-16">
 
         {/* Brand */}
         <div className="space-y-6">
@@ -312,11 +312,11 @@ export const Footer: React.FC = () => {
               <img
                 src={logoFull}
                 alt="Smith Instruments"
-                className="w-full h-full object-contain filter-none opacity-90"
+                className="w-full h-full object-contain filter invert mix-blend-screen opacity-90"
               />
             </div>
           </div>
-          <p className="text-sm font-light leading-relaxed max-w-xs text-stone-500">
+          <p className="text-sm font-light leading-relaxed max-w-xs text-stone-400">
             Molding the metal to serve life. Precision engineered surgical instruments for the modern medical world.
           </p>
           <div className="flex gap-4">
@@ -327,18 +327,18 @@ export const Footer: React.FC = () => {
 
         {/* Links */}
         <div className="flex flex-col space-y-4">
-          <h3 className="text-brand-charcoal font-serif text-lg mb-2">Explore</h3>
-          <NavLink to="/" className="hover:text-brand-gold transition-colors text-sm">Home</NavLink>
-          <NavLink to="/products" className="hover:text-brand-gold transition-colors text-sm">Products</NavLink>
-          <NavLink to="/catalogues" className="hover:text-brand-gold transition-colors text-sm">Catalogues</NavLink>
-          <NavLink to="/about" className="hover:text-brand-gold transition-colors text-sm">About Us</NavLink>
-          <NavLink to="/blog" className="hover:text-brand-gold transition-colors text-sm">Blog</NavLink>
-          <NavLink to="/contact" className="hover:text-brand-gold transition-colors text-sm">Contact</NavLink>
+          <h3 className="text-white font-serif text-lg mb-2">Explore</h3>
+          <NavLink to="/" className="hover:text-white transition-colors text-sm">Home</NavLink>
+          <NavLink to="/products" className="hover:text-white transition-colors text-sm">Products</NavLink>
+          <NavLink to="/catalogues" className="hover:text-white transition-colors text-sm">Catalogues</NavLink>
+          <NavLink to="/about" className="hover:text-white transition-colors text-sm">About Us</NavLink>
+          <NavLink to="/blog" className="hover:text-white transition-colors text-sm">Blog</NavLink>
+          <NavLink to="/contact" className="hover:text-white transition-colors text-sm">Contact</NavLink>
         </div>
 
         {/* Contact */}
         <div className="space-y-4">
-          <h3 className="text-brand-charcoal font-serif text-lg mb-2">Connect</h3>
+          <h3 className="text-white font-serif text-lg mb-2">Connect</h3>
           <div className="flex items-start gap-3">
             <Mail size={16} className="mt-1 text-brand-gold" />
             <span className="text-sm">sales@smithinstruments.com</span>
@@ -354,11 +354,11 @@ export const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-stone-400">
+      <div className="container mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-stone-500">
         <p>&copy; {new Date().getFullYear()} Smith Instruments. All rights reserved.</p>
         <div className="flex gap-6 mt-4 md:mt-0">
-          <NavLink to="/privacy-policy" className="hover:text-brand-gold">Privacy Policy</NavLink>
-          <NavLink to="/terms-of-service" className="hover:text-brand-gold">Terms of Service</NavLink>
+          <NavLink to="/privacy-policy" className="hover:text-stone-300">Privacy Policy</NavLink>
+          <NavLink to="/terms-of-service" className="hover:text-stone-300">Terms of Service</NavLink>
         </div>
       </div>
     </footer>
