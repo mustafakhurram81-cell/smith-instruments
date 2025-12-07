@@ -101,10 +101,10 @@ export const Home: React.FC = () => {
       </section>
 
       {/* IMPACT COUNTERS */}
-      <section className="bg-stone-50 py-24 border-y border-stone-200/50">
+      <section className="bg-brand-gold/5 py-24 border-y border-stone-200/50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl text-brand-charcoal">Our Impact</h2>
+            <h2 className="font-serif text-4xl text-black">Our Impact</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <FadeIn delay={0.1}>
@@ -139,10 +139,10 @@ export const Home: React.FC = () => {
       </section>
 
       {/* WHY CHOOSE US */}
-      <Section className="bg-brand-gold/5">
+      <Section className="bg-white">
         <div className="container mx-auto px-6">
           <div className="mb-20 text-center">
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Why Choose Us?</h2>
+            <h2 className="font-serif text-4xl text-black mb-4">Why Choose Us?</h2>
             <p className="text-stone-500 font-light">Precision, reliability, and partnership in every instrument we create.</p>
           </div>
 
@@ -168,10 +168,10 @@ export const Home: React.FC = () => {
       </Section>
 
       {/* PRODUCTS CAROUSEL */}
-      <Section className="bg-white overflow-hidden relative">
+      <Section className="bg-brand-gold/5 overflow-hidden relative">
         <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Our Products</h2>
+            <h2 className="font-serif text-4xl text-black mb-4">Our Products</h2>
             <p className="text-stone-500 font-light text-lg">A comprehensive range of instruments for every surgical specialty.</p>
           </div>
           <div className="flex items-center gap-4">
@@ -222,19 +222,19 @@ export const Home: React.FC = () => {
       </Section>
 
       {/* ABOUT SECTION */}
-      <Section className="bg-brand-charcoal relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-stone-800/20 to-transparent pointer-events-none"></div>
+      <Section className="bg-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-stone-100/50 to-transparent pointer-events-none"></div>
 
         <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16 relative z-10">
           <div className="w-full md:w-1/2">
             <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1000" alt="Surgical Team" className="rounded-sm shadow-2xl opacity-90" />
           </div>
-          <div className="w-full md:w-1/2 text-stone-300">
-            <h2 className="font-serif text-4xl text-white mb-6">American Craftsmanship, <br /><span className="text-brand-gold">Global Standards.</span></h2>
-            <p className="font-light leading-relaxed mb-8 text-lg text-stone-400">
+          <div className="w-full md:w-1/2 text-stone-600">
+            <h2 className="font-serif text-4xl text-black mb-6">American Craftsmanship, <br /><span className="text-brand-gold">Global Standards.</span></h2>
+            <p className="font-light leading-relaxed mb-8 text-lg text-stone-500">
               Based in the USA, Smith Instruments has been a pillar of the medical device industry for over two decades. We blend traditional craftsmanship with modern technology to produce surgical instruments that are not only precise but also reliable and ergonomic.
             </p>
-            <p className="font-light leading-relaxed mb-10 text-stone-400">
+            <p className="font-light leading-relaxed mb-10 text-stone-500">
               Our mission is to support healthcare providers by giving them the tools they need to perform with confidence.
             </p>
             <Button variant="primary" onClick={() => navigate('/about')}>
@@ -245,10 +245,10 @@ export const Home: React.FC = () => {
       </Section>
 
       {/* TESTIMONIALS */}
-      <Section className="bg-stone-50">
+      <Section className="bg-brand-gold/5">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Trusted by Professionals</h2>
+            <h2 className="font-serif text-4xl text-black mb-4">Trusted by Professionals</h2>
             <p className="text-stone-500 font-light">Hear from our partners in South America who rely on our quality and service.</p>
           </div>
 
