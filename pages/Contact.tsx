@@ -35,8 +35,8 @@ const AccordionItem: React.FC<{ item: { q: string, a: string } }> = ({ item }) =
   );
 };
 
-// reCAPTCHA site key - Replace with your actual site key from https://www.google.com/recaptcha/admin
-const RECAPTCHA_SITE_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'; // Test key - replace in production
+// reCAPTCHA site key
+const RECAPTCHA_SITE_KEY = '6LeD4CMsAAAAAHxO6so0lhRCDsnSA3Ybf7PQpcej';
 
 export const Contact: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);
