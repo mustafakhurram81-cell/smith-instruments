@@ -32,31 +32,50 @@ export async function getCategories(): Promise<string[]> {
     return categories;
 }
 
-// Get subcategories for a category
-export async function getSubcategories(category: string): Promise<string[]> {
-    const { data, error } = await supabase
+// Get subcategories for a category with counts and images
+export async function getSubcategoryDetails(category: string): Promise<{ name: string; count: number; image: string }[]> {
+    // 1. Get all products for this category to count per subcategory
+    const { data: products, error } = await supabase
         .from('products')
-        .select('subcategory')
-        .eq('category', category)
-        .neq('subcategory', 'General');
+        .select('subcategory, image_url')
+        .eq('category', category);
 
     if (error) {
-        console.error('Error fetching subcategories:', error);
+        console.error('Error fetching subcategory details:', error);
         return [];
     }
 
-    // Get unique subcategories
-    const subcategories = [...new Set(data.map(d => d.subcategory))].filter(Boolean).sort();
-    return subcategories;
+    // Calculate counts and get one image per subcategory
+    const counts: Record<string, number> = {};
+    const images: Record<string, string> = {};
+    const uniqueSubcategories = new Set<string>();
+
+    products.forEach(p => {
+        if (p.subcategory && p.subcategory !== 'General') {
+            counts[p.subcategory] = (counts[p.subcategory] || 0) + 1;
+            uniqueSubcategories.add(p.subcategory);
+            // Store first image found for each subcategory
+            if (!images[p.subcategory] && p.image_url) {
+                images[p.subcategory] = p.image_url;
+            }
+        }
+    });
+
+    const details = Array.from(uniqueSubcategories).map(sub => ({
+        name: sub,
+        count: counts[sub] || 0,
+        image: images[sub] || ''
+    }));
+
+    return details.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-// Get products by category
+// Get products by category (no limit to ensure accurate counts)
 export async function getProductsByCategory(category: string): Promise<Product[]> {
     const { data, error } = await supabase
         .from('products')
         .select('*')
-        .eq('category', category)
-        .limit(2000); // Increased limit
+        .eq('category', category);
 
     if (error) {
         console.error('Error fetching products:', error);

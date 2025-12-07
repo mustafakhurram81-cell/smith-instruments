@@ -3,31 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Section, FadeIn, Button } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { CategoryGridSkeleton, ProductGridSkeleton } from '../../components/ui/Skeleton';
-import { useSubcategories, useProductsByCategory } from '../../lib/queries';
+import { useSubcategoryDetails, useProductsByCategory } from '../../lib/queries';
 import { ChevronRight, Package, ArrowRight } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../../lib/supabase';
-
-// Get one image per subcategory
-async function getSubcategoryImages(category: string, subcategories: string[]): Promise<Record<string, string>> {
-    const images: Record<string, string> = {};
-
-    await Promise.all(subcategories.map(async (sub) => {
-        const { data } = await supabase
-            .from('products')
-            .select('image_url')
-            .eq('category', category)
-            .eq('subcategory', sub)
-            .neq('image_url', '')
-            .limit(1);
-
-        if (data?.[0]?.image_url) {
-            images[sub] = data[0].image_url;
-        }
-    }));
-
-    return images;
-}
 
 export const CategoryView: React.FC = () => {
     const { categoryName } = useParams<{ categoryName: string }>();
@@ -36,22 +13,14 @@ export const CategoryView: React.FC = () => {
 
     const [displayCount, setDisplayCount] = useState(20);
 
-    const { data: subcategories = [], isLoading: subsLoading } = useSubcategories(category);
+    // Use the new hook that includes counts and images
+    const { data: subcategoryDetails = [], isLoading: subsLoading } = useSubcategoryDetails(category);
     const { data: products = [], isLoading: productsLoading } = useProductsByCategory(category);
-
-    const { data: subcategoryImages = {} } = useQuery({
-        queryKey: ['subcategoryImages', category],
-        queryFn: () => getSubcategoryImages(category, subcategories),
-        enabled: subcategories.length > 0,
-        staleTime: 1000 * 60 * 10,
-    });
 
     const loading = subsLoading || productsLoading;
 
-    const subcategoryCounts: Record<string, number> = {};
-    products.forEach(p => {
-        subcategoryCounts[p.subcategory] = (subcategoryCounts[p.subcategory] || 0) + 1;
-    });
+    // Calculate total from subcategory details for accurate count
+    const totalProducts = subcategoryDetails.reduce((acc, sub) => acc + sub.count, 0);
 
     const loadMore = () => {
         setDisplayCount(prev => prev + 20);
@@ -79,7 +48,7 @@ export const CategoryView: React.FC = () => {
                     <h1 className="font-serif text-4xl md:text-6xl mb-4">{category}</h1>
                     <p className="text-stone-400 font-light max-w-2xl text-lg">
                         {!loading && (
-                            <>{products.length} instruments across {subcategories.length} subcategories</>
+                            <>{totalProducts} instruments across {subcategoryDetails.length} subcategories</>
                         )}
                     </p>
                 </div>
@@ -92,21 +61,21 @@ export const CategoryView: React.FC = () => {
                 <div className="container mx-auto px-6">
                     {loading ? (
                         <CategoryGridSkeleton count={6} />
-                    ) : subcategories.length > 0 ? (
+                    ) : subcategoryDetails.length > 0 ? (
                         <>
                             <h2 className="text-2xl font-serif text-brand-charcoal mb-8">Subcategories</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {subcategories.map((sub, idx) => (
-                                    <FadeIn key={sub} delay={idx * 0.05}>
+                                {subcategoryDetails.map((sub, idx) => (
+                                    <FadeIn key={sub.name} delay={idx * 0.05}>
                                         <div
-                                            onClick={() => navigate(`/products/${encodeURIComponent(category)}/${encodeURIComponent(sub)}`)}
+                                            onClick={() => navigate(`/products/${encodeURIComponent(category)}/${encodeURIComponent(sub.name)}`)}
                                             className="group cursor-pointer relative h-64 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500"
                                         >
                                             <div className="absolute inset-0 bg-stone-200">
-                                                {subcategoryImages[sub] ? (
+                                                {sub.image ? (
                                                     <img
-                                                        src={subcategoryImages[sub]}
-                                                        alt={sub}
+                                                        src={sub.image}
+                                                        alt={sub.name}
                                                         className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
                                                     />
                                                 ) : (
@@ -122,10 +91,10 @@ export const CategoryView: React.FC = () => {
                                                 <div className="flex justify-between items-end">
                                                     <div>
                                                         <h3 className="font-serif text-2xl text-white mb-1 group-hover:text-brand-gold transition-colors">
-                                                            {sub}
+                                                            {sub.name}
                                                         </h3>
                                                         <p className="text-stone-300 text-sm">
-                                                            {subcategoryCounts[sub] || 0} instruments
+                                                            {sub.count} instruments
                                                         </p>
                                                     </div>
                                                     <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-brand-gold group-hover:text-brand-charcoal transition-all">

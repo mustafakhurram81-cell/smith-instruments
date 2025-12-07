@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import {
     getCategoryDetails,
-    getSubcategories,
+    getSubcategoryDetails,
     getProductsByCategory,
     getProductsBySubcategory,
     getProductBySku,
@@ -13,7 +13,7 @@ import {
 export const queryKeys = {
     categories: ['categories'] as const,
     categoryDetails: ['categoryDetails'] as const,
-    subcategories: (category: string) => ['subcategories', category] as const,
+    subcategoryDetails: (category: string) => ['subcategoryDetails', category] as const,
     productsByCategory: (category: string) => ['products', 'category', category] as const,
     productsBySubcategory: (category: string, subcategory: string) =>
         ['products', 'subcategory', category, subcategory] as const,
@@ -30,11 +30,11 @@ export function useCategoryDetails() {
     });
 }
 
-// Hook to get subcategories for a category
-export function useSubcategories(category: string) {
+// Hook to get subcategory details with counts and images
+export function useSubcategoryDetails(category: string) {
     return useQuery({
-        queryKey: queryKeys.subcategories(category),
-        queryFn: () => getSubcategories(category),
+        queryKey: queryKeys.subcategoryDetails(category),
+        queryFn: () => getSubcategoryDetails(category),
         enabled: !!category,
         staleTime: 1000 * 60 * 10,
     });
