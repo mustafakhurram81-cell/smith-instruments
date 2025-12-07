@@ -111,7 +111,7 @@ export const About: React.FC = () => {
       </section>
 
       {/* 4. OEM & CUSTOMIZATION */}
-      <Section className="bg-stone-50">
+      <Section className="bg-white">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center gap-16">
             <div className="w-full md:w-1/2 order-2 md:order-1">
@@ -145,7 +145,7 @@ export const About: React.FC = () => {
       </Section>
 
       {/* 5. DIRECT CONNECTION */}
-      <section className="bg-white py-24 border-t border-stone-100">
+      <section className="bg-brand-gold/5 bg-noise py-24 border-t border-stone-100">
         <div className="container mx-auto px-6 text-center">
           <FadeIn>
             <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-6">Human Connection, Not Portals.</h2>

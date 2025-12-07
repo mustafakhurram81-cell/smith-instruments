@@ -280,7 +280,7 @@ export const Contact: React.FC = () => {
       </div>
 
       {/* FAQ SECTION */}
-      <section className="bg-white py-24 border-t border-stone-200">
+      <section className="bg-brand-gold/5 bg-noise py-24 border-t border-stone-200">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-12">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4">Frequently Asked Questions</h2>
