@@ -73,9 +73,6 @@ export const Home: React.FC = () => {
         <div className="container mx-auto px-6 relative z-10 py-20 md:py-0">
           <div className="max-w-4xl">
             <FadeIn>
-              <div className="inline-block border border-brand-charcoal/30 px-4 py-1 mb-6 md:mb-8 rounded-full backdrop-blur-sm bg-white/50">
-                <span className="text-brand-charcoal text-xs tracking-[0.2em] uppercase font-bold">Premium Surgical Solutions</span>
-              </div>
               <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-brand-charcoal leading-[1.1] mb-6 md:mb-8 drop-shadow-sm">
                 We Mold the Metal <span className="block md:inline italic font-light text-brand-gold">to Serve Life.</span>
               </h1>

@@ -163,7 +163,7 @@ export const Header: React.FC = () => {
     <>
       <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
-      <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${isScrolled || !isHome ? 'bg-stone-50/95 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'}`}>
+      <header className="fixed top-0 left-0 right-0 z-40 transition-all duration-500 bg-white/95 backdrop-blur-md shadow-sm py-4">
         <div className="container mx-auto px-6 flex items-center justify-between">
 
           <div className="flex items-center gap-6">
@@ -172,22 +172,20 @@ export const Header: React.FC = () => {
                 <img
                   src={logoFull}
                   alt="Smith Instruments"
-                  className={`w-full h-full object-contain transition-all duration-500 ${isScrolled || !isHome ? 'filter-none' : 'filter invert mix-blend-screen opacity-90'}`}
+                  className="w-full h-full object-contain filter-none"
                 />
               </div>
             </div>
-            <div className="hidden md:block">
-              <LanguageSwitcher />
-            </div>
+            {/* LanguageSwitcher removed as per request */}
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            <NavLink to="/" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
+            <NavLink to="/" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
               Home
             </NavLink>
 
             <div className="relative group">
-              <NavLink to="/products" className={({ isActive }) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
+              <NavLink to="/products" className={({ isActive }) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
                 Products <ChevronDown size={14} />
               </NavLink>
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top translate-y-2 group-hover:translate-y-0 text-brand-charcoal border border-stone-100">
@@ -206,16 +204,16 @@ export const Header: React.FC = () => {
               </div>
             </div>
 
-            <NavLink to="/catalogues" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
+            <NavLink to="/catalogues" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
               Catalogues
             </NavLink>
-            <NavLink to="/about" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
+            <NavLink to="/about" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
               About Us
             </NavLink>
-            <NavLink to="/blog" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
+            <NavLink to="/blog" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
               Blog
             </NavLink>
-            <NavLink to="/contact" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isScrolled || !isHome ? (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal') : (isActive ? 'text-white border-b border-white' : 'text-stone-200 hover:text-white')}`}>
+            <NavLink to="/contact" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal'}`}>
               Contact
             </NavLink>
           </nav>
@@ -223,14 +221,14 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className={`p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled || !isHome ? 'text-brand-charcoal' : 'text-white hover:bg-white/10'}`}
+              className="p-2 rounded-full hover:bg-stone-100 transition-colors text-brand-charcoal"
             >
               <SearchIcon size={20} />
             </button>
 
             <NavLink
               to="/quote-cart"
-              className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled || !isHome ? 'text-brand-charcoal' : 'text-white hover:bg-white/10'}`}
+              className="relative p-2 rounded-full hover:bg-stone-100 transition-colors text-brand-charcoal"
             >
               <ShoppingCart size={20} />
               {cartCount > 0 && (
@@ -241,7 +239,7 @@ export const Header: React.FC = () => {
             </NavLink>
 
             <button
-              className={`md:hidden focus:outline-none ${isScrolled || !isHome ? 'text-brand-charcoal' : 'text-white'}`}
+              className="md:hidden focus:outline-none text-brand-charcoal"
               onClick={() => setIsMobileOpen(!isMobileOpen)}
             >
               {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
