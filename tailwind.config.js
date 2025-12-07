@@ -10,7 +10,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
-                serif: ['Manrope', 'sans-serif'], // Replacing Playfair with Manrope for modern engineered look
+                serif: ['Playfair Display', 'serif'], // Restore Premium Serif for Headings
             },
             borderRadius: {
                 'none': '0',

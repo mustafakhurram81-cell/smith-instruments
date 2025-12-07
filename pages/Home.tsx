@@ -98,7 +98,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* IMPACT COUNTERS */}
-      <section className="bg-brand-gold/5 py-24 border-y border-stone-200/50">
+      <section className="bg-brand-gold/5 bg-noise py-24 border-y border-stone-200/50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-serif text-4xl text-black">Our Impact</h2>
@@ -165,7 +165,7 @@ export const Home: React.FC = () => {
       </Section>
 
       {/* PRODUCTS CAROUSEL */}
-      <Section className="bg-brand-gold/5 overflow-hidden relative">
+      <Section className="bg-brand-gold/5 bg-noise overflow-hidden relative">
         <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-2xl">
             <h2 className="font-serif text-4xl text-black mb-4">Our Products</h2>
@@ -242,7 +242,7 @@ export const Home: React.FC = () => {
       </Section>
 
       {/* TESTIMONIALS */}
-      <Section className="bg-brand-gold/5">
+      <Section className="bg-brand-gold/5 bg-noise">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-serif text-4xl text-black mb-4">Trusted by Professionals</h2>
