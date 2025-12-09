@@ -42,42 +42,41 @@ export const Contact: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-  const [captchaVerified, setCaptchaVerified] = useState(false);
 
-  // TODO: Replace these with your actual EmailJS credentials
+  // EmailJS credentials
   const SERVICE_ID = 'service_dzj0fa2';
   const TEMPLATE_ID = 'template_3kqu18e';
   const PUBLIC_KEY = 'JVcDcowpyoY1HnUQO';
 
+  // Called when invisible reCAPTCHA is verified
   const handleCaptchaChange = (token: string | null) => {
-    setCaptchaVerified(!!token);
+    if (token && form.current) {
+      // CAPTCHA verified, now send the email
+      setFormStatus('sending');
+
+      emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
+        .then((result) => {
+          console.log(result.text);
+          setFormStatus('success');
+          recaptchaRef.current?.reset();
+          form.current?.reset();
+          setTimeout(() => setFormStatus('idle'), 5000);
+        }, (error) => {
+          console.log(error.text);
+          setFormStatus('error');
+          recaptchaRef.current?.reset();
+          setTimeout(() => setFormStatus('idle'), 5000);
+        });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!captchaVerified) {
-      alert('Please complete the CAPTCHA verification');
-      return;
-    }
+    if (formStatus === 'sending') return;
 
-    setFormStatus('sending');
-
-    if (form.current) {
-      emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
-        .then((result) => {
-          console.log(result.text);
-          setFormStatus('success');
-          setCaptchaVerified(false);
-          recaptchaRef.current?.reset();
-          // Reset form status after 5 seconds to allow sending another
-          setTimeout(() => setFormStatus('idle'), 5000);
-        }, (error) => {
-          console.log(error.text);
-          setFormStatus('error');
-          setTimeout(() => setFormStatus('idle'), 5000);
-        });
-    }
+    // Execute invisible reCAPTCHA - it will call handleCaptchaChange when verified
+    recaptchaRef.current?.execute();
   };
 
   return (
@@ -245,18 +244,17 @@ export const Contact: React.FC = () => {
                       <p className="text-xs text-stone-400 mt-2 text-right">0/1000 characters</p>
                     </div>
 
-                    {/* reCAPTCHA */}
-                    <div className="flex justify-center">
-                      <ReCAPTCHA
-                        ref={recaptchaRef}
-                        sitekey={RECAPTCHA_SITE_KEY}
-                        onChange={handleCaptchaChange}
-                        theme="light"
-                      />
-                    </div>
+                    {/* Invisible reCAPTCHA - validates on form submit */}
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={RECAPTCHA_SITE_KEY}
+                      onChange={handleCaptchaChange}
+                      size="invisible"
+                      badge="inline"
+                    />
 
                     <div className="pt-4">
-                      <Button type="submit" variant="secondary" disabled={formStatus === 'sending' || !captchaVerified} className="w-full md:w-auto px-10 flex items-center gap-2">
+                      <Button type="submit" variant="secondary" disabled={formStatus === 'sending'} className="w-full md:w-auto px-10 flex items-center gap-2">
                         {formStatus === 'sending' ? (
                           <>
                             <Loader2 className="animate-spin" size={18} /> Sending...
@@ -277,10 +275,10 @@ export const Contact: React.FC = () => {
           </div>
 
         </div>
-      </div>
+      </div >
 
       {/* FAQ SECTION */}
-      <section className="bg-brand-gold/5 bg-noise py-24 border-t border-stone-200">
+      < section className="bg-brand-gold/5 bg-noise py-24 border-t border-stone-200" >
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-12">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4">Frequently Asked Questions</h2>
@@ -293,8 +291,8 @@ export const Contact: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section >
 
-    </div>
+    </div >
   );
 };
