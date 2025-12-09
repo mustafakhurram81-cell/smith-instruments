@@ -181,8 +181,8 @@ export const Header: React.FC = () => {
                   // 2. Hue-rotate 180deg: Blue -> Gold (restores the monogram color), Black -> Black, White -> White
                   // 3. Mix-blend-mode screen: Black BG becomes transparent
                   className={`w-full h-full object-contain transition-all duration-300 ${isTransparent
-                      ? 'filter invert hue-rotate-180 mix-blend-screen'
-                      : 'mix-blend-multiply'
+                    ? 'filter invert hue-rotate-180 mix-blend-screen'
+                    : 'mix-blend-multiply'
                     }`}
                 />
               </div>

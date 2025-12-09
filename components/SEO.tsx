@@ -8,6 +8,7 @@ interface SEOProps {
     image?: string;
     url?: string;
     type?: string;
+    structuredData?: object; // JSON-LD schema.org data
 }
 
 export const SEO: React.FC<SEOProps> = ({
@@ -16,10 +17,31 @@ export const SEO: React.FC<SEOProps> = ({
     keywords,
     image = 'https://images.unsplash.com/photo-1626315869436-d6781ba69d6e?q=80&w=1200', /* Default image */
     url = typeof window !== 'undefined' ? window.location.href : '',
-    type = 'website'
+    type = 'website',
+    structuredData
 }) => {
     const siteTitle = 'Smith Instruments';
     const fullTitle = `${title} | ${siteTitle}`;
+
+    // Default organization schema for all pages
+    const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Smith Instruments",
+        "url": "https://smithinstruments.com",
+        "logo": "https://smithinstruments.com/smith-logo-full.webp",
+        "description": "Premium manufacturer of precision surgical instruments",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+92-330-2449855",
+            "contactType": "sales",
+            "email": "sales@smithinstruments.com"
+        },
+        "sameAs": [
+            "https://www.facebook.com/smithinstrumentsusa",
+            "https://www.instagram.com/smithinstruments/"
+        ]
+    };
 
     return (
         <Helmet>
@@ -34,6 +56,7 @@ export const SEO: React.FC<SEOProps> = ({
             <meta property="og:title" content={fullTitle} />
             <meta property="og:description" content={description} />
             <meta property="og:image" content={image} />
+            <meta property="og:site_name" content={siteTitle} />
 
             {/* Twitter */}
             <meta property="twitter:card" content="summary_large_image" />
@@ -44,6 +67,11 @@ export const SEO: React.FC<SEOProps> = ({
 
             {/* Canonical URL */}
             <link rel="canonical" href={url} />
+
+            {/* JSON-LD Structured Data */}
+            <script type="application/ld+json">
+                {JSON.stringify(structuredData || organizationSchema)}
+            </script>
         </Helmet>
     );
 };

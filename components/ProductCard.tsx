@@ -1,61 +1,75 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { MessageCircle } from 'lucide-react';
-import { Button } from './Shared';
-import { Product } from '../data/products';
+import { useNavigate } from 'react-router-dom';
+import { Package } from 'lucide-react';
+import { FadeIn } from './Shared';
+import { LazyImage } from './ui/LazyImage';
+
+interface Product {
+    id: string;
+    sku: string;
+    name: string;
+    image_url?: string;
+}
 
 interface ProductCardProps {
     product: Product;
+    viewMode?: 'grid' | 'compact';
+    index?: number;
     onClick?: () => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({
+    product,
+    viewMode = 'grid',
+    index = 0,
+    onClick
+}) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        if (onClick) {
+            onClick();
+        } else {
+            navigate(`/product/${encodeURIComponent(product.sku)}`);
+        }
+    };
+
+    const isCompact = viewMode === 'compact';
+
     return (
-        <div
-            className="bg-white border border-stone-100 rounded-sm overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full cursor-pointer"
-            onClick={onClick}
-        >
-            {/* Image */}
-            <div className="h-48 overflow-hidden relative bg-stone-50 border-b border-stone-50">
-                <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="w-full h-full object-contain p-4 mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 text-[10px] font-bold tracking-widest text-brand-charcoal border border-stone-200 rounded-sm">
-                    {product.sku}
+        <FadeIn delay={Math.min(index * 0.02, 0.5)}>
+            <div
+                onClick={handleClick}
+                className="group cursor-pointer bg-white border border-stone-100 hover:border-stone-200 hover:shadow-md transition-all duration-300"
+            >
+                <div className="bg-stone-50 relative overflow-hidden aspect-square">
+                    {product.image_url ? (
+                        <LazyImage
+                            src={product.image_url}
+                            alt={product.name}
+                            className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                            containerClassName="w-full h-full"
+                            placeholder={
+                                <div className="w-full h-full bg-stone-100 animate-pulse flex items-center justify-center">
+                                    <Package className="text-stone-300" size={isCompact ? 32 : 48} />
+                                </div>
+                            }
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                            <Package className="text-stone-300" size={isCompact ? 32 : 48} />
+                        </div>
+                    )}
+                </div>
+                <div className={`border-t border-stone-100 ${isCompact ? 'p-3' : 'p-4'}`}>
+                    <p className={`text-brand-gold font-mono mb-1 ${isCompact ? 'text-[10px]' : 'text-xs'}`}>
+                        {product.sku}
+                    </p>
+                    <h3 className={`font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors ${isCompact ? 'text-xs line-clamp-1' : 'text-sm line-clamp-2'}`}>
+                        {product.name}
+                    </h3>
                 </div>
             </div>
-
-            {/* Content */}
-            <div className="p-5 flex flex-col flex-grow">
-                <div className="mb-1 text-xs font-bold text-brand-gold uppercase tracking-wider">{product.category.replace('-', ' ')}</div>
-                <h3 className="font-serif text-lg text-brand-charcoal leading-tight mb-2 group-hover:text-brand-gold transition-colors">{product.name}</h3>
-                <p className="text-stone-500 text-xs line-clamp-2 mb-4 flex-grow">{product.description}</p>
-
-                {/* Specs Mini-Table */}
-                <div className="bg-stone-50 p-3 rounded-sm text-xs text-stone-600 space-y-1 mb-4">
-                    <div className="flex justify-between">
-                        <span className="text-stone-400">Material:</span>
-                        <span>{product.specifications.material}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span className="text-stone-400">Finish:</span>
-                        <span>{product.specifications.finish}</span>
-                    </div>
-                </div>
-
-                <Button
-                    variant="primary"
-                    className="w-full text-xs py-2 gap-2"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(`https://wa.me/923302449855?text=Hi, I am interested in ${product.name} (SKU: ${product.sku})`, '_blank');
-                    }}
-                >
-                    <MessageCircle size={14} /> Request Quote
-                </Button>
-            </div>
-        </div>
+        </FadeIn>
     );
 };

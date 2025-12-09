@@ -1,3 +1,4 @@
-// Admin Components
-export { StatsOverview, StatsCard } from './StatsOverview';
-export { CategoryBreakdown } from './CategoryBreakdown';
+// Admin components barrel export
+export { DashboardHeader } from './DashboardHeader';
+export { OverviewTab } from './OverviewTab';
+export { CategoriesTab } from './CategoriesTab';

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Section, Button, FadeIn } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
-import { getProductBySku, getProductsBySubcategory, Product } from '../../lib/database';
-import { ChevronRight, Package, Loader2, MessageCircle, Mail, ArrowRight, X, ZoomIn } from 'lucide-react';
+import { getProductBySku, getProductsBySubcategory, getProductVariants, Product } from '../../lib/database';
+import { ChevronRight, Package, Loader2, MessageCircle, Mail, ArrowRight, X, ZoomIn, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../components/CartProvider';
 
@@ -15,9 +15,12 @@ export const ProductDetail: React.FC = () => {
     const { addToCart } = useCart();
 
     const [product, setProduct] = useState<Product | null>(null);
+    const [parentProduct, setParentProduct] = useState<Product | null>(null); // Stores original for consistent name
+    const [variants, setVariants] = useState<Product[]>([]);
     const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [isZoomed, setIsZoomed] = useState(false);
+    const [isVariantDropdownOpen, setIsVariantDropdownOpen] = useState(false);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -26,17 +29,36 @@ export const ProductDetail: React.FC = () => {
             const prod = await getProductBySku(sku);
             setProduct(prod);
 
-            // Fetch related products from same subcategory
             if (prod) {
+                // Fetch variants (products with same SKU prefix)
+                const variantProducts = await getProductVariants(prod.sku);
+                setVariants(variantProducts);
+
+                // Find the parent/base product (first variant or shortest SKU) for consistent name
+                const baseSku = prod.specifications?.variant_of || prod.sku.replace(/-\d+$/, '-01');
+                const parent = variantProducts.find(v => v.sku === baseSku) || variantProducts[0] || prod;
+                setParentProduct(parent);
+
+                // Fetch related products from same subcategory
                 const related = await getProductsBySubcategory(prod.category, prod.subcategory);
-                // Filter out current product and limit to 4
-                setRelatedProducts(related.filter(p => p.sku !== prod.sku).slice(0, 4));
+                // Filter out current product and its variants, limit to 4
+                const variantSkus = new Set(variantProducts.map(v => v.sku));
+                setRelatedProducts(related.filter(p => !variantSkus.has(p.sku)).slice(0, 4));
             }
 
             setLoading(false);
         };
         fetchProduct();
     }, [sku]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = () => setIsVariantDropdownOpen(false);
+        if (isVariantDropdownOpen) {
+            document.addEventListener('click', handleClickOutside);
+            return () => document.removeEventListener('click', handleClickOutside);
+        }
+    }, [isVariantDropdownOpen]);
 
     if (loading) {
         return (
@@ -57,6 +79,48 @@ export const ProductDetail: React.FC = () => {
         );
     }
 
+    // Extract variant info from product specifications/description for display
+    const getVariantLabel = (p: Product) => {
+        // Try to get meaningful info from specifications
+        const specs = p.specifications as Record<string, string> | null;
+        if (specs) {
+            const parts: string[] = [];
+            if (specs.fig || specs.figure) parts.push(specs.fig || specs.figure);
+            if (specs.length) parts.push(specs.length);
+            if (specs.blade) parts.push(specs.blade);
+            if (specs.size) parts.push(specs.size);
+            if (parts.length > 0) {
+                return `${p.sku} - ${parts.join(', ')}`;
+            }
+        }
+        // Fallback to description if available
+        if (p.description && p.description.length < 50) {
+            return `${p.sku} - ${p.description}`;
+        }
+        return p.sku;
+    };
+
+    // Short label for dropdown items - just the differentiating specs
+    const getShortVariantLabel = (p: Product) => {
+        const specs = p.specifications as Record<string, string> | null;
+        if (specs) {
+            const parts: string[] = [];
+            if (specs.fig || specs.figure) parts.push(specs.fig || specs.figure);
+            if (specs.length) parts.push(specs.length);
+            if (specs.blade) parts.push(`Blade ${specs.blade}`);
+            if (specs.size) parts.push(specs.size);
+            if (parts.length > 0) {
+                return parts.join(' | ');
+            }
+        }
+        // Extract size from description if no specs
+        if (p.description) {
+            const match = p.description.match(/(\d+(?:\.\d+)?\s*(?:mm|cm))/i);
+            if (match) return match[1];
+        }
+        return '';
+    };
+
     const whatsappMessage = encodeURIComponent(
         `Hi, I'm interested in the product:\n\nSKU: ${product.sku}\nName: ${product.name}\n\nPlease provide more information.`
     );
@@ -66,11 +130,43 @@ export const ProductDetail: React.FC = () => {
     const emailBody = encodeURIComponent(`Hello,\n\nI'm interested in the following product:\n\nSKU: ${product.sku}\nName: ${product.name}\n\nPlease provide pricing and availability.\n\nThank you.`);
     const emailUrl = `mailto:info@smithinstruments.co.uk?subject=${emailSubject}&body=${emailBody}`;
 
+    // Generate Product schema for structured data
+    const productSchema = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": parentProduct?.name || product.name,
+        "sku": product.sku,
+        "description": product.description || `${product.name} - Premium surgical instrument`,
+        "image": product.image_url || undefined,
+        "brand": {
+            "@type": "Brand",
+            "name": "Smith Instruments"
+        },
+        "category": `${product.category}${product.subcategory ? ` > ${product.subcategory}` : ''}`,
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "Smith Instruments",
+            "url": "https://smithinstruments.com"
+        },
+        "offers": {
+            "@type": "Offer",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "seller": {
+                "@type": "Organization",
+                "name": "Smith Instruments"
+            }
+        }
+    };
+
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
             <SEO
                 title={`${product.name} - ${product.sku}`}
                 description={product.description || `${product.name} surgical instrument`}
+                image={product.image_url}
+                type="product"
+                structuredData={productSchema}
             />
 
             {/* Breadcrumbs */}
@@ -107,28 +203,44 @@ export const ProductDetail: React.FC = () => {
                             className="bg-stone-50 border border-stone-100 overflow-hidden aspect-square flex items-center justify-center relative cursor-zoom-in group"
                             onClick={() => product.image_url && setIsZoomed(true)}
                         >
-                            {product.image_url ? (
-                                <>
-                                    <img
-                                        src={product.image_url}
-                                        alt={product.name}
-                                        className="w-full h-full object-contain p-8 group-hover:scale-105 transition-transform duration-300"
-                                    />
-                                    <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <ZoomIn size={20} className="text-brand-charcoal" />
-                                    </div>
-                                </>
-                            ) : (
-                                <Package className="text-stone-300" size={120} />
-                            )}
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={product.sku}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="w-full h-full flex items-center justify-center"
+                                >
+                                    {product.image_url ? (
+                                        <>
+                                            <img
+                                                src={product.image_url}
+                                                alt={product.name}
+                                                className="w-full h-full object-contain p-8 group-hover:scale-105 transition-transform duration-300"
+                                            />
+                                            <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <ZoomIn size={20} className="text-brand-charcoal" />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <Package className="text-stone-300" size={120} />
+                                    )}
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
 
                         {/* Details */}
                         <div className="space-y-6">
-                            <div>
+                            <motion.div
+                                key={`details-${product.sku}`}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.2, delay: 0.1 }}
+                            >
                                 <p className="text-brand-gold font-medium text-sm mb-2">SKU: {product.sku}</p>
                                 <h1 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4">
-                                    {product.name}
+                                    {parentProduct?.name || product.name}
                                 </h1>
 
                                 <div className="flex gap-2 flex-wrap mb-6">
@@ -141,7 +253,70 @@ export const ProductDetail: React.FC = () => {
                                         </span>
                                     )}
                                 </div>
-                            </div>
+                            </motion.div>
+
+                            {/* Variant Selector */}
+                            {variants.length > 1 && (
+                                <div className="border border-stone-200 rounded-lg p-4 bg-stone-50">
+                                    <label className="text-sm font-medium text-brand-charcoal mb-2 block">
+                                        Size / Variant ({variants.length} options)
+                                    </label>
+                                    <div className="relative">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsVariantDropdownOpen(!isVariantDropdownOpen);
+                                            }}
+                                            className="w-full flex items-center justify-between bg-white border border-stone-200 rounded-lg px-4 py-3 text-left hover:border-brand-gold transition-colors"
+                                        >
+                                            <span className="font-medium text-brand-charcoal">
+                                                {getVariantLabel(product)}
+                                            </span>
+                                            <ChevronDown
+                                                size={20}
+                                                className={`text-stone-400 transition-transform ${isVariantDropdownOpen ? 'rotate-180' : ''}`}
+                                            />
+                                        </button>
+
+                                        <AnimatePresence>
+                                            {isVariantDropdownOpen && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: -10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -10 }}
+                                                    className="absolute top-full left-0 right-0 mt-2 bg-white border border-stone-200 rounded-lg shadow-lg z-20 max-h-60 overflow-auto"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    {variants.map((variant) => (
+                                                        <button
+                                                            key={variant.id}
+                                                            onClick={() => {
+                                                                setIsVariantDropdownOpen(false);
+                                                                // Update product state directly (no page reload)
+                                                                setProduct(variant);
+                                                                // Update URL for sharing/bookmarking without reload
+                                                                window.history.pushState(null, '', `/product/${encodeURIComponent(variant.sku)}`);
+                                                            }}
+                                                            className={`w-full px-4 py-3 text-left hover:bg-stone-50 flex items-center justify-between border-b border-stone-100 last:border-b-0 transition-colors ${variant.sku === product.sku ? 'bg-brand-gold/10' : ''
+                                                                }`}
+                                                        >
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="font-mono text-sm text-brand-gold">{variant.sku}</span>
+                                                                <span className="text-sm text-stone-500">
+                                                                    {getShortVariantLabel(variant)}
+                                                                </span>
+                                                            </div>
+                                                            {variant.sku === product.sku && (
+                                                                <span className="text-xs bg-brand-gold text-white px-2 py-0.5 rounded">Current</span>
+                                                            )}
+                                                        </button>
+                                                    ))}
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                </div>
+                            )}
 
                             {product.description && (
                                 <div className="prose prose-stone max-w-none">
@@ -274,3 +449,4 @@ export const ProductDetail: React.FC = () => {
         </div>
     );
 };
+

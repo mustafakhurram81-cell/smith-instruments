@@ -10,26 +10,7 @@ export interface Product {
     subcategory: string;
     image_url: string;
     specifications: any;
-}
-
-// Get all unique categories
-export async function getCategories(): Promise<string[]> {
-    console.log('Fetching categories...');
-    const { data, error } = await supabase
-        .from('products')
-        .select('category');
-
-    if (error) {
-        console.error('Error fetching categories:', error);
-        return [];
-    }
-
-    console.log('Raw data from Supabase:', data);
-
-    // Get unique categories
-    const categories = [...new Set(data.map(d => d.category))].filter(Boolean).sort();
-    console.log('Processed categories:', categories);
-    return categories;
+    variant_group?: string; // Groups products that are variations of each other
 }
 
 // Get subcategories for a category with counts and images - with pagination
@@ -163,6 +144,43 @@ export async function searchProducts(query: string): Promise<Product[]> {
     }
 
     return data || [];
+}
+
+// Get product variants - finds products with same SKU prefix
+// e.g., 01-100-01, 01-100-02, 01-100-03 are variants (prefix: 01-100)
+export async function getProductVariants(sku: string): Promise<Product[]> {
+    // Extract the SKU prefix (everything before the last dash and number)
+    // Pattern: XX-XXX-YY where YY is the variant number
+    const skuParts = sku.split('-');
+
+    if (skuParts.length < 3) {
+        // SKU doesn't follow the expected pattern
+        return [];
+    }
+
+    // Get the prefix (all parts except the last one)
+    const prefix = skuParts.slice(0, -1).join('-');
+
+    const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .ilike('sku', `${prefix}-%`)
+        .order('sku', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching product variants:', error);
+        return [];
+    }
+
+    // Filter to ensure we only get actual variants (same prefix pattern)
+    const variants = (data || []).filter(p => {
+        const pParts = p.sku.split('-');
+        if (pParts.length < 3) return false;
+        const pPrefix = pParts.slice(0, -1).join('-');
+        return pPrefix === prefix;
+    });
+
+    return variants;
 }
 
 // Get detailed category info (count + image) - with pagination to get ALL products

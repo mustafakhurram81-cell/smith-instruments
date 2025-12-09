@@ -5,6 +5,7 @@ import { SEO } from '../../components/SEO';
 import { CategoryGridSkeleton, ProductGridSkeleton } from '../../components/ui/Skeleton';
 import { useSubcategoryDetails, useProductsByCategory } from '../../lib/queries';
 import { ChevronRight, Package, ArrowRight } from 'lucide-react';
+import { ProductCard } from '../../components/ProductCard';
 
 export const CategoryView: React.FC = () => {
     const { categoryName } = useParams<{ categoryName: string }>();
@@ -117,30 +118,12 @@ export const CategoryView: React.FC = () => {
 
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                 {visibleProducts.map((product, idx) => (
-                                    <FadeIn key={product.sku} delay={idx * 0.02}>
-                                        <div
-                                            onClick={() => navigate(`/product/${product.sku}`)}
-                                            className="group cursor-pointer bg-white border border-stone-100 hover:border-stone-200 hover:shadow-md transition-all"
-                                        >
-                                            <div className="aspect-square bg-stone-50 relative overflow-hidden">
-                                                {product.image_url ? (
-                                                    <img
-                                                        src={product.image_url}
-                                                        alt={product.name}
-                                                        className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center">
-                                                        <Package className="text-stone-300" size={48} />
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="border-t border-stone-100 p-4">
-                                                <p className="text-xs text-brand-gold font-mono mb-1">{product.sku}</p>
-                                                <h3 className="text-sm font-medium text-brand-charcoal line-clamp-2 group-hover:text-brand-gold transition-colors">{product.name}</h3>
-                                            </div>
-                                        </div>
-                                    </FadeIn>
+                                    <ProductCard
+                                        key={product.sku}
+                                        product={product}
+                                        viewMode="grid"
+                                        index={idx}
+                                    />
                                 ))}
                             </div>
 

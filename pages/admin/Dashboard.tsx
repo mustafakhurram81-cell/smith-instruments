@@ -1,38 +1,83 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../components/AuthProvider';
 import {
     Package, Loader2, FolderOpen, Settings, Search, Edit, Trash2, X, Save,
     Plus, Upload, CheckSquare, Square, FolderEdit,
-    Filter, ChevronRight, ChevronDown
+    Filter, ChevronRight, ChevronDown, BarChart3, AlertTriangle, ImageOff, FileText, RefreshCw,
+    Download, ExternalLink, GitBranch, Layers, ArrowUpDown, Eye, Check
 } from 'lucide-react';
 import { Button } from '../../components/Shared';
-import { StatsOverview, CategoryBreakdown } from '../../components/admin';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { DashboardHeader, OverviewTab, CategoriesTab } from '../../components/admin';
+
+interface VariantGroup {
+    parent_sku: string;
+    parent_name: string;
+    variants: any[];
+}
 
 export const Dashboard: React.FC = () => {
+    const { user, signOut } = useAuth();
+    const navigate = useNavigate();
+
     const [activeTab, setActiveTab] = useState('overview');
     const [loading, setLoading] = useState(true);
-    const [stats, setStats] = useState({ products: 0, categories: 0, uncategorized: 0, missingImages: 0, missingDesc: 0 });
+    const [stats, setStats] = useState({
+        products: 0,
+        categories: 0,
+        uncategorized: 0,
+        missingImages: 0,
+        missingDesc: 0,
+        withVariants: 0,
+        parentProducts: 0,
+        missingAttributes: 0
+    });
     const [products, setProducts] = useState<any[]>([]);
     const [productsLoading, setProductsLoading] = useState(false);
     const [page, setPage] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryFilter, setCategoryFilter] = useState('');
+    const [subcategoryFilter, setSubcategoryFilter] = useState('');
+    const [sortBy, setSortBy] = useState<'sku' | 'name' | 'category'>('sku');
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [showAddModal, setShowAddModal] = useState(false);
     const [newProduct, setNewProduct] = useState({ sku: '', name: '', description: '', category: '', subcategory: '' });
     const [editingProduct, setEditingProduct] = useState<any>(null);
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
     const [showBulkModal, setShowBulkModal] = useState(false);
+    const [showBulkSubcategoryModal, setShowBulkSubcategoryModal] = useState(false);
     const [bulkCategory, setBulkCategory] = useState('');
+    const [bulkSubcategory, setBulkSubcategory] = useState('');
     const [uploadingImage, setUploadingImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [editingCategory, setEditingCategory] = useState<{ old: string; new: string } | null>(null);
     const pageSize = 50;
 
+    // Quick Filters
+    const [quickFilter, setQuickFilter] = useState<'all' | 'missing-images' | 'missing-desc' | 'uncategorized' | 'has-variants'>('all');
+
+    // Inline Editing
+    const [inlineEdit, setInlineEdit] = useState<{ id: string; field: 'name' | 'category' | 'subcategory'; value: string } | null>(null);
+    const [savingInline, setSavingInline] = useState<string | null>(null);
+
     // Categories tab
     const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
     const [statsTree, setStatsTree] = useState<{ name: string; count: number; subcategories: { name: string; count: number }[] }[]>([]);
     const categoryStats = statsTree;
+
+    // Variants tab
+    const [variantGroups, setVariantGroups] = useState<VariantGroup[]>([]);
+    const [variantsLoading, setVariantsLoading] = useState(false);
+    const [expandedVariantGroups, setExpandedVariantGroups] = useState<Set<string>>(new Set());
+    const [variantSearchQuery, setVariantSearchQuery] = useState('');
+    const [variantPage, setVariantPage] = useState(0);
+    const [editingVariant, setEditingVariant] = useState<any>(null);
+
+    // Get subcategories for selected category
+    const subcategoriesForCategory = categoryFilter
+        ? statsTree.find(c => c.name === categoryFilter)?.subcategories || []
+        : [];
 
     useEffect(() => {
         fetchStats();
@@ -46,11 +91,46 @@ export const Dashboard: React.FC = () => {
         const { count: missingImages } = await supabase.from('products').select('*', { count: 'exact', head: true }).or('image_url.is.null,image_url.eq.');
         const { count: missingDesc } = await supabase.from('products').select('*', { count: 'exact', head: true }).or('description.is.null,description.eq.');
 
-        const { data: allProducts } = await supabase.from('products').select('category, subcategory');
+        // Paginate through ALL products to get accurate counts
+        const pageSize = 1000;
+        let allProducts: { category: string; subcategory: string; sku: string; specifications: any }[] = [];
+        let page = 0;
+        let hasMore = true;
+
+        while (hasMore) {
+            const { data } = await supabase
+                .from('products')
+                .select('category, subcategory, sku, specifications')
+                .range(page * pageSize, (page + 1) * pageSize - 1);
+
+            if (data && data.length > 0) {
+                allProducts = [...allProducts, ...data];
+                hasMore = data.length === pageSize;
+                page++;
+            } else {
+                hasMore = false;
+            }
+        }
+
+        // Calculate variant stats
+        const parentSkus = new Set<string>();
+        let productsWithVariants = 0;
+        let missingAttributes = 0;
+
+        allProducts.forEach(p => {
+            const variantOf = p.specifications?.variant_of;
+            if (variantOf && variantOf !== p.sku) {
+                productsWithVariants++;
+                parentSkus.add(variantOf);
+            }
+            if (!p.specifications || Object.keys(p.specifications || {}).length === 0) {
+                missingAttributes++;
+            }
+        });
 
         const tree: Record<string, { count: number; subcategories: Record<string, number> }> = {};
 
-        allProducts?.forEach(p => {
+        allProducts.forEach(p => {
             if (!tree[p.category]) {
                 tree[p.category] = { count: 0, subcategories: {} };
             }
@@ -76,14 +156,75 @@ export const Dashboard: React.FC = () => {
             categories: sortedTree.length,
             uncategorized: uncategorized || 0,
             missingImages: missingImages || 0,
-            missingDesc: missingDesc || 0
+            missingDesc: missingDesc || 0,
+            withVariants: productsWithVariants,
+            parentProducts: parentSkus.size,
+            missingAttributes
         });
         setLoading(false);
     };
 
-    // ... (keep fetchProducts, handleSearch, methods)
+    // Variants tab methods
+    const fetchVariantGroups = async (query: string = '', pageNum: number = 0) => {
+        setVariantsLoading(true);
 
-    // New Category methods
+        // Get all products with specifications.variant_of
+        let queryBuilder = supabase
+            .from('products')
+            .select('*')
+            .not('specifications->variant_of', 'is', null)
+            .order('sku', { ascending: true })
+            .range(pageNum * 200, (pageNum + 1) * 200 - 1);
+
+        if (query.trim()) {
+            queryBuilder = queryBuilder.or(`sku.ilike.%${query}%,name.ilike.%${query}%`);
+        }
+
+        const { data } = await queryBuilder;
+
+        // Group by variant_of (parent SKU)
+        const groups: Record<string, VariantGroup> = {};
+        (data || []).forEach(product => {
+            const parentSku = product.specifications?.variant_of || product.sku;
+            if (!groups[parentSku]) {
+                groups[parentSku] = {
+                    parent_sku: parentSku,
+                    parent_name: product.name,
+                    variants: []
+                };
+            }
+            groups[parentSku].variants.push(product);
+        });
+
+        // Sort variants within each group
+        Object.values(groups).forEach(g => {
+            g.variants.sort((a, b) => a.sku.localeCompare(b.sku));
+        });
+
+        setVariantGroups(Object.values(groups));
+        setVariantsLoading(false);
+    };
+
+    const toggleVariantGroup = (parentSku: string) => {
+        setExpandedVariantGroups(prev => {
+            const next = new Set(prev);
+            next.has(parentSku) ? next.delete(parentSku) : next.add(parentSku);
+            return next;
+        });
+    };
+
+    const handleSaveVariant = async () => {
+        if (!editingVariant) return;
+        await supabase.from('products').update({
+            specifications: editingVariant.specifications
+        }).eq('id', editingVariant.id);
+
+        // Refresh variant groups
+        fetchVariantGroups(variantSearchQuery, variantPage);
+        setEditingVariant(null);
+    };
+
+    // Category methods
     const toggleExpand = (catName: string) => {
         setExpandedCategories(prev => {
             const next = new Set(prev);
@@ -101,20 +242,14 @@ export const Dashboard: React.FC = () => {
         fetchStats();
     };
 
-    // ... (keep other handlers)
-
-    // RENDER SECTION UPDATE FOR CATEGORIES TAB
-
-
-
-    const fetchProducts = async (query: string = '', category: string = '', pageNum: number = 0) => {
+    const fetchProducts = async (query: string = '', category: string = '', subcategory: string = '', pageNum: number = 0, qFilter: typeof quickFilter = 'all') => {
         setProductsLoading(true);
         setSelectedIds(new Set());
 
         let queryBuilder = supabase
             .from('products')
-            .select('id, sku, name, description, category, subcategory, image_url')
-            .order('sku', { ascending: true })
+            .select('id, sku, name, description, category, subcategory, image_url, specifications')
+            .order(sortBy, { ascending: sortOrder === 'asc' })
             .range(pageNum * pageSize, (pageNum + 1) * pageSize - 1);
 
         if (query.trim()) {
@@ -122,6 +257,20 @@ export const Dashboard: React.FC = () => {
         }
         if (category) {
             queryBuilder = queryBuilder.eq('category', category);
+        }
+        if (subcategory) {
+            queryBuilder = queryBuilder.eq('subcategory', subcategory);
+        }
+
+        // Apply quick filters
+        if (qFilter === 'missing-images') {
+            queryBuilder = queryBuilder.or('image_url.is.null,image_url.eq.');
+        } else if (qFilter === 'missing-desc') {
+            queryBuilder = queryBuilder.or('description.is.null,description.eq.');
+        } else if (qFilter === 'uncategorized') {
+            queryBuilder = queryBuilder.eq('category', 'Uncategorized');
+        } else if (qFilter === 'has-variants') {
+            queryBuilder = queryBuilder.not('specifications->variant_of', 'is', null);
         }
 
         const { data } = await queryBuilder;
@@ -131,7 +280,7 @@ export const Dashboard: React.FC = () => {
 
     const handleSearch = () => {
         setPage(0);
-        fetchProducts(searchQuery, categoryFilter, 0);
+        fetchProducts(searchQuery, categoryFilter, subcategoryFilter, 0);
     };
 
     const handleDeleteProduct = async (id: string) => {
@@ -165,7 +314,7 @@ export const Dashboard: React.FC = () => {
         if (!error) {
             setShowAddModal(false);
             setNewProduct({ sku: '', name: '', description: '', category: '', subcategory: '' });
-            fetchProducts(searchQuery, categoryFilter, page);
+            fetchProducts(searchQuery, categoryFilter, subcategoryFilter, page);
             fetchStats();
         }
     };
@@ -177,6 +326,16 @@ export const Dashboard: React.FC = () => {
         setSelectedIds(new Set());
         setShowBulkModal(false);
         setBulkCategory('');
+        fetchStats();
+    };
+
+    const handleBulkSubcategoryChange = async () => {
+        if (!bulkSubcategory || selectedIds.size === 0) return;
+        await supabase.from('products').update({ subcategory: bulkSubcategory }).in('id', Array.from(selectedIds));
+        setProducts(prev => prev.map(p => selectedIds.has(p.id) ? { ...p, subcategory: bulkSubcategory } : p));
+        setSelectedIds(new Set());
+        setShowBulkSubcategoryModal(false);
+        setBulkSubcategory('');
         fetchStats();
     };
 
@@ -224,99 +383,154 @@ export const Dashboard: React.FC = () => {
         }
     };
 
-    const handleLogout = () => {
-        localStorage.removeItem('admin_authenticated');
-        window.location.href = '/#/admin/login';
+    const handleLogout = async () => {
+        await signOut();
+        navigate('/admin/login');
+    };
+
+    // Inline editing
+    const handleInlineEdit = (id: string, field: 'name' | 'category' | 'subcategory', value: string) => {
+        setInlineEdit({ id, field, value });
+    };
+
+    const handleInlineSave = async () => {
+        if (!inlineEdit) return;
+        setSavingInline(inlineEdit.id);
+        await supabase.from('products').update({ [inlineEdit.field]: inlineEdit.value }).eq('id', inlineEdit.id);
+        setProducts(prev => prev.map(p => p.id === inlineEdit.id ? { ...p, [inlineEdit.field]: inlineEdit.value } : p));
+        setInlineEdit(null);
+        setTimeout(() => setSavingInline(null), 1000);
+    };
+
+    // Export to CSV
+    const handleExportCSV = async () => {
+        // Fetch all products (or filtered)
+        let allProducts: any[] = [];
+        let offset = 0;
+        const limit = 1000;
+
+        while (true) {
+            let queryBuilder = supabase
+                .from('products')
+                .select('sku, name, description, category, subcategory, image_url, specifications')
+                .order('sku', { ascending: true })
+                .range(offset, offset + limit - 1);
+
+            if (categoryFilter) {
+                queryBuilder = queryBuilder.eq('category', categoryFilter);
+            }
+            if (subcategoryFilter) {
+                queryBuilder = queryBuilder.eq('subcategory', subcategoryFilter);
+            }
+
+            const { data } = await queryBuilder;
+            if (!data || data.length === 0) break;
+            allProducts = [...allProducts, ...data];
+            offset += limit;
+        }
+
+        // Create CSV
+        const headers = ['SKU', 'Name', 'Description', 'Category', 'Subcategory', 'Image URL', 'Parent SKU', 'Attributes'];
+        const rows = allProducts.map(p => [
+            p.sku,
+            `"${(p.name || '').replace(/"/g, '""')}"`,
+            `"${(p.description || '').replace(/"/g, '""')}"`,
+            p.category,
+            p.subcategory,
+            p.image_url || '',
+            p.specifications?.variant_of || '',
+            JSON.stringify(p.specifications || {})
+        ]);
+
+        const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `products-export-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    const handleSort = (column: 'sku' | 'name' | 'category') => {
+        if (sortBy === column) {
+            setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortBy(column);
+            setSortOrder('asc');
+        }
     };
 
     useEffect(() => {
-        if (activeTab === 'products') fetchProducts('', '', 0);
+        if (activeTab === 'products') fetchProducts(searchQuery, categoryFilter, subcategoryFilter, 0);
+    }, [activeTab, sortBy, sortOrder]);
+
+    useEffect(() => {
+        if (activeTab === 'variants') fetchVariantGroups('', 0);
     }, [activeTab]);
+
+    // Get variant count for a product
+    const getVariantCount = (product: any) => {
+        const variantOf = product.specifications?.variant_of;
+        if (!variantOf || variantOf === product.sku) return 0;
+        return products.filter(p => p.specifications?.variant_of === variantOf).length;
+    };
 
     return (
         <div className="min-h-screen bg-stone-100">
-            {/* Header */}
-            <div className="bg-brand-charcoal text-white p-4">
-                <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <h1 className="text-xl font-serif">Smith Instruments Admin</h1>
-                    <div className="flex items-center gap-4">
-                        <Link to="/" className="text-sm text-stone-400 hover:text-white">← Back to Site</Link>
-                        <button onClick={handleLogout} className="text-sm text-red-400 hover:text-red-300">Logout</button>
-                    </div>
-                </div>
-            </div>
+            <DashboardHeader
+                userEmail={user?.email}
+                activeTab={activeTab}
+                onTabChange={(tab) => setActiveTab(tab as any)}
+                onLogout={handleLogout}
+            />
 
-            <div className="max-w-7xl mx-auto p-6">
-                {/* Tabs */}
-                <div className="flex gap-2 mb-6 border-b border-stone-300 overflow-x-auto">
-                    {[
-                        { id: 'overview', label: 'Overview', icon: BarChart3 },
-                        { id: 'products', label: 'Products', icon: Package },
-                        { id: 'categories', label: 'Categories', icon: FolderOpen },
-                        { id: 'settings', label: 'Settings', icon: Settings }
-                    ].map(tab => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id as any)}
-                            className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id ? 'border-brand-gold text-brand-charcoal' : 'border-transparent text-stone-500 hover:text-brand-charcoal'
-                                }`}
-                        >
-                            <tab.icon size={18} />
-                            {tab.label}
-                        </button>
-                    ))}
-                </div>
+            <div className="max-w-7xl mx-auto px-6 pb-6">
 
                 {/* Overview Tab */}
                 {activeTab === 'overview' && (
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                            {[
-                                { label: 'Total Products', value: stats.products, color: 'blue', icon: Package },
-                                { label: 'Categories', value: stats.categories, color: 'green', icon: FolderOpen },
-                                { label: 'Uncategorized', value: stats.uncategorized, color: 'amber', icon: AlertTriangle },
-                                { label: 'Missing Images', value: stats.missingImages, color: 'red', icon: ImageOff },
-                                { label: 'Missing Description', value: stats.missingDesc, color: 'purple', icon: FileText },
-                            ].map(stat => (
-                                <div key={stat.label} className="bg-white p-4 rounded-xl shadow-sm">
-                                    <div className={`p-2 bg-${stat.color}-50 text-${stat.color}-600 rounded-lg w-fit mb-2`}>
-                                        <stat.icon size={20} />
-                                    </div>
-                                    <p className="text-xs text-stone-500">{stat.label}</p>
-                                    <h3 className="text-2xl font-bold text-brand-charcoal">{loading ? '...' : stat.value.toLocaleString()}</h3>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="bg-white rounded-xl shadow-sm p-6">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="font-medium text-brand-charcoal">Category Breakdown</h2>
-                                <button onClick={fetchStats} className="text-brand-gold text-sm hover:underline flex items-center gap-1">
-                                    <RefreshCw size={14} /> Refresh
-                                </button>
-                            </div>
-                            <div className="space-y-2 max-h-80 overflow-y-auto">
-                                {categoryStats.map(cat => (
-                                    <div key={cat.name} className="flex items-center gap-3">
-                                        <div className="w-28 text-sm truncate">{cat.name}</div>
-                                        <div className="flex-1 h-5 bg-stone-100 rounded-full overflow-hidden">
-                                            <div className="h-full bg-brand-gold" style={{ width: `${(cat.count / stats.products) * 100}%` }} />
-                                        </div>
-                                        <div className="w-12 text-right text-sm text-stone-500">{cat.count}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                    <OverviewTab
+                        stats={stats}
+                        categoryStats={categoryStats}
+                        loading={loading}
+                        onRefresh={fetchStats}
+                    />
                 )}
 
                 {/* Products Tab */}
                 {activeTab === 'products' && (
                     <div className="space-y-4">
+                        {/* Quick Filters */}
+                        <div className="flex flex-wrap gap-2">
+                            {[
+                                { id: 'all', label: 'All Products', icon: Package },
+                                { id: 'missing-images', label: 'Missing Images', icon: ImageOff },
+                                { id: 'missing-desc', label: 'Missing Description', icon: FileText },
+                                { id: 'uncategorized', label: 'Uncategorized', icon: AlertTriangle },
+                                { id: 'has-variants', label: 'Has Variants', icon: GitBranch },
+                            ].map(f => (
+                                <button
+                                    key={f.id}
+                                    onClick={() => {
+                                        setQuickFilter(f.id as typeof quickFilter);
+                                        setPage(0);
+                                        fetchProducts(searchQuery, categoryFilter, subcategoryFilter, 0, f.id as typeof quickFilter);
+                                    }}
+                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${quickFilter === f.id
+                                        ? 'bg-brand-gold text-white shadow-md'
+                                        : 'bg-white text-stone-600 hover:bg-stone-50 border border-stone-200'
+                                        }`}
+                                >
+                                    <f.icon size={14} />
+                                    {f.label}
+                                </button>
+                            ))}
+                        </div>
+
                         {/* Toolbar */}
                         <div className="bg-white rounded-xl shadow-sm p-4 flex flex-wrap gap-4 items-center">
-                            <div className="flex-1 flex gap-2 min-w-[200px]">
-                                <div className="relative flex-1">
+                            <div className="flex-1 flex gap-2 min-w-[200px] flex-wrap">
+                                <div className="relative flex-1 min-w-[150px]">
                                     <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
                                     <input
                                         type="text"
@@ -329,21 +543,48 @@ export const Dashboard: React.FC = () => {
                                 </div>
                                 <select
                                     value={categoryFilter}
-                                    onChange={e => { setCategoryFilter(e.target.value); setPage(0); fetchProducts(searchQuery, e.target.value, 0); }}
+                                    onChange={e => {
+                                        setCategoryFilter(e.target.value);
+                                        setSubcategoryFilter('');
+                                        setPage(0);
+                                        fetchProducts(searchQuery, e.target.value, '', 0);
+                                    }}
                                     className="px-3 py-2 border border-stone-200 rounded-lg text-sm outline-none"
                                 >
                                     <option value="">All Categories</option>
                                     {categoryStats.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                                 </select>
+                                {categoryFilter && subcategoriesForCategory.length > 0 && (
+                                    <select
+                                        value={subcategoryFilter}
+                                        onChange={e => {
+                                            setSubcategoryFilter(e.target.value);
+                                            setPage(0);
+                                            fetchProducts(searchQuery, categoryFilter, e.target.value, 0);
+                                        }}
+                                        className="px-3 py-2 border border-stone-200 rounded-lg text-sm outline-none"
+                                    >
+                                        <option value="">All Subcategories</option>
+                                        {subcategoriesForCategory.map(s => <option key={s.name} value={s.name}>{s.name} ({s.count})</option>)}
+                                    </select>
+                                )}
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 flex-wrap">
+                                <Button variant="outline" onClick={handleExportCSV}>
+                                    <Download size={16} className="mr-1" /> Export CSV
+                                </Button>
                                 <Button variant="outline" onClick={() => setShowAddModal(true)}>
                                     <Plus size={16} className="mr-1" /> Add Product
                                 </Button>
                                 {selectedIds.size > 0 && (
-                                    <Button variant="primary" onClick={() => setShowBulkModal(true)}>
-                                        Change Category ({selectedIds.size})
-                                    </Button>
+                                    <>
+                                        <Button variant="primary" onClick={() => setShowBulkModal(true)}>
+                                            Change Category ({selectedIds.size})
+                                        </Button>
+                                        <Button variant="outline" onClick={() => setShowBulkSubcategoryModal(true)}>
+                                            Change Subcategory ({selectedIds.size})
+                                        </Button>
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -351,7 +592,36 @@ export const Dashboard: React.FC = () => {
                         {/* Table */}
                         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                             {productsLoading ? (
-                                <div className="p-12 text-center"><Loader2 className="animate-spin mx-auto text-brand-gold" size={32} /></div>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-sm">
+                                        <thead className="bg-stone-50 border-b">
+                                            <tr>
+                                                <th className="p-3 text-left w-10"></th>
+                                                <th className="p-3 text-left">Image</th>
+                                                <th className="p-3 text-left">SKU</th>
+                                                <th className="p-3 text-left">Name</th>
+                                                <th className="p-3 text-left">Category</th>
+                                                <th className="p-3 text-left">Subcategory</th>
+                                                <th className="p-3 text-center">Variant</th>
+                                                <th className="p-3 text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {[...Array(6)].map((_, i) => (
+                                                <tr key={i} className="border-b">
+                                                    <td className="p-3"><div className="w-5 h-5 bg-stone-200 rounded animate-pulse" /></td>
+                                                    <td className="p-3"><div className="w-10 h-10 bg-stone-200 rounded animate-pulse" /></td>
+                                                    <td className="p-3"><div className="w-20 h-4 bg-stone-200 rounded animate-pulse" /></td>
+                                                    <td className="p-3"><div className="w-32 h-4 bg-stone-200 rounded animate-pulse" /></td>
+                                                    <td className="p-3"><div className="w-24 h-4 bg-stone-200 rounded animate-pulse" /></td>
+                                                    <td className="p-3"><div className="w-20 h-4 bg-stone-200 rounded animate-pulse" /></td>
+                                                    <td className="p-3"><div className="w-16 h-4 bg-stone-200 rounded animate-pulse mx-auto" /></td>
+                                                    <td className="p-3"><div className="w-16 h-4 bg-stone-200 rounded animate-pulse ml-auto" /></td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             ) : (
                                 <div className="overflow-x-auto">
                                     <table className="w-full text-sm">
@@ -363,10 +633,35 @@ export const Dashboard: React.FC = () => {
                                                     </button>
                                                 </th>
                                                 <th className="p-3 text-left">Image</th>
-                                                <th className="p-3 text-left">SKU</th>
-                                                <th className="p-3 text-left">Name</th>
-                                                <th className="p-3 text-left">Category</th>
+                                                <th className="p-3 text-left">
+                                                    <button
+                                                        onClick={() => handleSort('sku')}
+                                                        className="flex items-center gap-1 hover:text-brand-gold"
+                                                    >
+                                                        SKU
+                                                        {sortBy === 'sku' && <ArrowUpDown size={14} className={sortOrder === 'desc' ? 'rotate-180' : ''} />}
+                                                    </button>
+                                                </th>
+                                                <th className="p-3 text-left">
+                                                    <button
+                                                        onClick={() => handleSort('name')}
+                                                        className="flex items-center gap-1 hover:text-brand-gold"
+                                                    >
+                                                        Name
+                                                        {sortBy === 'name' && <ArrowUpDown size={14} className={sortOrder === 'desc' ? 'rotate-180' : ''} />}
+                                                    </button>
+                                                </th>
+                                                <th className="p-3 text-left">
+                                                    <button
+                                                        onClick={() => handleSort('category')}
+                                                        className="flex items-center gap-1 hover:text-brand-gold"
+                                                    >
+                                                        Category
+                                                        {sortBy === 'category' && <ArrowUpDown size={14} className={sortOrder === 'desc' ? 'rotate-180' : ''} />}
+                                                    </button>
+                                                </th>
                                                 <th className="p-3 text-left">Subcategory</th>
+                                                <th className="p-3 text-center">Variant</th>
                                                 <th className="p-3 text-right">Actions</th>
                                             </tr>
                                         </thead>
@@ -400,11 +695,70 @@ export const Dashboard: React.FC = () => {
                                                         </div>
                                                     </td>
                                                     <td className="p-3 font-mono text-brand-gold">{product.sku}</td>
-                                                    <td className="p-3 max-w-[200px] truncate">{product.name}</td>
-                                                    <td className="p-3 text-stone-600">{product.category}</td>
+                                                    <td className="p-3 max-w-[200px]">
+                                                        {inlineEdit?.id === product.id && inlineEdit.field === 'name' ? (
+                                                            <input
+                                                                autoFocus
+                                                                value={inlineEdit.value}
+                                                                onChange={e => setInlineEdit({ ...inlineEdit, value: e.target.value })}
+                                                                onBlur={handleInlineSave}
+                                                                onKeyDown={e => e.key === 'Enter' && handleInlineSave()}
+                                                                className="w-full px-2 py-1 border border-brand-gold rounded text-sm outline-none"
+                                                            />
+                                                        ) : (
+                                                            <span
+                                                                onDoubleClick={() => handleInlineEdit(product.id, 'name', product.name)}
+                                                                className="cursor-pointer hover:bg-stone-100 px-1 py-0.5 rounded truncate block"
+                                                                title="Double-click to edit"
+                                                            >
+                                                                {savingInline === product.id ? <Check size={14} className="inline text-green-500 mr-1" /> : null}
+                                                                {product.name}
+                                                            </span>
+                                                        )}
+                                                    </td>
+                                                    <td className="p-3">
+                                                        {inlineEdit?.id === product.id && inlineEdit.field === 'category' ? (
+                                                            <select
+                                                                autoFocus
+                                                                value={inlineEdit.value}
+                                                                onChange={e => { setInlineEdit({ ...inlineEdit, value: e.target.value }); }}
+                                                                onBlur={handleInlineSave}
+                                                                className="px-2 py-1 border border-brand-gold rounded text-sm outline-none"
+                                                            >
+                                                                {categoryStats.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
+                                                            </select>
+                                                        ) : (
+                                                            <span
+                                                                onDoubleClick={() => handleInlineEdit(product.id, 'category', product.category)}
+                                                                className="cursor-pointer hover:bg-stone-100 px-1 py-0.5 rounded text-stone-600"
+                                                                title="Double-click to edit"
+                                                            >
+                                                                {product.category}
+                                                            </span>
+                                                        )}
+                                                    </td>
                                                     <td className="p-3 text-stone-500">{product.subcategory}</td>
+                                                    <td className="p-3 text-center">
+                                                        {product.specifications?.variant_of && product.specifications?.variant_of !== product.sku ? (
+                                                            <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-xs rounded-full">
+                                                                <GitBranch size={12} className="inline mr-1" />
+                                                                {product.specifications.variant_of}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-stone-300">—</span>
+                                                        )}
+                                                    </td>
                                                     <td className="p-3 text-right">
                                                         <div className="flex justify-end gap-1">
+                                                            <a
+                                                                href={`/#/product/${product.sku}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="p-1.5 hover:bg-stone-100 rounded"
+                                                                title="View on site"
+                                                            >
+                                                                <Eye size={14} className="text-stone-500" />
+                                                            </a>
                                                             <button onClick={() => setEditingProduct(product)} className="p-1.5 hover:bg-stone-100 rounded">
                                                                 <Edit size={14} className="text-stone-500" />
                                                             </button>
@@ -422,8 +776,126 @@ export const Dashboard: React.FC = () => {
                             <div className="p-4 border-t flex justify-between items-center text-sm">
                                 <span className="text-stone-500">Page {page + 1}</span>
                                 <div className="flex gap-2">
-                                    <Button variant="outline" onClick={() => { setPage(p => p - 1); fetchProducts(searchQuery, categoryFilter, page - 1); }} disabled={page === 0}>Prev</Button>
-                                    <Button variant="outline" onClick={() => { setPage(p => p + 1); fetchProducts(searchQuery, categoryFilter, page + 1); }} disabled={products.length < pageSize}>Next</Button>
+                                    <Button variant="outline" onClick={() => { setPage(p => p - 1); fetchProducts(searchQuery, categoryFilter, subcategoryFilter, page - 1); }} disabled={page === 0}>Prev</Button>
+                                    <Button variant="outline" onClick={() => { setPage(p => p + 1); fetchProducts(searchQuery, categoryFilter, subcategoryFilter, page + 1); }} disabled={products.length < pageSize}>Next</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Variants Tab */}
+                {activeTab === 'variants' && (
+                    <div className="space-y-4">
+                        {/* Toolbar */}
+                        <div className="bg-white rounded-xl shadow-sm p-4 flex gap-4 items-center">
+                            <div className="relative flex-1 max-w-md">
+                                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Search parent SKU or name..."
+                                    value={variantSearchQuery}
+                                    onChange={e => setVariantSearchQuery(e.target.value)}
+                                    onKeyDown={e => e.key === 'Enter' && fetchVariantGroups(variantSearchQuery, 0)}
+                                    className="w-full pl-9 pr-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:border-brand-gold"
+                                />
+                            </div>
+                            <Button variant="outline" onClick={() => fetchVariantGroups(variantSearchQuery, 0)}>
+                                <RefreshCw size={16} className="mr-1" /> Refresh
+                            </Button>
+                        </div>
+
+                        {/* Variant Groups */}
+                        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                            {variantsLoading ? (
+                                <div className="p-12 text-center"><Loader2 className="animate-spin mx-auto text-brand-gold" size={32} /></div>
+                            ) : (
+                                <div className="divide-y">
+                                    {variantGroups.length === 0 ? (
+                                        <div className="p-12 text-center text-stone-500">No variant groups found</div>
+                                    ) : (
+                                        variantGroups.map(group => (
+                                            <div key={group.parent_sku}>
+                                                <div
+                                                    className="flex items-center justify-between p-4 hover:bg-stone-50 cursor-pointer"
+                                                    onClick={() => toggleVariantGroup(group.parent_sku)}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        {expandedVariantGroups.has(group.parent_sku) ? (
+                                                            <ChevronDown size={18} className="text-stone-400" />
+                                                        ) : (
+                                                            <ChevronRight size={18} className="text-stone-400" />
+                                                        )}
+                                                        <Layers size={18} className="text-brand-gold" />
+                                                        <span className="font-mono text-brand-gold">{group.parent_sku}</span>
+                                                        <span className="text-stone-600">{group.parent_name}</span>
+                                                    </div>
+                                                    <span className="px-3 py-1 bg-indigo-50 text-indigo-600 text-sm rounded-full">
+                                                        {group.variants.length} variants
+                                                    </span>
+                                                </div>
+
+                                                {expandedVariantGroups.has(group.parent_sku) && (
+                                                    <div className="bg-stone-50 border-t">
+                                                        <table className="w-full text-sm">
+                                                            <thead className="bg-stone-100">
+                                                                <tr>
+                                                                    <th className="p-3 text-left pl-12">SKU</th>
+                                                                    <th className="p-3 text-left">Description</th>
+                                                                    <th className="p-3 text-left">Fig</th>
+                                                                    <th className="p-3 text-left">Length</th>
+                                                                    <th className="p-3 text-left">Blade</th>
+                                                                    <th className="p-3 text-left">Size</th>
+                                                                    <th className="p-3 text-right">Actions</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {group.variants.map(variant => (
+                                                                    <tr key={variant.id} className="border-t border-stone-200 hover:bg-white">
+                                                                        <td className="p-3 pl-12 font-mono text-brand-gold">{variant.sku}</td>
+                                                                        <td className="p-3 text-stone-600 max-w-[200px] truncate">{variant.description}</td>
+                                                                        <td className="p-3 text-stone-500">{variant.specifications?.fig || variant.specifications?.figure || '—'}</td>
+                                                                        <td className="p-3 text-stone-500">{variant.specifications?.length || '—'}</td>
+                                                                        <td className="p-3 text-stone-500">{variant.specifications?.blade || '—'}</td>
+                                                                        <td className="p-3 text-stone-500">{variant.specifications?.size || '—'}</td>
+                                                                        <td className="p-3 text-right">
+                                                                            <div className="flex justify-end gap-1">
+                                                                                <a
+                                                                                    href={`/#/product/${variant.sku}`}
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer"
+                                                                                    className="p-1.5 hover:bg-stone-100 rounded"
+                                                                                    title="View on site"
+                                                                                >
+                                                                                    <Eye size={14} className="text-stone-500" />
+                                                                                </a>
+                                                                                <button
+                                                                                    onClick={(e) => {
+                                                                                        e.stopPropagation();
+                                                                                        setEditingVariant(variant);
+                                                                                    }}
+                                                                                    className="p-1.5 hover:bg-stone-100 rounded"
+                                                                                >
+                                                                                    <Edit size={14} className="text-stone-500" />
+                                                                                </button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                            )}
+                            <div className="p-4 border-t flex justify-between items-center text-sm">
+                                <span className="text-stone-500">Page {variantPage + 1}</span>
+                                <div className="flex gap-2">
+                                    <Button variant="outline" onClick={() => { setVariantPage(p => p - 1); fetchVariantGroups(variantSearchQuery, variantPage - 1); }} disabled={variantPage === 0}>Prev</Button>
+                                    <Button variant="outline" onClick={() => { setVariantPage(p => p + 1); fetchVariantGroups(variantSearchQuery, variantPage + 1); }} disabled={variantGroups.length < 50}>Next</Button>
                                 </div>
                             </div>
                         </div>
@@ -583,6 +1055,29 @@ export const Dashboard: React.FC = () => {
                 </div>
             )}
 
+            {/* Edit Variant Modal */}
+            {editingVariant && (
+                <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl w-full max-w-lg p-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-medium">Edit Variant Attributes</h3>
+                            <button onClick={() => setEditingVariant(null)}><X size={20} /></button>
+                        </div>
+                        <div className="space-y-3">
+                            <div><label className="text-xs text-stone-500">SKU</label><input value={editingVariant.sku} disabled className="w-full p-3 border rounded-lg bg-stone-50" /></div>
+                            <div><label className="text-xs text-stone-500">Fig</label><input value={editingVariant.specifications?.fig || editingVariant.specifications?.figure || ''} onChange={e => setEditingVariant({ ...editingVariant, specifications: { ...editingVariant.specifications, fig: e.target.value } })} className="w-full p-3 border rounded-lg" /></div>
+                            <div><label className="text-xs text-stone-500">Length</label><input value={editingVariant.specifications?.length || ''} onChange={e => setEditingVariant({ ...editingVariant, specifications: { ...editingVariant.specifications, length: e.target.value } })} className="w-full p-3 border rounded-lg" /></div>
+                            <div><label className="text-xs text-stone-500">Blade</label><input value={editingVariant.specifications?.blade || ''} onChange={e => setEditingVariant({ ...editingVariant, specifications: { ...editingVariant.specifications, blade: e.target.value } })} className="w-full p-3 border rounded-lg" /></div>
+                            <div><label className="text-xs text-stone-500">Size</label><input value={editingVariant.specifications?.size || ''} onChange={e => setEditingVariant({ ...editingVariant, specifications: { ...editingVariant.specifications, size: e.target.value } })} className="w-full p-3 border rounded-lg" /></div>
+                        </div>
+                        <div className="flex gap-3 mt-6">
+                            <Button variant="outline" onClick={() => setEditingVariant(null)} className="flex-1">Cancel</Button>
+                            <Button variant="primary" onClick={handleSaveVariant} className="flex-1"><Save size={16} className="mr-1" /> Save</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Bulk Category Modal */}
             {showBulkModal && (
                 <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
@@ -598,6 +1093,28 @@ export const Dashboard: React.FC = () => {
                         <div className="flex gap-3">
                             <Button variant="outline" onClick={() => setShowBulkModal(false)} className="flex-1">Cancel</Button>
                             <Button variant="primary" onClick={handleBulkCategoryChange} className="flex-1">Apply</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Bulk Subcategory Modal */}
+            {showBulkSubcategoryModal && (
+                <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl w-full max-w-md p-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="font-medium">Change Subcategory for {selectedIds.size} Products</h3>
+                            <button onClick={() => setShowBulkSubcategoryModal(false)}><X size={20} /></button>
+                        </div>
+                        <input
+                            placeholder="Enter new subcategory..."
+                            value={bulkSubcategory}
+                            onChange={e => setBulkSubcategory(e.target.value)}
+                            className="w-full p-3 border rounded-lg mb-4"
+                        />
+                        <div className="flex gap-3">
+                            <Button variant="outline" onClick={() => setShowBulkSubcategoryModal(false)} className="flex-1">Cancel</Button>
+                            <Button variant="primary" onClick={handleBulkSubcategoryChange} className="flex-1">Apply</Button>
                         </div>
                     </div>
                 </div>

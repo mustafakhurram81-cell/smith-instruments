@@ -11,7 +11,7 @@ const envPath = path.resolve(__dirname, '../.env');
 if (fs.existsSync(envPath)) {
     const envFile = fs.readFileSync(envPath, 'utf8');
     envFile.split('\n').forEach(line => {
-        const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/);
+        const match = line.match(/^\s*([\w.-]+)\s*=\s*(.*)?$/);
         if (match) {
             const key = match[1];
             let value = match[2] || '';
@@ -28,27 +28,34 @@ const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
-    if (process.env.VITE_VERCEL_ENV) { /* Silence on Vercel if strictly not needed, but we do need it */ }
-    // Only warn if we really can't connect, but don't fail hard if we are just testing
     console.warn('Warning: Missing Supabase credentials. Sitemap will be static only.');
 }
 
 const supabase = (SUPABASE_URL && SUPABASE_KEY)
     ? createClient(SUPABASE_URL, SUPABASE_KEY)
-    : { from: () => ({ select: () => ({ data: [] }) }) }; // Mock if missing
+    : { from: () => ({ select: () => ({ data: [] }) }) };
 
-const BASE_URL = 'https://smith-instruments.vercel.app/#'; // Hash router needs #
+const BASE_URL = 'https://smith-instruments.vercel.app/#';
+const TODAY = new Date().toISOString().split('T')[0];
 
 async function generateSitemap() {
     console.log('Generating sitemap...');
 
-    // Static Routes
+    let categoryCount = 0;
+    let subcategoryCount = 0;
+    let productCount = 0;
+
+    // Static Routes with priorities
     const staticRoutes = [
-        '/',
-        '/about',
-        '/contact',
-        '/catalogues',
-        '/products'
+        { path: '/', priority: '1.0', changefreq: 'weekly' },
+        { path: '/products', priority: '0.9', changefreq: 'daily' },
+        { path: '/catalogues', priority: '0.8', changefreq: 'weekly' },
+        { path: '/about', priority: '0.7', changefreq: 'monthly' },
+        { path: '/contact', priority: '0.7', changefreq: 'monthly' },
+        { path: '/blog', priority: '0.6', changefreq: 'weekly' },
+        { path: '/quote-cart', priority: '0.5', changefreq: 'monthly' },
+        { path: '/privacy-policy', priority: '0.3', changefreq: 'yearly' },
+        { path: '/terms-of-service', priority: '0.3', changefreq: 'yearly' }
     ];
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -58,48 +65,83 @@ async function generateSitemap() {
     // Add Static Routes
     staticRoutes.forEach(route => {
         xml += `  <url>
-    <loc>${BASE_URL}${route}</loc>
-    <changefreq>weekly</changefreq>
-    <priority>${route === '/' ? '1.0' : '0.8'}</priority>
+    <loc>${BASE_URL}${route.path}</loc>
+    <lastmod>${TODAY}</lastmod>
+    <changefreq>${route.changefreq}</changefreq>
+    <priority>${route.priority}</priority>
   </url>
 `;
     });
 
     try {
-        // Fetch Categories
-        const { data: categories } = await supabase
+        // Fetch all products with category/subcategory info
+        const { data: products } = await supabase
             .from('products')
-            .select('category')
-            .not('category', 'is', null);
+            .select('sku, category, subcategory, updated_at');
 
-        const uniqueCategories = [...new Set(categories?.map(p => p.category))];
+        if (products && products.length > 0) {
+            // Build category -> subcategory -> products map
+            const categoryMap = new Map();
 
-        uniqueCategories.forEach(cat => {
-            if (!cat) return;
-            const safeCat = encodeURIComponent(cat);
-            xml += `  <url>
+            products.forEach(p => {
+                if (!p.category) return;
+
+                if (!categoryMap.has(p.category)) {
+                    categoryMap.set(p.category, new Map());
+                }
+
+                const subMap = categoryMap.get(p.category);
+                const sub = p.subcategory || 'General';
+
+                if (!subMap.has(sub)) {
+                    subMap.set(sub, []);
+                }
+                subMap.get(sub).push(p);
+            });
+
+            // Add category routes
+            for (const [category, subMap] of categoryMap) {
+                const safeCat = encodeURIComponent(category);
+                xml += `  <url>
     <loc>${BASE_URL}/products/${safeCat}</loc>
+    <lastmod>${TODAY}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 `;
-        });
+                categoryCount++;
 
-        // Fetch Products (ID and updated_at)
-        const { data: products } = await supabase
-            .from('products')
-            .select('id, updated_at');
+                // Add subcategory routes
+                for (const [subcategory, prods] of subMap) {
+                    if (subcategory && subcategory !== 'General') {
+                        const safeSub = encodeURIComponent(subcategory);
+                        xml += `  <url>
+    <loc>${BASE_URL}/products/${safeCat}/${safeSub}</loc>
+    <lastmod>${TODAY}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+`;
+                        subcategoryCount++;
+                    }
+                }
+            }
 
-        products?.forEach(product => {
-            const lastMod = product.updated_at ? product.updated_at.split('T')[0] : new Date().toISOString().split('T')[0];
-            xml += `  <url>
-    <loc>${BASE_URL}/product/${product.id}</loc>
+            // Add product routes
+            products.forEach(product => {
+                const lastMod = product.updated_at
+                    ? product.updated_at.split('T')[0]
+                    : TODAY;
+                xml += `  <url>
+    <loc>${BASE_URL}/product/${encodeURIComponent(product.sku)}</loc>
     <lastmod>${lastMod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 `;
-        });
+                productCount++;
+            });
+        }
 
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -114,7 +156,14 @@ async function generateSitemap() {
     }
 
     fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), xml);
-    console.log(`Sitemap generated with ${staticRoutes.length} static routes and dynamic product routes.`);
+
+    console.log(`Sitemap generated:`);
+    console.log(`  - ${staticRoutes.length} static routes`);
+    console.log(`  - ${categoryCount} categories`);
+    console.log(`  - ${subcategoryCount} subcategories`);
+    console.log(`  - ${productCount} products`);
+    console.log(`  Total: ${staticRoutes.length + categoryCount + subcategoryCount + productCount} URLs`);
 }
 
 generateSitemap();
+

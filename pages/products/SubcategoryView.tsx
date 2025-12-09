@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Section, FadeIn, Button } from '../../components/Shared';
+import { Section, Button } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { ProductGridSkeleton } from '../../components/ui/Skeleton';
 import { useProductsBySubcategory } from '../../lib/queries';
 import { ChevronRight, Package, Grid, LayoutGrid } from 'lucide-react';
+import { ProductCard } from '../../components/ProductCard';
 
 export const SubcategoryView: React.FC = () => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string; subcategoryName: string }>();
@@ -80,33 +81,12 @@ export const SubcategoryView: React.FC = () => {
 
                             <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : 'grid-cols-3 md:grid-cols-4 lg:grid-cols-6'}`}>
                                 {visibleProducts.map((product, idx) => (
-                                    <FadeIn key={product.sku} delay={Math.min(idx * 0.02, 0.5)}>
-                                        <div
-                                            onClick={() => navigate(`/product/${encodeURIComponent(product.sku)}`)}
-                                            className="group cursor-pointer bg-white border border-stone-100 hover:border-stone-200 hover:shadow-md transition-all duration-300"
-                                        >
-                                            <div className={`bg-stone-50 relative overflow-hidden ${viewMode === 'grid' ? 'aspect-square' : 'aspect-square'}`}>
-                                                {product.image_url ? (
-                                                    <img
-                                                        src={product.image_url}
-                                                        alt={product.name}
-                                                        className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                                                        loading="lazy"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center">
-                                                        <Package className="text-stone-300" size={viewMode === 'grid' ? 48 : 32} />
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className={`border-t border-stone-100 ${viewMode === 'grid' ? 'p-4' : 'p-3'}`}>
-                                                <p className={`text-brand-gold font-mono mb-1 ${viewMode === 'grid' ? 'text-xs' : 'text-[10px]'}`}>{product.sku}</p>
-                                                <h3 className={`font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors ${viewMode === 'grid' ? 'text-sm line-clamp-2' : 'text-xs line-clamp-1'}`}>
-                                                    {product.name}
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </FadeIn>
+                                    <ProductCard
+                                        key={product.sku}
+                                        product={product}
+                                        viewMode={viewMode}
+                                        index={idx}
+                                    />
                                 ))}
                             </div>
 

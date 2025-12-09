@@ -1,12 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense, lazy } from 'react';
 import { Section, Button, FadeIn } from '../components/Shared';
-import { Eye, Search, Filter, X } from 'lucide-react';
+import { Eye, Search, Filter, X, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CATALOGUES } from '../data/catalogues';
 import { CatalogueThumbnail } from '../components/CatalogueThumbnail';
-import { FlipBookViewer } from '../components/FlipBookViewer';
 import { SEO } from '../components/SEO';
+
+// Lazy load FlipBookViewer to defer 507KB PDF library until needed
+const FlipBookViewer = lazy(() => import('../components/FlipBookViewer').then(m => ({ default: m.FlipBookViewer })));
 
 export const Catalogues: React.FC = () => {
   const navigate = useNavigate();
@@ -162,7 +164,13 @@ export const Catalogues: React.FC = () => {
       {/* 3D FLIPBOOK MODAL */}
       <AnimatePresence>
         {selectedCatalogue && (
-          <FlipBookViewer catalogue={selectedCatalogue} onClose={() => setSelectedCatalogue(null)} />
+          <Suspense fallback={
+            <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
+              <Loader2 className="w-12 h-12 text-brand-gold animate-spin" />
+            </div>
+          }>
+            <FlipBookViewer catalogue={selectedCatalogue} onClose={() => setSelectedCatalogue(null)} />
+          </Suspense>
         )}
       </AnimatePresence>
     </div>
