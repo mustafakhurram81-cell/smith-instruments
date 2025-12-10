@@ -250,7 +250,7 @@ export const Contact: React.FC = () => {
                       sitekey={RECAPTCHA_SITE_KEY}
                       onChange={handleCaptchaChange}
                       size="invisible"
-                      badge="inline"
+                      badge="bottomright"
                     />
 
                     <div className="pt-4">
