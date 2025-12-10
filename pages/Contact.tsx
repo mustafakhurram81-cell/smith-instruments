@@ -250,8 +250,12 @@ export const Contact: React.FC = () => {
                       sitekey={RECAPTCHA_SITE_KEY}
                       onChange={handleCaptchaChange}
                       size="invisible"
-                      badge="bottomright"
                     />
+
+                    {/* Hide the floating badge via CSS since we are displaying the legal text manually */}
+                    <style>{`
+                      .grecaptcha-badge { visibility: hidden; }
+                    `}</style>
 
                     <div className="pt-4">
                       <Button type="submit" variant="secondary" disabled={formStatus === 'sending'} className="w-full md:w-auto px-10 flex items-center gap-2">
@@ -264,6 +268,13 @@ export const Contact: React.FC = () => {
                         )}
                       </Button>
                     </div>
+
+                    {/* Google reCAPTCHA Legal Text (Required when hiding the badge) */}
+                    <p className="text-[10px] text-stone-400 mt-3">
+                      This site is protected by reCAPTCHA and the Google{' '}
+                      <a href="https://policies.google.com/privacy" className="hover:text-brand-gold underline decoration-stone-300 underline-offset-2 transition-colors">Privacy Policy</a> and{' '}
+                      <a href="https://policies.google.com/terms" className="hover:text-brand-gold underline decoration-stone-300 underline-offset-2 transition-colors">Terms of Service</a> apply.
+                    </p>
 
                     <p className="text-xs text-stone-400 bg-stone-50 p-4 rounded-sm mt-4">
                       <strong>Privacy Notice:</strong> Your information will be used solely to respond to your inquiry. We do not share your data with third parties.
