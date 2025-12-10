@@ -5,6 +5,7 @@ import { Trash2, Plus, Minus, Send, ArrowRight, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import { SEO } from '../components/SEO';
+import { supabase } from '../lib/supabase';
 
 export const QuoteCart: React.FC = () => {
     const { items, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -29,32 +30,59 @@ export const QuoteCart: React.FC = () => {
         e.preventDefault();
         setSending(true);
 
-        // Prepare the product list string
+        // Prepare the product list string for email
         const productList = items.map(i => `• ${i.sku} - ${i.name} (Qty: ${i.quantity})`).join('\n');
 
         // Combine message with product list for safety
         const fullMessage = `${formData.message}\n\n--- Requested Items ---\n${productList}`;
 
-        const templateParams = {
-            to_name: "Smith Instruments Sales",
-            items_count: items.length,      // Added for Subject line
-            user_name: formData.name,
-            user_email: formData.email,
-            interest: "Quote Request",
-            // company: removed
-            phone: formData.phone,
-            country: formData.country,
-            message: fullMessage,
-            reply_to: formData.email
-        };
+        // Prepare products array for database
+        const productsData = items.map(item => ({
+            sku: item.sku,
+            name: item.name,
+            quantity: item.quantity,
+            image_url: item.image_url || null
+        }));
 
         try {
+            // 1. Save to Supabase database
+            const { error: dbError } = await supabase
+                .from('quote_requests')
+                .insert({
+                    customer_name: formData.name,
+                    customer_email: formData.email,
+                    customer_phone: formData.phone || null,
+                    customer_country: formData.country || null,
+                    products: productsData,
+                    message: formData.message || null,
+                    status: 'new'
+                });
+
+            if (dbError) {
+                console.warn('Failed to save to database:', dbError);
+                // Continue anyway - email is more important
+            }
+
+            // 2. Send email notification
+            const templateParams = {
+                to_name: "Smith Instruments Sales",
+                items_count: items.length,
+                user_name: formData.name,
+                user_email: formData.email,
+                interest: "Quote Request",
+                phone: formData.phone,
+                country: formData.country,
+                message: fullMessage,
+                reply_to: formData.email
+            };
+
             await emailjs.send(
-                'service_dzj0fa2', // Service ID
-                QUOTE_TEMPLATE_ID, // Template ID
+                'service_dzj0fa2',
+                QUOTE_TEMPLATE_ID,
                 templateParams,
-                'JVcDcowpyoY1HnUQO'  // Public Key
+                'JVcDcowpyoY1HnUQO'
             );
+
             setSuccess(true);
             clearCart();
         } catch (error) {
