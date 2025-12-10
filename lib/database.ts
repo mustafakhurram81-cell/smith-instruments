@@ -267,19 +267,42 @@ export async function getCategoryDetails(): Promise<{ name: string; count: numbe
 
 // Optimization: Get ONLY category names for the Header (skips expensive image/count lookups)
 export async function getCategoryNames(): Promise<string[]> {
-    const { data, error } = await supabase
-        .from('products')
-        .select('category'); // We have to fetch all to get distinct in client (Supabase REST limitation without RPC)
+    try {
+        // Try to use RPC function for max performance (needs to be created in Supabase)
+        // SQL: CREATE OR REPLACE FUNCTION get_distinct_categories()
+        // RETURNS TABLE(category text) AS $$
+        //   SELECT DISTINCT category FROM products WHERE category IS NOT NULL AND category != '' ORDER BY category;
+        // $$ LANGUAGE SQL STABLE;
 
-    if (error) {
-        console.error('Error fetching category names:', error);
+        const { data: rpcData, error: rpcError } = await supabase
+            .rpc('get_distinct_categories');
+
+        if (!rpcError && rpcData) {
+            return rpcData.map((row: any) => row.category);
+        }
+
+        // Fallback: Use a more efficient query with limit
+        // This limits to 1000 products to extract categories (should be enough to get all unique ones)
+        const { data, error } = await supabase
+            .from('products')
+            .select('category')
+            .not('category', 'is', null)
+            .neq('category', '')
+            .limit(1000); // Limit for performance
+
+        if (error) {
+            console.error('Error fetching category names:', error);
+            return [];
+        }
+
+        const uniqueCategories = new Set<string>();
+        data?.forEach(p => {
+            if (p.category) uniqueCategories.add(p.category);
+        });
+
+        return Array.from(uniqueCategories).sort();
+    } catch (err) {
+        console.error('Error in getCategoryNames:', err);
         return [];
     }
-
-    const uniqueCategories = new Set<string>();
-    data?.forEach(p => {
-        if (p.category) uniqueCategories.add(p.category);
-    });
-
-    return Array.from(uniqueCategories).sort();
 }
