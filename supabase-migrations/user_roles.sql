@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.user_roles (
     UNIQUE(user_id)
 );
 
--- Step 2: Enable Row Level Security with simple policies
+-- Step 2: Enable Row Level Security
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 
 -- Drop existing policies if they exist (prevents errors on re-run)
@@ -18,15 +18,28 @@ DROP POLICY IF EXISTS "Users can view their own role" ON public.user_roles;
 DROP POLICY IF EXISTS "Admins can manage roles" ON public.user_roles;
 DROP POLICY IF EXISTS "Allow authenticated users to read all roles" ON public.user_roles;
 DROP POLICY IF EXISTS "Allow admins to insert/update/delete" ON public.user_roles;
+DROP POLICY IF EXISTS "Only admins can modify roles" ON public.user_roles;
 
--- Create simple policies that allow authenticated users to read
+-- Policy 1: All authenticated users can READ roles (needed to check their own role)
 CREATE POLICY "Allow authenticated users to read all roles" ON public.user_roles
     FOR SELECT TO authenticated
     USING (true);
 
-CREATE POLICY "Allow admins to insert/update/delete" ON public.user_roles
+-- Policy 2: Only ADMINS can INSERT, UPDATE, DELETE roles (secure!)
+CREATE POLICY "Only admins can modify roles" ON public.user_roles
     FOR ALL TO authenticated
-    USING (true);
+    USING (
+        EXISTS (
+            SELECT 1 FROM public.user_roles ur
+            WHERE ur.user_id = auth.uid() AND ur.role = 'admin'
+        )
+    )
+    WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.user_roles ur
+            WHERE ur.user_id = auth.uid() AND ur.role = 'admin'
+        )
+    );
 
 -- Step 3: Grant permissions
 GRANT ALL ON public.user_roles TO authenticated;
@@ -38,3 +51,4 @@ ON CONFLICT (user_id) DO UPDATE SET role = 'admin';
 
 -- Step 5: Verify - this should show your admin role
 SELECT * FROM public.user_roles;
+
