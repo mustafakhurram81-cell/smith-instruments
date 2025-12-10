@@ -231,8 +231,8 @@ export const Home: React.FC = () => {
         <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16 relative z-10">
           <div className="w-full md:w-1/2">
             <img
-              src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1000"
-              alt="Surgical Team"
+              src="https://images.unsplash.com/photo-1581093458791-9f3c3ae24ce1?auto=format&fit=crop&q=80&w=1000"
+              alt="Precision Instrument Manufacturing"
               className="rounded-sm shadow-2xl opacity-90"
               loading="lazy"
               width="600"
@@ -240,12 +240,12 @@ export const Home: React.FC = () => {
             />
           </div>
           <div className="w-full md:w-1/2 text-stone-600">
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-6">American Craftsmanship, <br /><span className="text-brand-gold">Global Standards.</span></h2>
+            <h2 className="font-serif text-4xl text-brand-charcoal mb-6">Our Legacy, <br /><span className="text-brand-gold">Your Trust.</span></h2>
             <p className="font-light leading-relaxed mb-8 text-lg text-stone-500">
-              Based in the USA, Smith Instruments has been a pillar of the medical device industry for over two decades. We blend traditional craftsmanship with modern technology to produce surgical instruments that are not only precise but also reliable and ergonomic.
+              Headquartered in the United States and powered by world-class manufacturing facilities in Pakistan, Smith Instruments combines the best of both worlds: American quality standards with skilled craftsmanship honed over generations in one of the world's premier surgical instrument manufacturing hubs.
             </p>
             <p className="font-light leading-relaxed mb-10 text-stone-500">
-              Our mission is to support healthcare providers by giving them the tools they need to perform with confidence.
+              For over two decades, we've partnered with healthcare professionals across 20+ countries, delivering precision instruments that surgeons trust in the most critical moments. Our commitment: uncompromising quality, competitive pricing, and a satisfaction-first approach.
             </p>
             <Button variant="primary" onClick={() => navigate('/about')}>
               Learn More <ArrowRight size={16} className="ml-1" />

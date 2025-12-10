@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Globe, ChevronDown, Check } from 'lucide-react';
+import { Globe, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const LANGUAGES = [
     { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -89,38 +90,59 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ isTransparen
 
             {/* Compact Professional UI */}
             <div ref={dropdownRef} className="relative z-50">
-                <button
+                <motion.button
                     onClick={() => setIsOpen(!isOpen)}
                     className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors ${isTransparent
-                            ? 'text-white hover:bg-white/10'
-                            : 'text-stone-600 hover:bg-stone-100 hover:text-brand-charcoal'
+                        ? 'text-white hover:bg-white/10'
+                        : 'text-stone-600 hover:bg-stone-100 hover:text-brand-charcoal'
                         }`}
                     title={`Language: ${currentLanguage.name}`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
                 >
                     <Globe size={18} />
-                </button>
+                </motion.button>
 
-                {/* Dropdown */}
-                {isOpen && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl py-1.5 border border-stone-100 overflow-hidden">
-                        {LANGUAGES.map((lang) => (
-                            <button
-                                key={lang.code}
-                                onClick={() => handleLanguageChange(lang.code)}
-                                className={`flex items-center justify-between w-full px-3 py-2 text-xs transition-colors ${currentLang === lang.code
-                                    ? 'bg-brand-gold/10 text-brand-gold font-medium'
-                                    : 'text-stone-600 hover:bg-stone-50 hover:text-stone-800'
-                                    }`}
-                            >
-                                <span className="flex items-center gap-2">
-                                    <span className="text-sm">{lang.flag}</span>
-                                    <span>{lang.name}</span>
-                                </span>
-                                {currentLang === lang.code && <Check size={12} />}
-                            </button>
-                        ))}
-                    </div>
-                )}
+                {/* Animated Dropdown */}
+                <AnimatePresence>
+                    {isOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{ duration: 0.2, ease: 'easeOut' }}
+                            className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl py-1.5 border border-stone-100 overflow-hidden"
+                        >
+                            {LANGUAGES.map((lang, idx) => (
+                                <motion.button
+                                    key={lang.code}
+                                    onClick={() => handleLanguageChange(lang.code)}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: idx * 0.03 }}
+                                    className={`flex items-center justify-between w-full px-3 py-2 text-xs transition-colors ${currentLang === lang.code
+                                        ? 'bg-brand-gold/10 text-brand-gold font-medium'
+                                        : 'text-stone-600 hover:bg-stone-50 hover:text-stone-800'
+                                        }`}
+                                >
+                                    <span className="flex items-center gap-2">
+                                        <span className="text-sm">{lang.flag}</span>
+                                        <span>{lang.name}</span>
+                                    </span>
+                                    {currentLang === lang.code && (
+                                        <motion.span
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{ type: 'spring', stiffness: 500 }}
+                                        >
+                                            <Check size={12} />
+                                        </motion.span>
+                                    )}
+                                </motion.button>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </>
     );
