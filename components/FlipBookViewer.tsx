@@ -201,7 +201,7 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
 
                     {/* Download */}
                     <a
-                        href={catalogue.pdfUrl}
+                        href={catalogue.pdf_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all"
@@ -222,7 +222,7 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
             {/* Book Container */}
             <div className="flex items-center justify-center w-full h-full p-8">
                 <Document
-                    file={catalogue.pdfUrl}
+                    file={catalogue.pdf_url}
                     onLoadSuccess={onDocumentLoadSuccess}
                     onLoadError={(err) => { console.error(err); setError("Failed to load PDF"); setLoading(false); }}
                     loading={null}

@@ -1,9 +1,9 @@
-import React, { useState, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useMemo, useEffect, Suspense, lazy } from 'react';
 import { Section, Button, FadeIn } from '../components/Shared';
 import { Eye, Search, Filter, X, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CATALOGUES } from '../data/catalogues';
+import { getCatalogues, getCatalogueCategories, Catalogue } from '../lib/database';
 import { CatalogueThumbnail } from '../components/CatalogueThumbnail';
 import { SEO } from '../components/SEO';
 
@@ -12,26 +12,38 @@ const FlipBookViewer = lazy(() => import('../components/FlipBookViewer').then(m 
 
 export const Catalogues: React.FC = () => {
   const navigate = useNavigate();
-  const [selectedCatalogue, setSelectedCatalogue] = useState<any | null>(null);
+  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
+  const [categories, setCategories] = useState<string[]>(['All']);
+  const [loading, setLoading] = useState(true);
+  const [selectedCatalogue, setSelectedCatalogue] = useState<Catalogue | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Extract unique categories from data (assuming titles imply categories or we add a category field later)
-  // For now, we'll hardcode some logical categories based on current data
-  const CATEGORIES = ['All', 'Surgery', 'Dental', 'Cardiovascular', 'Neuro', 'ENT'];
+  // Fetch catalogues from Supabase
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      const [catalogueData, categoryData] = await Promise.all([
+        getCatalogues(),
+        getCatalogueCategories()
+      ]);
+      setCatalogues(catalogueData);
+      setCategories(categoryData);
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
 
   const filteredCatalogues = useMemo(() => {
-    return CATALOGUES.filter((cat) => {
+    return catalogues.filter((cat) => {
       const matchesSearch = cat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cat.desc.toLowerCase().includes(searchQuery.toLowerCase());
+        (cat.description?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
 
-      const matchesCategory = selectedCategory === 'All' ||
-        cat.title.toLowerCase().includes(selectedCategory.toLowerCase()) ||
-        (selectedCategory === 'Surgery' && cat.title.includes('Surgery')); // Simple matching logic
+      const matchesCategory = selectedCategory === 'All' || cat.category === selectedCategory;
 
       return matchesSearch && matchesCategory;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [catalogues, searchQuery, selectedCategory]);
 
   return (
     <div className="pt-20">
@@ -67,7 +79,7 @@ export const Catalogues: React.FC = () => {
 
           {/* Category Tags */}
           <div className="flex flex-wrap justify-center gap-2 mt-6">
-            {CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
@@ -86,7 +98,11 @@ export const Catalogues: React.FC = () => {
       {/* Grid of 3D Books */}
       <Section className="bg-white min-h-[600px]">
         <div className="container mx-auto px-6">
-          {filteredCatalogues.length > 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-10 h-10 text-brand-gold animate-spin" />
+            </div>
+          ) : filteredCatalogues.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
               {filteredCatalogues.map((cat, idx) => (
                 <FadeIn key={cat.title} delay={idx * 0.1}>
@@ -96,7 +112,7 @@ export const Catalogues: React.FC = () => {
 
                       {/* Front Cover */}
                       <div className="absolute inset-0 bg-white rounded-r-md shadow-xl overflow-hidden border-l-[6px] border-stone-800">
-                        <CatalogueThumbnail url={cat.pdfUrl} color={cat.color} title="" />
+                        <CatalogueThumbnail url={cat.pdf_url} color={cat.color} title="" />
 
                         {/* Spine shadow */}
                         <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black/20 to-transparent"></div>

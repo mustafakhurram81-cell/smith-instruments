@@ -306,3 +306,120 @@ export async function getCategoryNames(): Promise<string[]> {
         return [];
     }
 }
+
+// ============================================
+// CATALOGUES
+// ============================================
+
+export interface Catalogue {
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    size: string;
+    color: string;
+    pdf_url: string;
+    thumbnail_url: string | null;
+    display_order: number;
+    is_active: boolean;
+    created_at: string;
+}
+
+// Get all active catalogues (for public display)
+export async function getCatalogues(): Promise<Catalogue[]> {
+    const { data, error } = await supabase
+        .from('catalogues')
+        .select('*')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching catalogues:', error);
+        return [];
+    }
+
+    return data || [];
+}
+
+// Get all catalogues including inactive (for admin)
+export async function getAllCatalogues(): Promise<Catalogue[]> {
+    const { data, error } = await supabase
+        .from('catalogues')
+        .select('*')
+        .order('display_order', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching all catalogues:', error);
+        return [];
+    }
+
+    return data || [];
+}
+
+// Get unique catalogue categories
+export async function getCatalogueCategories(): Promise<string[]> {
+    const { data, error } = await supabase
+        .from('catalogues')
+        .select('category')
+        .eq('is_active', true);
+
+    if (error) {
+        console.error('Error fetching catalogue categories:', error);
+        return [];
+    }
+
+    const uniqueCategories = new Set<string>();
+    data?.forEach(c => {
+        if (c.category) uniqueCategories.add(c.category);
+    });
+
+    return ['All', ...Array.from(uniqueCategories).sort()];
+}
+
+// Create a new catalogue (admin)
+export async function createCatalogue(catalogue: Omit<Catalogue, 'id' | 'created_at'>): Promise<Catalogue | null> {
+    const { data, error } = await supabase
+        .from('catalogues')
+        .insert(catalogue)
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error creating catalogue:', error);
+        return null;
+    }
+
+    return data;
+}
+
+// Update a catalogue (admin)
+export async function updateCatalogue(id: string, updates: Partial<Catalogue>): Promise<Catalogue | null> {
+    const { data, error } = await supabase
+        .from('catalogues')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+    if (error) {
+        console.error('Error updating catalogue:', error);
+        return null;
+    }
+
+    return data;
+}
+
+// Delete a catalogue (admin)
+export async function deleteCatalogue(id: string): Promise<boolean> {
+    const { error } = await supabase
+        .from('catalogues')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        console.error('Error deleting catalogue:', error);
+        return false;
+    }
+
+    return true;
+}
