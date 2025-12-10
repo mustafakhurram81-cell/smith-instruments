@@ -65,6 +65,10 @@ export const Home: React.FC = () => {
             src={heroMethods}
             alt="Surgical Instruments Background"
             className="w-full h-full object-cover object-center"
+            loading="eager"
+            fetchPriority="high"
+            width="1920"
+            height="1080"
           />
           {/* Subtle overlay for extra contrast */}
           <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal/60 via-transparent to-transparent" />
@@ -224,7 +228,14 @@ export const Home: React.FC = () => {
 
         <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16 relative z-10">
           <div className="w-full md:w-1/2">
-            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1000" alt="Surgical Team" className="rounded-sm shadow-2xl opacity-90" />
+            <img
+              src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1000"
+              alt="Surgical Team"
+              className="rounded-sm shadow-2xl opacity-90"
+              loading="lazy"
+              width="600"
+              height="400"
+            />
           </div>
           <div className="w-full md:w-1/2 text-stone-600">
             <h2 className="font-serif text-4xl text-brand-charcoal mb-6">American Craftsmanship, <br /><span className="text-brand-gold">Global Standards.</span></h2>
