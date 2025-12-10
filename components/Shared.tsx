@@ -165,6 +165,7 @@ export const Header: React.FC = () => {
   return (
     <>
       <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      {/* Search Overlay End */}
 
       <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 py-4 ${isTransparent
         ? 'bg-transparent'
