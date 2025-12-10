@@ -38,45 +38,50 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             {children}
 
             {/* Toast Container - top right below header */}
-            <div className="fixed top-24 right-6 z-50 flex flex-col gap-3">
-                <AnimatePresence>
+            <div className="fixed top-24 right-6 z-[100] flex flex-col gap-3 pointer-events-none">
+                <AnimatePresence mode="popLayout">
                     {toasts.map((toast) => (
                         <motion.div
+                            layout
                             key={toast.id}
-                            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+                            initial={{ opacity: 0, y: -20, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, x: 100, scale: 0.9 }}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border backdrop-blur-sm max-w-sm ${toast.type === 'success'
-                                ? 'bg-white border-green-200'
-                                : toast.type === 'error'
-                                    ? 'bg-white border-red-200'
-                                    : 'bg-white border-stone-200'
+                            exit={{ opacity: 0, x: 20, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                            className={`pointer-events-auto flex items-start gap-4 px-5 py-4 rounded-xl shadow-2xl border backdrop-blur-md max-w-sm w-80 ${toast.type === 'success'
+                                    ? 'bg-white/95 border-green-100 shadow-green-100/20'
+                                    : toast.type === 'error'
+                                        ? 'bg-white/95 border-red-100 shadow-red-100/20'
+                                        : 'bg-white/95 border-stone-200'
                                 }`}
                         >
                             {/* Icon */}
-                            <div className={`p-2 rounded-full ${toast.type === 'success'
-                                ? 'bg-green-100 text-green-600'
-                                : toast.type === 'error'
-                                    ? 'bg-red-100 text-red-600'
-                                    : 'bg-brand-gold/10 text-brand-gold'
+                            <div className={`mt-0.5 p-1.5 rounded-full shrink-0 ${toast.type === 'success'
+                                    ? 'bg-green-100 text-green-600'
+                                    : toast.type === 'error'
+                                        ? 'bg-red-100 text-red-600'
+                                        : 'bg-brand-gold/10 text-brand-gold'
                                 }`}>
                                 {toast.type === 'success' ? (
-                                    <ShoppingCart size={18} />
+                                    <ShoppingCart size={16} strokeWidth={2.5} />
                                 ) : toast.type === 'error' ? (
-                                    <AlertCircle size={18} />
+                                    <AlertCircle size={16} strokeWidth={2.5} />
                                 ) : (
-                                    <Check size={18} />
+                                    <Check size={16} strokeWidth={2.5} />
                                 )}
                             </div>
 
                             {/* Content */}
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-brand-charcoal">
+                            <div className="flex-1 min-w-0 pt-0.5">
+                                <p className="text-sm font-semibold text-brand-charcoal leading-tight">
                                     {toast.message}
                                 </p>
                                 {toast.productName && (
-                                    <p className="text-xs text-stone-500 truncate">
-                                        {toast.quantity && toast.quantity > 1 ? `${toast.quantity}x ` : ''}{toast.productName}
+                                    <p className="text-xs text-stone-500 mt-1 truncate font-medium">
+                                        {toast.quantity && toast.quantity > 1 ? (
+                                            <span className="text-brand-gold font-bold">{toast.quantity}x </span>
+                                        ) : ''}
+                                        {toast.productName}
                                     </p>
                                 )}
                             </div>
@@ -84,9 +89,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                             {/* Close */}
                             <button
                                 onClick={() => removeToast(toast.id)}
-                                className="p-1 hover:bg-stone-100 rounded-full transition-colors"
+                                className="group -mr-2 -mt-2 p-2 rounded-full hover:bg-stone-100 transition-colors"
                             >
-                                <X size={14} className="text-stone-400" />
+                                <X size={14} className="text-stone-400 group-hover:text-stone-600 transition-colors" />
                             </button>
                         </motion.div>
                     ))}
