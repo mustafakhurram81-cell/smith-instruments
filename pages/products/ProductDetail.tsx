@@ -362,7 +362,7 @@ export const ProductDetail: React.FC = () => {
                                             min="1"
                                             value={quantity}
                                             onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                                            className="w-16 text-center py-2 border-x border-stone-200 outline-none text-brand-charcoal font-medium"
+                                            className="w-16 text-center py-2 border-x border-stone-200 outline-none text-brand-charcoal font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                         />
                                         <button
                                             onClick={() => setQuantity(q => q + 1)}
