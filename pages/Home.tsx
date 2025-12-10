@@ -3,8 +3,7 @@ import { Section, Button, FadeIn, AnimatedCounter } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import heroMethods from '../assets/hero-instruments.png';
-import featureInstruments from '../assets/feature-instruments.png';
+import heroMethods from '../assets/hero-instruments.jpg';
 
 const PRODUCTS = [
   { id: 1, name: "Plastic Surgery", icon: Scissors, desc: "Precision instruments for reconstruction" },
