@@ -23,7 +23,7 @@ export const QuoteCart: React.FC = () => {
     // TODO: Create a separate EmailJS template for Quotes if desired
     // Currently using the same as Contact form: template_3kqu18e
     // If you create a new one, replace it here:
-    const QUOTE_TEMPLATE_ID = 'template_3kqu18e';
+    const QUOTE_TEMPLATE_ID = 'template_aq74xvd';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -37,6 +37,7 @@ export const QuoteCart: React.FC = () => {
 
         const templateParams = {
             to_name: "Smith Instruments Sales",
+            items_count: items.length,      // Added for Subject line
             user_name: formData.name,
             user_email: formData.email,
             interest: "Quote Request",
