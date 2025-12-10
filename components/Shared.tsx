@@ -301,32 +301,42 @@ export const Header: React.FC = () => {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="md:hidden overflow-hidden bg-stone-50 border-b border-stone-200 absolute top-full left-0 right-0 shadow-lg"
+              className="md:hidden overflow-visible bg-stone-50 border-b border-stone-200 absolute top-full left-0 right-0 shadow-lg"
             >
               <nav className="flex flex-col p-6 gap-4">
                 <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Home</NavLink>
 
-                {/* Collapsible Products */}
+                {/* Collapsible Products with Animation */}
                 <div className="space-y-2">
                   <button
                     onClick={() => setIsProductsOpen(!isProductsOpen)}
                     className="w-full text-lg font-serif text-left text-stone-500 hover:text-brand-charcoal transition-colors flex items-center justify-between"
                   >
                     Products
-                    <ChevronDown size={18} className={`transition-transform ${isProductsOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown size={18} className={`transition-transform duration-300 ${isProductsOpen ? 'rotate-180' : ''}`} />
                   </button>
-                  {isProductsOpen && (
-                    <div className="pl-4 border-l border-stone-200 ml-1 flex flex-col gap-2 pt-2">
-                      <NavLink to="/products" onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400 hover:text-brand-gold transition-colors">
-                        All Products
-                      </NavLink>
-                      {categories.slice(0, 6).map(cat => (
-                        <NavLink key={cat.name} to={`/products/${encodeURIComponent(cat.name)}`} onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400 hover:text-brand-gold transition-colors">
-                          {cat.name}
-                        </NavLink>
-                      ))}
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {isProductsOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2, ease: 'easeInOut' }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pl-4 border-l border-stone-200 ml-1 flex flex-col gap-2 pt-2">
+                          <NavLink to="/products" onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400 hover:text-brand-gold transition-colors">
+                            All Products
+                          </NavLink>
+                          {categories.slice(0, 6).map(cat => (
+                            <NavLink key={cat.name} to={`/products/${encodeURIComponent(cat.name)}`} onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400 hover:text-brand-gold transition-colors">
+                              {cat.name}
+                            </NavLink>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <NavLink to="/catalogues" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Catalogues</NavLink>
