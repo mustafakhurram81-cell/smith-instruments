@@ -413,7 +413,7 @@ export const ProductDetail: React.FC = () => {
 
             {/* Related Products Section */}
             {relatedProducts.length > 0 && (
-                <Section className="bg-stone-50">
+                <Section className="bg-stone-50 !pb-16">
                     <div className="container mx-auto px-6">
                         <div className="flex justify-between items-center mb-8">
                             <div>
@@ -468,7 +468,7 @@ export const ProductDetail: React.FC = () => {
 
             {/* Recently Viewed Section */}
             {recentlyViewed.filter(item => item.id !== product?.id).length > 0 && (
-                <Section className="bg-white border-t border-stone-100">
+                <Section className="bg-white border-t border-stone-100 !pt-16">
                     <div className="container mx-auto px-6">
                         <div className="flex items-center gap-3 mb-8">
                             <Clock size={20} className="text-stone-400" />

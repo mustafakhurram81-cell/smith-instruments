@@ -48,19 +48,19 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, x: 20, scale: 0.95 }}
                             transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                            className={`pointer-events-auto flex items-start gap-4 px-5 py-4 rounded-xl shadow-2xl border backdrop-blur-md max-w-sm w-80 ${toast.type === 'success'
-                                    ? 'bg-white/95 border-green-100 shadow-green-100/20'
-                                    : toast.type === 'error'
-                                        ? 'bg-white/95 border-red-100 shadow-red-100/20'
-                                        : 'bg-white/95 border-stone-200'
+                            className={`pointer-events-auto flex items-start gap-4 px-5 py-4 rounded-xl shadow-2xl border backdrop-blur-md max-w-sm w-96 ${toast.type === 'success'
+                                ? 'bg-white/95 border-green-100 shadow-green-100/20'
+                                : toast.type === 'error'
+                                    ? 'bg-white/95 border-red-100 shadow-red-100/20'
+                                    : 'bg-white/95 border-stone-200'
                                 }`}
                         >
                             {/* Icon */}
                             <div className={`mt-0.5 p-1.5 rounded-full shrink-0 ${toast.type === 'success'
-                                    ? 'bg-green-100 text-green-600'
-                                    : toast.type === 'error'
-                                        ? 'bg-red-100 text-red-600'
-                                        : 'bg-brand-gold/10 text-brand-gold'
+                                ? 'bg-green-100 text-green-600'
+                                : toast.type === 'error'
+                                    ? 'bg-red-100 text-red-600'
+                                    : 'bg-brand-gold/10 text-brand-gold'
                                 }`}>
                                 {toast.type === 'success' ? (
                                     <ShoppingCart size={16} strokeWidth={2.5} />
@@ -86,13 +86,25 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                                 )}
                             </div>
 
-                            {/* Close */}
                             <button
                                 onClick={() => removeToast(toast.id)}
                                 className="group -mr-2 -mt-2 p-2 rounded-full hover:bg-stone-100 transition-colors"
                             >
                                 <X size={14} className="text-stone-400 group-hover:text-stone-600 transition-colors" />
                             </button>
+
+                            {/* Progress Bar */}
+                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-stone-100 rounded-b-xl overflow-hidden">
+                                <motion.div
+                                    initial={{ width: "100%" }}
+                                    animate={{ width: "0%" }}
+                                    transition={{ duration: 3, ease: "linear" }}
+                                    className={`h-full ${toast.type === 'success' ? 'bg-green-500' :
+                                        toast.type === 'error' ? 'bg-red-500' :
+                                            'bg-brand-gold'
+                                        }`}
+                                />
+                            </div>
                         </motion.div>
                     ))}
                 </AnimatePresence>
