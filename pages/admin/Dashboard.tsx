@@ -18,7 +18,7 @@ interface VariantGroup {
 }
 
 export const Dashboard: React.FC = () => {
-    const { user, signOut } = useAuth();
+    const { user, signOut, canExport, userRole } = useAuth();
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState('overview');
@@ -555,6 +555,7 @@ export const Dashboard: React.FC = () => {
         <div className="min-h-screen bg-stone-100">
             <DashboardHeader
                 userEmail={user?.email}
+                userRole={userRole}
                 activeTab={activeTab}
                 onTabChange={(tab) => setActiveTab(tab as any)}
                 onLogout={handleLogout}
@@ -645,9 +646,11 @@ export const Dashboard: React.FC = () => {
                                 )}
                             </div>
                             <div className="flex gap-2 flex-wrap">
-                                <Button variant="outline" onClick={handleExportCSV}>
-                                    <Download size={16} className="mr-1" /> Export CSV
-                                </Button>
+                                {canExport && (
+                                    <Button variant="outline" onClick={handleExportCSV}>
+                                        <Download size={16} className="mr-1" /> Export CSV
+                                    </Button>
+                                )}
                                 <Button variant="outline" onClick={() => setShowAddModal(true)}>
                                     <Plus size={16} className="mr-1" /> Add Product
                                 </Button>
