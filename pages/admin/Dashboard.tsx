@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../../components/Shared';
 import { Link, useNavigate } from 'react-router-dom';
-import { DashboardHeader, OverviewTab, CategoriesTab, CataloguesTab, QuotesTab, UsersTab } from '../../components/admin';
+import { DashboardHeader, OverviewTab, CategoriesTab, CataloguesTab, QuotesTab, UsersTab, ImportModal, ActivityTab } from '../../components/admin';
 
 interface VariantGroup {
     parent_sku: string;
@@ -85,6 +85,9 @@ export const Dashboard: React.FC = () => {
     const [parentSearchResults, setParentSearchResults] = useState<any[]>([]);
     const [parentSearching, setParentSearching] = useState(false);
     const [linkingSaving, setLinkingSaving] = useState(false);
+
+    // Import Modal
+    const [showImportModal, setShowImportModal] = useState(false);
 
     // Get subcategories for selected category
     const subcategoriesForCategory = categoryFilter
@@ -651,6 +654,11 @@ export const Dashboard: React.FC = () => {
                                         <Download size={16} className="mr-1" /> Export CSV
                                     </Button>
                                 )}
+                                {canExport && (
+                                    <Button variant="outline" onClick={() => setShowImportModal(true)}>
+                                        <Upload size={16} className="mr-1" /> Import CSV
+                                    </Button>
+                                )}
                                 <Button variant="outline" onClick={() => setShowAddModal(true)}>
                                     <Plus size={16} className="mr-1" /> Add Product
                                 </Button>
@@ -1093,6 +1101,11 @@ export const Dashboard: React.FC = () => {
                     <UsersTab />
                 )}
 
+                {/* Activity Tab */}
+                {activeTab === 'activity' && (
+                    <ActivityTab />
+                )}
+
                 {/* Settings Tab */}
                 {activeTab === 'settings' && (
                     <div className="max-w-xl bg-white rounded-xl shadow-sm p-6">
@@ -1433,6 +1446,16 @@ export const Dashboard: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            {/* Import Modal */}
+            <ImportModal
+                isOpen={showImportModal}
+                onClose={() => setShowImportModal(false)}
+                onSuccess={() => {
+                    fetchProducts(searchQuery, categoryFilter, subcategoryFilter, page);
+                    fetchStats();
+                }}
+            />
         </div>
     );
 };

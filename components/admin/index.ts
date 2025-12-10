@@ -5,3 +5,5 @@ export { CategoriesTab } from './CategoriesTab';
 export { CataloguesTab } from './CataloguesTab';
 export { QuotesTab } from './QuotesTab';
 export { UsersTab } from './UsersTab';
+export { ImportModal } from './ImportModal';
+export { ActivityTab } from './ActivityTab';

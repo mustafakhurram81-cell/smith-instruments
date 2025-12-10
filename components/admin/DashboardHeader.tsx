@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Package, FolderOpen, Settings, BarChart3, GitBranch, BookOpen, Inbox, Users, LucideIcon } from 'lucide-react';
+import { Package, FolderOpen, Settings, BarChart3, GitBranch, BookOpen, Inbox, Users, History, LucideIcon } from 'lucide-react';
 
 interface Tab {
     id: string;
@@ -24,6 +24,7 @@ const TABS: Tab[] = [
     { id: 'catalogues', label: 'Catalogues', icon: BookOpen },
     { id: 'quotes', label: 'Quotes', icon: Inbox },
     { id: 'users', label: 'Users', icon: Users },
+    { id: 'activity', label: 'Activity', icon: History },
     { id: 'settings', label: 'Settings', icon: Settings }
 ];
 
