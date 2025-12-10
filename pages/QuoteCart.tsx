@@ -13,14 +13,17 @@ export const QuoteCart: React.FC = () => {
 
     // Form State
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
+        name: '',
         email: '',
-        company: '',
         phone: '',
         country: '',
         message: ''
     });
+
+    // TODO: Create a separate EmailJS template for Quotes if desired
+    // Currently using the same as Contact form: template_3kqu18e
+    // If you create a new one, replace it here:
+    const QUOTE_TEMPLATE_ID = 'template_3kqu18e';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,22 +37,22 @@ export const QuoteCart: React.FC = () => {
 
         const templateParams = {
             to_name: "Smith Instruments Sales",
-            user_name: `${formData.firstName} ${formData.lastName}`.trim(),       // Matches Contact.tsx logic
+            user_name: formData.name,
             user_email: formData.email,
             interest: "Quote Request",
-            company: formData.company,
+            // company: removed
             phone: formData.phone,
-            country: formData.country,      // Added country
-            message: fullMessage,           // Combined message
+            country: formData.country,
+            message: fullMessage,
             reply_to: formData.email
         };
 
         try {
             await emailjs.send(
-                'service_dzj0fa2', // Service ID from Contact.tsx
-                'template_3kqu18e', // Template ID from Contact.tsx
+                'service_dzj0fa2', // Service ID
+                QUOTE_TEMPLATE_ID, // Template ID
                 templateParams,
-                'JVcDcowpyoY1HnUQO'  // Public Key from Contact.tsx
+                'JVcDcowpyoY1HnUQO'  // Public Key
             );
             setSuccess(true);
             clearCart();
@@ -84,7 +87,7 @@ export const QuoteCart: React.FC = () => {
                 </div>
                 <h1 className="text-3xl font-serif text-brand-charcoal mb-4">Quote Request Sent!</h1>
                 <p className="text-stone-500 max-w-md mx-auto mb-8">
-                    Thank you, {formData.firstName}. We have received your request for {items.length > 0 ? items.length : 'your'} items.
+                    Thank you, {formData.name}. We have received your request for {items.length > 0 ? items.length : 'your'} items.
                     Our sales team will email you a formal quotation within 24 hours.
                 </p>
                 <Link to="/">
@@ -165,25 +168,14 @@ export const QuoteCart: React.FC = () => {
                         <div className="bg-white p-6 rounded-xl shadow-xl border-t-4 border-brand-gold sticky top-24">
                             <h2 className="text-xl font-medium mb-6">Contact Details</h2>
                             <form onSubmit={handleSubmit} className="space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-stone-600 mb-1">First Name *</label>
-                                        <input
-                                            required
-                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
-                                            value={formData.firstName}
-                                            onChange={e => setFormData({ ...formData, firstName: e.target.value })}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-stone-600 mb-1">Last Name *</label>
-                                        <input
-                                            required
-                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
-                                            value={formData.lastName}
-                                            onChange={e => setFormData({ ...formData, lastName: e.target.value })}
-                                        />
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-stone-600 mb-1">Full Name *</label>
+                                    <input
+                                        required
+                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                        value={formData.name}
+                                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                                    />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
@@ -209,14 +201,6 @@ export const QuoteCart: React.FC = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-stone-600 mb-1">Clinic / Company</label>
-                                    <input
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
-                                        value={formData.company}
-                                        onChange={e => setFormData({ ...formData, company: e.target.value })}
-                                    />
-                                </div>
-                                <div>
                                     <label className="block text-sm font-medium text-stone-600 mb-1">Phone (Optional)</label>
                                     <input
                                         className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
@@ -228,7 +212,7 @@ export const QuoteCart: React.FC = () => {
                                     <label className="block text-sm font-medium text-stone-600 mb-1">Additional Notes</label>
                                     <textarea
                                         rows={3}
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all resize-none"
                                         value={formData.message}
                                         onChange={e => setFormData({ ...formData, message: e.target.value })}
                                         placeholder="Any specific requirements?"

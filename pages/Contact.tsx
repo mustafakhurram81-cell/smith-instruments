@@ -43,13 +43,38 @@ export const Contact: React.FC = () => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+
+  // Unified Form State
+  const [formData, setFormData] = useState({
+    user_name: '',
+    phone: '',
+    user_email: '',
+    country: '',
+    interest: '',
+    message: ''
+  });
 
   // EmailJS credentials
   const SERVICE_ID = 'service_dzj0fa2';
-  const TEMPLATE_ID = 'template_3kqu18e';
+  const TEMPLATE_ID = 'template_3kqu18e'; // TODO: Ensure this template has {{phone}} and {{country}}
   const PUBLIC_KEY = 'JVcDcowpyoY1HnUQO';
+
+  /*
+    EMAILJS TEMPLATE SETTINGS FOR CONTACT FORM:
+    -------------------------------------------
+    1. Go to EmailJS Dashboard > Email Templates
+    2. Create/Edit Template with ID: template_3kqu18e (or create new one and update ID above)
+    3. Subject Line: New Inquiry from {{user_name}} - {{interest}}
+    4. Content:
+       Name: {{user_name}}
+       Phone: {{phone}}
+       Email: {{user_email}}
+       Country: {{country}}
+       Subject: {{interest}}
+       
+       Message:
+       {{message}}
+  */
 
   // Called when invisible reCAPTCHA is verified
   const handleCaptchaChange = (token: string | null) => {
@@ -61,30 +86,27 @@ export const Contact: React.FC = () => {
         .then((result) => {
           console.log(result.text);
           setFormStatus('success');
+          // Reset Form
+          setFormData({ user_name: '', phone: '', user_email: '', country: '', interest: '', message: '' });
           recaptchaRef.current?.reset();
-          form.current?.reset();
           setTimeout(() => setFormStatus('idle'), 5000);
         }, (error) => {
           console.error("EmailJS Error:", error);
           setErrorMessage(error.text || "Unknown error occurred");
           setFormStatus('error');
           recaptchaRef.current?.reset();
-          // Don't auto-reset error state so user can read it
         });
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (formStatus === 'sending') return;
-
-    // Execute invisible reCAPTCHA - it will call handleCaptchaChange when verified
     if (recaptchaRef.current) {
       recaptchaRef.current.execute();
     } else {
       console.error("reCAPTCHA ref is null");
-      setErrorMessage("reCAPTCHA failed to load. Please refresh the page.");
+      setErrorMessage("reCAPTCHA failed to load. Please refresh.");
       setFormStatus('error');
     }
   };
@@ -210,37 +232,36 @@ export const Contact: React.FC = () => {
                     <Button className="mt-4" onClick={() => setFormStatus('idle')}>Try Again</Button>
                   </div>
                 ) : (
-                  <form ref={form} onSubmit={handleSubmit} className="space-y-6">
-                    {/* Hidden input to combine names for EmailJS compatibility */}
-                    <input type="hidden" name="user_name" value={`${firstName} ${lastName}`.trim()} />
+                  <form ref={form} onSubmit={handleSubmit} className="space-y-5">
 
-                    {/* Row 1: Names */}
+                    {/* Row 1: Full Name + Phone */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-2">First Name <span className="text-brand-gold">*</span></label>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Full Name <span className="text-brand-gold">*</span></label>
                         <input
                           required
                           type="text"
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                          placeholder="John"
+                          name="user_name"
+                          value={formData.user_name}
+                          onChange={(e) => setFormData({ ...formData, user_name: e.target.value })}
+                          placeholder="Dr. John Smith"
                           className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-2">Last Name <span className="text-brand-gold">*</span></label>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Phone (Optional)</label>
                         <input
-                          required
                           type="text"
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                          placeholder="Smith"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="+1 (555) 000-0000"
                           className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
                       </div>
                     </div>
 
-                    {/* Row 2: Email & Country */}
+                    {/* Row 2: Email + Country */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-stone-700 mb-2">Email Address <span className="text-brand-gold">*</span></label>
@@ -248,6 +269,8 @@ export const Contact: React.FC = () => {
                           required
                           type="email"
                           name="user_email"
+                          value={formData.user_email}
+                          onChange={(e) => setFormData({ ...formData, user_email: e.target.value })}
                           placeholder="john.smith@hospital.com"
                           className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
@@ -257,6 +280,8 @@ export const Contact: React.FC = () => {
                         <input
                           type="text"
                           name="country"
+                          value={formData.country}
+                          onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                           placeholder="United States"
                           className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
@@ -269,15 +294,15 @@ export const Contact: React.FC = () => {
                       <div className="relative">
                         <select
                           name="interest"
+                          value={formData.interest}
+                          onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
                           className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal appearance-none cursor-pointer"
-                          defaultValue=""
                         >
                           <option value="" disabled>Select a topic...</option>
                           <option value="General Inquiry">General Inquiry</option>
                           <option value="Quote Request">Request a Quote</option>
                           <option value="Custom Manufacturing">Custom Manufacturing / OEM</option>
                           <option value="Distributorship">Distributorship Inquiry</option>
-                          <option value="Existing Order">Existing Order Support</option>
                           <option value="Other">Other</option>
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">
@@ -293,10 +318,12 @@ export const Contact: React.FC = () => {
                         required
                         rows={6}
                         name="message"
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         placeholder="Tell us about your requirements or questions..."
                         className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300 resize-none"
                       ></textarea>
-                      <p className="text-xs text-stone-400 mt-2 text-right">0/1000 characters</p>
+                      <p className="text-xs text-stone-400 mt-1 text-right">0/1000 characters</p>
                     </div>
 
                     {/* Invisible reCAPTCHA - validates on form submit */}
@@ -312,7 +339,8 @@ export const Contact: React.FC = () => {
                       .grecaptcha-badge { visibility: hidden; }
                     `}</style>
 
-                    <div className="pt-4">
+                    {/* Reduced top margin for unified feel */}
+                    <div className="pt-2">
                       <Button type="submit" variant="secondary" disabled={formStatus === 'sending'} className="w-full md:w-auto px-10 flex items-center gap-2">
                         {formStatus === 'sending' ? (
                           <>
@@ -325,15 +353,14 @@ export const Contact: React.FC = () => {
                     </div>
 
                     {/* Google reCAPTCHA Legal Text (Required when hiding the badge) */}
-                    <p className="text-[10px] text-stone-400 mt-3">
-                      This site is protected by reCAPTCHA and the Google{' '}
-                      <a href="https://policies.google.com/privacy" className="hover:text-brand-gold underline decoration-stone-300 underline-offset-2 transition-colors">Privacy Policy</a> and{' '}
-                      <a href="https://policies.google.com/terms" className="hover:text-brand-gold underline decoration-stone-300 underline-offset-2 transition-colors">Terms of Service</a> apply.
-                    </p>
-
-                    <p className="text-xs text-stone-400 bg-stone-50 p-4 rounded-sm mt-4">
-                      <strong>Privacy Notice:</strong> Your information will be used solely to respond to your inquiry. We do not share your data with third parties.
-                    </p>
+                    <div className="text-[10px] text-stone-400 space-y-2 mt-4">
+                      <p>
+                        Protected by reCAPTCHA. Google <a href="https://policies.google.com/privacy" className="hover:text-brand-gold underline decoration-stone-300">Privacy</a> & <a href="https://policies.google.com/terms" className="hover:text-brand-gold underline decoration-stone-300">Terms</a>.
+                      </p>
+                      <p>
+                        <strong>Privacy:</strong> We use your info solely to respond. No third parties.
+                      </p>
+                    </div>
                   </form>
                 )}
               </div>
