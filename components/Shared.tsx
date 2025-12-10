@@ -248,11 +248,15 @@ export const Header: React.FC = () => {
           </nav>
 
           <div className="flex items-center gap-2">
-            <LanguageSwitcher isTransparent={isTransparent} />
+            {/* Hide language switcher on mobile, show on desktop */}
+            <div className="hidden md:block">
+              <LanguageSwitcher isTransparent={isTransparent} />
+            </div>
 
+            {/* Hide search on mobile, show on desktop */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className={`p-2 rounded-full transition-colors ${isTransparent ? 'text-white hover:bg-white/10' : 'text-brand-charcoal hover:bg-stone-100'
+              className={`hidden md:block p-2 rounded-full transition-colors ${isTransparent ? 'text-white hover:bg-white/10' : 'text-brand-charcoal hover:bg-stone-100'
                 }`}
             >
               <SearchIcon size={20} />
@@ -321,6 +325,14 @@ export const Header: React.FC = () => {
                 <NavLink to="/about" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>About Us</NavLink>
                 <NavLink to="/blog" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Blog</NavLink>
                 <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Contact</NavLink>
+
+                {/* Language switcher at bottom of mobile menu */}
+                <div className="pt-4 mt-4 border-t border-stone-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-stone-400">Language</span>
+                    <LanguageSwitcher isTransparent={false} />
+                  </div>
+                </div>
               </nav>
             </motion.div>
           )}
