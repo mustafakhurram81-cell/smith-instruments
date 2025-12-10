@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Section, Button, FadeIn } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { getProductBySku, getProductsBySubcategory, getProductVariants, Product } from '../../lib/database';
-import { ChevronRight, Package, Loader2, MessageCircle, Mail, ArrowRight, X, ZoomIn, ChevronDown } from 'lucide-react';
+import { ChevronRight, Package, Loader2, MessageCircle, Mail, ArrowRight, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../components/CartProvider';
 
@@ -21,6 +21,7 @@ export const ProductDetail: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [isZoomed, setIsZoomed] = useState(false);
     const [isVariantDropdownOpen, setIsVariantDropdownOpen] = useState(false);
+    const [hoverZoom, setHoverZoom] = useState({ active: false, x: 50, y: 50 });
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -198,10 +199,18 @@ export const ProductDetail: React.FC = () => {
             <Section className="bg-white">
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                        {/* Image with Zoom */}
+                        {/* Image with Hover Zoom */}
                         <div
                             className="bg-stone-50 border border-stone-100 overflow-hidden aspect-square flex items-center justify-center relative cursor-zoom-in group"
                             onClick={() => product.image_url && setIsZoomed(true)}
+                            onMouseMove={(e) => {
+                                if (!product.image_url) return;
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                                setHoverZoom({ active: true, x, y });
+                            }}
+                            onMouseLeave={() => setHoverZoom({ active: false, x: 50, y: 50 })}
                         >
                             <AnimatePresence mode="wait">
                                 <motion.div
@@ -213,21 +222,28 @@ export const ProductDetail: React.FC = () => {
                                     className="w-full h-full flex items-center justify-center"
                                 >
                                     {product.image_url ? (
-                                        <>
+                                        <div className="w-full h-full overflow-hidden">
                                             <img
                                                 src={product.image_url}
                                                 alt={product.name}
-                                                className="w-full h-full object-contain p-8 group-hover:scale-105 transition-transform duration-300"
+                                                className="w-full h-full object-contain p-8 transition-transform duration-200"
+                                                style={{
+                                                    transform: hoverZoom.active ? 'scale(2)' : 'scale(1)',
+                                                    transformOrigin: `${hoverZoom.x}% ${hoverZoom.y}%`
+                                                }}
                                             />
-                                            <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <ZoomIn size={20} className="text-brand-charcoal" />
-                                            </div>
-                                        </>
+                                        </div>
                                     ) : (
                                         <Package className="text-stone-300" size={120} />
                                     )}
                                 </motion.div>
                             </AnimatePresence>
+                            {/* Click to enlarge hint */}
+                            {product.image_url && !hoverZoom.active && (
+                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                    Click to enlarge
+                                </div>
+                            )}
                         </div>
 
                         {/* Details */}

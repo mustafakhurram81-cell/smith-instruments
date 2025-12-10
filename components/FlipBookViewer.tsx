@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import HTMLFlipBook from 'react-pageflip';
-import { Download, X, ChevronRight, ChevronLeft, ZoomIn, ZoomOut, Maximize, Minimize } from 'lucide-react';
+import { Download, X, ChevronRight, ChevronLeft, Maximize, Minimize } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -16,7 +16,6 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
     const [loadedPages, setLoadedPages] = useState<number>(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [zoom, setZoom] = useState(1);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [showControls, setShowControls] = useState(true);
@@ -30,11 +29,11 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
     const touchStartX = useRef<number>(0);
     const touchStartY = useRef<number>(0);
 
-    // Calculate dimensions based on zoom
+    // Calculate fixed dimensions
     const baseWidth = Math.min(500, window.innerWidth * 0.4);
     const baseHeight = baseWidth * 1.4;
-    const bookWidth = baseWidth * zoom;
-    const bookHeight = baseHeight * zoom;
+    const bookWidth = baseWidth;
+    const bookHeight = baseHeight;
 
     // Preload sound
     useEffect(() => {
@@ -76,8 +75,6 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
             if (e.key === 'ArrowRight') { book.current?.pageFlip()?.flipNext(); playSound(); }
             if (e.key === 'ArrowLeft') { book.current?.pageFlip()?.flipPrev(); playSound(); }
             if (e.key === 'Escape') onClose();
-            if (e.key === '+' || e.key === '=') setZoom(z => Math.min(z + 0.2, 2));
-            if (e.key === '-') setZoom(z => Math.max(z - 0.2, 0.6));
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
@@ -174,23 +171,6 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
             >
                 <div className="pointer-events-auto" />
                 <div className="flex items-center gap-2 pointer-events-auto">
-                    {/* Zoom Controls */}
-                    <button
-                        onClick={() => setZoom(z => Math.max(z - 0.2, 0.6))}
-                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all"
-                    >
-                        <ZoomOut size={20} />
-                    </button>
-                    <span className="text-white/50 text-sm w-12 text-center">{Math.round(zoom * 100)}%</span>
-                    <button
-                        onClick={() => setZoom(z => Math.min(z + 0.2, 2))}
-                        className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all"
-                    >
-                        <ZoomIn size={20} />
-                    </button>
-
-                    <div className="w-px h-6 bg-white/20 mx-2" />
-
                     {/* Fullscreen */}
                     <button
                         onClick={toggleFullscreen}
