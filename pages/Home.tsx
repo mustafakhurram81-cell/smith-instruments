@@ -4,7 +4,6 @@ import { SEO } from '../components/SEO';
 import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import heroMethods from '../assets/hero-instruments.jpg';
-import heroMobile from '../assets/hero-mobile.jpg';
 
 const PRODUCTS = [
   { id: 1, name: "Plastic Surgery", icon: Scissors, desc: "Precision instruments for reconstruction" },
@@ -62,7 +61,7 @@ export const Home: React.FC = () => {
       <section className="relative h-screen flex items-center bg-brand-charcoal">
         <div className="absolute inset-0 z-0">
           <picture>
-            <source media="(max-width: 767px)" srcSet={heroMobile} />
+            <source media="(max-width: 767px)" srcSet="/hero-mobile.jpg" />
             <img
               src={heroMethods}
               alt="Surgical Instruments Background"
