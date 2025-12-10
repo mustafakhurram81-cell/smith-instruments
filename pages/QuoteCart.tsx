@@ -21,10 +21,10 @@ export const QuoteCart: React.FC = () => {
         message: ''
     });
 
-    // TODO: Create a separate EmailJS template for Quotes if desired
-    // Currently using the same as Contact form: template_3kqu18e
-    // If you create a new one, replace it here:
-    const QUOTE_TEMPLATE_ID = 'template_aq74xvd';
+    // EmailJS credentials from environment variables
+    const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const QUOTE_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_QUOTE_TEMPLATE_ID;
+    const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -77,10 +77,10 @@ export const QuoteCart: React.FC = () => {
             };
 
             await emailjs.send(
-                'service_dzj0fa2',
+                SERVICE_ID,
                 QUOTE_TEMPLATE_ID,
                 templateParams,
-                'JVcDcowpyoY1HnUQO'
+                PUBLIC_KEY
             );
 
             setSuccess(true);

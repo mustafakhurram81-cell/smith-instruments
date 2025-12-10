@@ -54,10 +54,10 @@ export const Contact: React.FC = () => {
     message: ''
   });
 
-  // EmailJS credentials
-  const SERVICE_ID = 'service_dzj0fa2';
-  const TEMPLATE_ID = 'template_3kqu18e'; // TODO: Ensure this template has {{phone}} and {{country}}
-  const PUBLIC_KEY = 'JVcDcowpyoY1HnUQO';
+  // EmailJS credentials from environment variables
+  const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+  const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID;
+  const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
   /*
     EMAILJS TEMPLATE SETTINGS FOR CONTACT FORM:
