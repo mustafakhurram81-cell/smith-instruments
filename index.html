@@ -38,13 +38,20 @@
     content="Premium manufacturer of precision surgical instruments. ISO certified, global shipping, and custom OEM solutions." />
   <meta property="twitter:image" content="https://images.unsplash.com/photo-1626315869436-d6781ba69d6e?q=80&w=1200" />
 
-  <!-- Fonts: Playfair Display (Serif/Premium) and Inter (Sans/Clean) -->
+  <!-- Fonts: Non-blocking load using media swap trick -->
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap">
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
-    rel="stylesheet">
+    rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet">
+  </noscript>
 
   <!-- Preload hero image for faster LCP -->
   <link rel="preload" as="image" href="/hero-mobile.jpg" media="(max-width: 767px)">
