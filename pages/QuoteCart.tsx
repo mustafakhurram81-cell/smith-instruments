@@ -13,10 +13,12 @@ export const QuoteCart: React.FC = () => {
 
     // Form State
     const [formData, setFormData] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         company: '',
         phone: '',
+        country: '',
         message: ''
     });
 
@@ -32,11 +34,12 @@ export const QuoteCart: React.FC = () => {
 
         const templateParams = {
             to_name: "Smith Instruments Sales",
-            user_name: formData.name,       // Matches Contact.tsx name="user_name"
-            user_email: formData.email,     // Matches Contact.tsx name="user_email"
-            interest: "Quote Request",      // Matches Contact.tsx name="interest"
+            user_name: `${formData.firstName} ${formData.lastName}`.trim(),       // Matches Contact.tsx logic
+            user_email: formData.email,
+            interest: "Quote Request",
             company: formData.company,
             phone: formData.phone,
+            country: formData.country,      // Added country
             message: fullMessage,           // Combined message
             reply_to: formData.email
         };
@@ -75,13 +78,13 @@ export const QuoteCart: React.FC = () => {
     if (success) {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center pt-20 text-center px-4">
-                <SEO title="Quote Sent" />
+                <SEO title="Quote Sent" description="Your quote request has been successfully sent." />
                 <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
                     <Send size={32} />
                 </div>
                 <h1 className="text-3xl font-serif text-brand-charcoal mb-4">Quote Request Sent!</h1>
                 <p className="text-stone-500 max-w-md mx-auto mb-8">
-                    Thank you, {formData.name}. We have received your request for {items.length > 0 ? items.length : 'your'} items.
+                    Thank you, {formData.firstName}. We have received your request for {items.length > 0 ? items.length : 'your'} items.
                     Our sales team will email you a formal quotation within 24 hours.
                 </p>
                 <Link to="/">
@@ -162,25 +165,49 @@ export const QuoteCart: React.FC = () => {
                         <div className="bg-white p-6 rounded-xl shadow-xl border-t-4 border-brand-gold sticky top-24">
                             <h2 className="text-xl font-medium mb-6">Contact Details</h2>
                             <form onSubmit={handleSubmit} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-stone-600 mb-1">Full Name *</label>
-                                    <input
-                                        required
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
-                                        value={formData.name}
-                                        onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                    />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-600 mb-1">First Name *</label>
+                                        <input
+                                            required
+                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                            value={formData.firstName}
+                                            onChange={e => setFormData({ ...formData, firstName: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-600 mb-1">Last Name *</label>
+                                        <input
+                                            required
+                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                            value={formData.lastName}
+                                            onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-stone-600 mb-1">Email Address *</label>
-                                    <input
-                                        type="email"
-                                        required
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
-                                        value={formData.email}
-                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                    />
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-600 mb-1">Email *</label>
+                                        <input
+                                            type="email"
+                                            required
+                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                            value={formData.email}
+                                            onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-600 mb-1">Country</label>
+                                        <input
+                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                            value={formData.country}
+                                            onChange={e => setFormData({ ...formData, country: e.target.value })}
+                                            placeholder="e.g. USA"
+                                        />
+                                    </div>
                                 </div>
+
                                 <div>
                                     <label className="block text-sm font-medium text-stone-600 mb-1">Clinic / Company</label>
                                     <input
