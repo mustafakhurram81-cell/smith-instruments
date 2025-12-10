@@ -3,9 +3,11 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Section, Button, FadeIn } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { getProductBySku, getProductsBySubcategory, getProductVariants, Product } from '../../lib/database';
-import { ChevronRight, Package, Loader2, Mail, ArrowRight, X, ChevronDown, Minus, Plus } from 'lucide-react';
+import { ChevronRight, Package, Loader2, Mail, ArrowRight, X, ChevronDown, Minus, Plus, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../components/CartProvider';
+import { useToast } from '../../components/ToastProvider';
+import { useRecentlyViewed } from '../../hooks/useRecentlyViewed';
 
 export const ProductDetail: React.FC = () => {
     // Handle both /product/:productId and /products/:category/:subcategory/:productSKU
@@ -13,6 +15,8 @@ export const ProductDetail: React.FC = () => {
     const sku = decodeURIComponent(productId || productSKU || '');
     const navigate = useNavigate();
     const { addToCart } = useCart();
+    const { showToast } = useToast();
+    const { items: recentlyViewed, addToRecentlyViewed } = useRecentlyViewed();
 
     const [product, setProduct] = useState<Product | null>(null);
     const [parentProduct, setParentProduct] = useState<Product | null>(null); // Stores original for consistent name
@@ -52,6 +56,13 @@ export const ProductDetail: React.FC = () => {
         };
         fetchProduct();
     }, [sku]);
+
+    // Track recently viewed
+    useEffect(() => {
+        if (product) {
+            addToRecentlyViewed(product);
+        }
+    }, [product?.id]);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -379,6 +390,10 @@ export const ProductDetail: React.FC = () => {
                                     onClick={() => {
                                         if (product) {
                                             addToCart(product, quantity);
+                                            showToast('Added to Quote Cart', 'success', {
+                                                productName: product.name,
+                                                quantity: quantity
+                                            });
                                             setQuantity(1); // Reset after adding
                                         }
                                     }}
@@ -446,6 +461,54 @@ export const ProductDetail: React.FC = () => {
                                     </div>
                                 </FadeIn>
                             ))}
+                        </div>
+                    </div>
+                </Section>
+            )}
+
+            {/* Recently Viewed Section */}
+            {recentlyViewed.filter(item => item.id !== product?.id).length > 0 && (
+                <Section className="bg-white border-t border-stone-100">
+                    <div className="container mx-auto px-6">
+                        <div className="flex items-center gap-3 mb-8">
+                            <Clock size={20} className="text-stone-400" />
+                            <h2 className="font-serif text-2xl text-brand-charcoal">
+                                Recently Viewed
+                            </h2>
+                        </div>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                            {recentlyViewed
+                                .filter(item => item.id !== product?.id)
+                                .slice(0, 6)
+                                .map((item, idx) => (
+                                    <FadeIn key={item.id} delay={idx * 0.05}>
+                                        <div
+                                            onClick={() => navigate(`/product/${encodeURIComponent(item.sku)}`)}
+                                            className="group cursor-pointer bg-stone-50 overflow-hidden border border-stone-100 hover:shadow-md hover:border-brand-gold/30 transition-all duration-300"
+                                        >
+                                            <div className="aspect-square bg-white overflow-hidden">
+                                                {item.image_url ? (
+                                                    <img
+                                                        src={item.image_url}
+                                                        alt={item.name}
+                                                        className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <Package className="text-stone-300" size={32} />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="p-3 border-t border-stone-100">
+                                                <p className="text-[10px] text-brand-gold font-mono mb-0.5">{item.sku}</p>
+                                                <h3 className="text-xs font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors line-clamp-2">
+                                                    {item.name}
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </FadeIn>
+                                ))}
                         </div>
                     </div>
                 </Section>

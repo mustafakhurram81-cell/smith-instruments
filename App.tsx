@@ -4,6 +4,7 @@ import { Header, Footer, WhatsAppFloat } from './components/Shared';
 import { AuthProvider } from './components/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { CartProvider } from './components/CartProvider';
+import { ToastProvider } from './components/ToastProvider';
 import { Loader2 } from 'lucide-react';
 
 // Lazy load pages
@@ -92,10 +93,12 @@ function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <Router>
-          <ScrollToTop />
-          <AppContent />
-        </Router>
+        <ToastProvider>
+          <Router>
+            <ScrollToTop />
+            <AppContent />
+          </Router>
+        </ToastProvider>
       </CartProvider>
     </AuthProvider>
   );
