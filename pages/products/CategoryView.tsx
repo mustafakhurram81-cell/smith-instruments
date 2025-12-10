@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Section, FadeIn, Button } from '../../components/Shared';
+import { Section, FadeIn, Button, Pagination } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { CategoryGridSkeleton, ProductGridSkeleton } from '../../components/ui/Skeleton';
 import { useSubcategoryDetails, useProductsByCategory } from '../../lib/queries';
@@ -12,7 +12,8 @@ export const CategoryView: React.FC = () => {
     const navigate = useNavigate();
     const category = decodeURIComponent(categoryName || '');
 
-    const [displayCount, setDisplayCount] = useState(20);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 24;
 
     // Use the new hook that includes counts and images
     const { data: subcategoryDetails = [], isLoading: subsLoading } = useSubcategoryDetails(category);
@@ -23,12 +24,8 @@ export const CategoryView: React.FC = () => {
     // Calculate total from subcategory details for accurate count
     const totalProducts = subcategoryDetails.reduce((acc, sub) => acc + sub.count, 0);
 
-    const loadMore = () => {
-        setDisplayCount(prev => prev + 20);
-    };
-
-    const visibleProducts = products.slice(0, displayCount);
-    const hasMore = displayCount < products.length;
+    const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+    const visibleProducts = products.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
@@ -127,13 +124,11 @@ export const CategoryView: React.FC = () => {
                                 ))}
                             </div>
 
-                            {hasMore && (
-                                <div className="text-center mt-12">
-                                    <Button variant="outline" onClick={loadMore}>
-                                        Load More ({products.length - displayCount} remaining)
-                                    </Button>
-                                </div>
-                            )}
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                            />
                         </>
                     )}
                 </div>

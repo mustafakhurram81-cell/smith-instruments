@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Section, Button } from '../../components/Shared';
+import { Section, Button, Pagination } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { ProductGridSkeleton } from '../../components/ui/Skeleton';
 import { useProductsBySubcategory } from '../../lib/queries';
@@ -14,7 +14,8 @@ export const SubcategoryView: React.FC = () => {
     const category = decodeURIComponent(categoryName || '');
     const subcategory = decodeURIComponent(subcategoryName || '');
 
-    const [displayCount, setDisplayCount] = useState(24);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 24;
     const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid');
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -26,12 +27,13 @@ export const SubcategoryView: React.FC = () => {
         p.sku.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const loadMore = () => {
-        setDisplayCount(prev => prev + 24);
-    };
+    // Reset page when filtering
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
 
-    const visibleProducts = filteredProducts.slice(0, displayCount);
-    const hasMore = displayCount < filteredProducts.length;
+    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+    const visibleProducts = filteredProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
@@ -88,7 +90,7 @@ export const SubcategoryView: React.FC = () => {
 
                                 <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                                     <p className="text-stone-500 text-sm">
-                                        {filteredProducts.length} results
+                                        Showing {visibleProducts.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length}
                                     </p>
                                     <div className="flex items-center gap-2">
                                         <button
@@ -118,13 +120,11 @@ export const SubcategoryView: React.FC = () => {
                                 ))}
                             </div>
 
-                            {hasMore && (
-                                <div className="text-center mt-12">
-                                    <Button variant="outline" onClick={loadMore}>
-                                        Load More ({products.length - displayCount} remaining)
-                                    </Button>
-                                </div>
-                            )}
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                            />
                         </>
                     ) : (
                         <div className="text-center py-20">
