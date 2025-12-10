@@ -5,7 +5,7 @@ import {
     Package, Loader2, FolderOpen, Settings, Search, Edit, Trash2, X, Save,
     Plus, Upload, CheckSquare, Square, FolderEdit,
     Filter, ChevronRight, ChevronDown, BarChart3, AlertTriangle, ImageOff, FileText, RefreshCw,
-    Download, ExternalLink, GitBranch, Layers, ArrowUpDown, Eye, Check
+    Download, ExternalLink, GitBranch, Layers, ArrowUpDown, Eye, Check, Link2, Unlink
 } from 'lucide-react';
 import { Button } from '../../components/Shared';
 import { Link, useNavigate } from 'react-router-dom';
@@ -78,6 +78,13 @@ export const Dashboard: React.FC = () => {
     const [passwordData, setPasswordData] = useState({ newPassword: '', confirmPassword: '' });
     const [passwordSaving, setPasswordSaving] = useState(false);
     const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+    // Link as Variant
+    const [linkingProduct, setLinkingProduct] = useState<any>(null);
+    const [parentSearchQuery, setParentSearchQuery] = useState('');
+    const [parentSearchResults, setParentSearchResults] = useState<any[]>([]);
+    const [parentSearching, setParentSearching] = useState(false);
+    const [linkingSaving, setLinkingSaving] = useState(false);
 
     // Get subcategories for selected category
     const subcategoriesForCategory = categoryFilter
@@ -292,6 +299,69 @@ export const Dashboard: React.FC = () => {
         if (!confirm('Delete this product?')) return;
         await supabase.from('products').delete().eq('id', id);
         setProducts(prev => prev.filter(p => p.id !== id));
+    };
+
+    // Search for potential parent products
+    const searchParentProducts = async (query: string) => {
+        if (!query.trim()) {
+            setParentSearchResults([]);
+            return;
+        }
+        setParentSearching(true);
+        const { data } = await supabase
+            .from('products')
+            .select('id, sku, name, image_url')
+            .or(`sku.ilike.%${query}%,name.ilike.%${query}%`)
+            .neq('id', linkingProduct?.id) // Exclude the product being linked
+            .limit(10);
+        setParentSearchResults(data || []);
+        setParentSearching(false);
+    };
+
+    // Link product as variant of parent
+    const handleLinkVariant = async (parentSku: string) => {
+        if (!linkingProduct) return;
+        setLinkingSaving(true);
+
+        const newSpecs = {
+            ...(linkingProduct.specifications || {}),
+            variant_of: parentSku
+        };
+
+        await supabase.from('products').update({
+            specifications: newSpecs
+        }).eq('id', linkingProduct.id);
+
+        // Update local state
+        setProducts(prev => prev.map(p =>
+            p.id === linkingProduct.id
+                ? { ...p, specifications: newSpecs }
+                : p
+        ));
+
+        setLinkingProduct(null);
+        setParentSearchQuery('');
+        setParentSearchResults([]);
+        setLinkingSaving(false);
+    };
+
+    // Unlink product from its parent
+    const handleUnlinkVariant = async (product: any) => {
+        if (!confirm(`Remove ${product.sku} from its variant group?`)) return;
+
+        const newSpecs = { ...(product.specifications || {}) };
+        delete newSpecs.variant_of;
+
+        await supabase.from('products').update({
+            specifications: Object.keys(newSpecs).length > 0 ? newSpecs : null
+        }).eq('id', product.id);
+
+        // Update local state
+        setProducts(prev => prev.map(p =>
+            p.id === product.id
+                ? { ...p, specifications: newSpecs }
+                : p
+        ));
     };
 
     const handleSaveProduct = async () => {
@@ -745,12 +815,28 @@ export const Dashboard: React.FC = () => {
                                                     <td className="p-3 text-stone-500">{product.subcategory}</td>
                                                     <td className="p-3 text-center">
                                                         {product.specifications?.variant_of && product.specifications?.variant_of !== product.sku ? (
-                                                            <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-xs rounded-full">
-                                                                <GitBranch size={12} className="inline mr-1" />
-                                                                {product.specifications.variant_of}
-                                                            </span>
+                                                            <div className="flex items-center justify-center gap-1">
+                                                                <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-xs rounded-full">
+                                                                    <GitBranch size={12} className="inline mr-1" />
+                                                                    {product.specifications.variant_of}
+                                                                </span>
+                                                                <button
+                                                                    onClick={() => handleUnlinkVariant(product)}
+                                                                    className="p-1 hover:bg-red-50 rounded text-stone-400 hover:text-red-500"
+                                                                    title="Unlink from parent"
+                                                                >
+                                                                    <Unlink size={12} />
+                                                                </button>
+                                                            </div>
                                                         ) : (
-                                                            <span className="text-stone-300">—</span>
+                                                            <button
+                                                                onClick={() => setLinkingProduct(product)}
+                                                                className="px-2 py-0.5 bg-stone-100 hover:bg-indigo-50 text-stone-400 hover:text-indigo-600 text-xs rounded-full transition-colors"
+                                                                title="Link as variant of another product"
+                                                            >
+                                                                <Link2 size={12} className="inline mr-1" />
+                                                                Link
+                                                            </button>
                                                         )}
                                                     </td>
                                                     <td className="p-3 text-right">
@@ -764,10 +850,10 @@ export const Dashboard: React.FC = () => {
                                                             >
                                                                 <Eye size={14} className="text-stone-500" />
                                                             </a>
-                                                            <button onClick={() => setEditingProduct(product)} className="p-1.5 hover:bg-stone-100 rounded">
+                                                            <button onClick={() => setEditingProduct(product)} className="p-1.5 hover:bg-stone-100 rounded" title="Edit">
                                                                 <Edit size={14} className="text-stone-500" />
                                                             </button>
-                                                            <button onClick={() => handleDeleteProduct(product.id)} className="p-1.5 hover:bg-red-50 rounded">
+                                                            <button onClick={() => handleDeleteProduct(product.id)} className="p-1.5 hover:bg-red-50 rounded" title="Delete">
                                                                 <Trash2 size={14} className="text-red-400" />
                                                             </button>
                                                         </div>
@@ -1005,8 +1091,8 @@ export const Dashboard: React.FC = () => {
 
                             {passwordMessage && (
                                 <div className={`p-3 rounded-lg text-sm ${passwordMessage.type === 'success'
-                                        ? 'bg-green-50 text-green-700 border border-green-200'
-                                        : 'bg-red-50 text-red-700 border border-red-200'
+                                    ? 'bg-green-50 text-green-700 border border-green-200'
+                                    : 'bg-red-50 text-red-700 border border-red-200'
                                     }`}>
                                     {passwordMessage.text}
                                 </div>
@@ -1233,6 +1319,103 @@ export const Dashboard: React.FC = () => {
                         <div className="flex gap-3">
                             <Button variant="outline" onClick={() => setEditingCategory(null)} className="flex-1">Cancel</Button>
                             <Button variant="primary" onClick={handleRenameCategory} className="flex-1">Rename</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Link as Variant Modal */}
+            {linkingProduct && (
+                <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl w-full max-w-lg">
+                        <div className="p-4 border-b flex justify-between items-center">
+                            <div>
+                                <h3 className="font-medium text-brand-charcoal">Link as Variant</h3>
+                                <p className="text-sm text-stone-500 mt-1">
+                                    Making <span className="font-mono text-brand-gold">{linkingProduct.sku}</span> a variant of...
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    setLinkingProduct(null);
+                                    setParentSearchQuery('');
+                                    setParentSearchResults([]);
+                                }}
+                                className="p-1 hover:bg-stone-100 rounded"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="p-4">
+                            {/* Search Input */}
+                            <div className="relative">
+                                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Search for parent product by SKU or name..."
+                                    value={parentSearchQuery}
+                                    onChange={e => {
+                                        setParentSearchQuery(e.target.value);
+                                        searchParentProducts(e.target.value);
+                                    }}
+                                    className="w-full pl-10 pr-4 py-3 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                    autoFocus
+                                />
+                                {parentSearching && (
+                                    <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 animate-spin" />
+                                )}
+                            </div>
+
+                            {/* Search Results */}
+                            <div className="mt-4 max-h-[300px] overflow-y-auto">
+                                {parentSearchResults.length === 0 && parentSearchQuery && !parentSearching ? (
+                                    <div className="text-center py-8 text-stone-400">
+                                        No products found matching "{parentSearchQuery}"
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {parentSearchResults.map(result => (
+                                            <button
+                                                key={result.id}
+                                                onClick={() => handleLinkVariant(result.sku)}
+                                                disabled={linkingSaving}
+                                                className="w-full flex items-center gap-3 p-3 border border-stone-200 rounded-lg hover:border-brand-gold hover:bg-brand-gold/5 transition-colors text-left disabled:opacity-50"
+                                            >
+                                                <div className="w-10 h-10 bg-stone-100 rounded overflow-hidden flex-shrink-0">
+                                                    {result.image_url ? (
+                                                        <img src={result.image_url} alt="" className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-stone-300">
+                                                            <Package size={16} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-mono text-brand-gold text-sm">{result.sku}</p>
+                                                    <p className="text-sm text-stone-600 truncate">{result.name}</p>
+                                                </div>
+                                                <div className="flex-shrink-0">
+                                                    {linkingSaving ? (
+                                                        <Loader2 size={18} className="text-brand-gold animate-spin" />
+                                                    ) : (
+                                                        <Link2 size={18} className="text-stone-400" />
+                                                    )}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Help Text */}
+                            {parentSearchResults.length === 0 && !parentSearchQuery && (
+                                <div className="text-center py-8 text-stone-400 text-sm">
+                                    <GitBranch size={32} className="mx-auto mb-2 opacity-50" />
+                                    <p>Search for a product to make <strong>{linkingProduct.sku}</strong> its variant</p>
+                                    <p className="text-xs mt-1">Variants share the same name but have different sizes/attributes</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
