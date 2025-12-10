@@ -357,7 +357,7 @@ export const Header: React.FC = () => {
                       <div className="relative">
                         <ShoppingCart size={24} className="text-brand-charcoal group-hover:text-brand-gold transition-colors" />
                         {cartCount > 0 && (
-                          <span className="absolute -top-2 -right-2 bg-brand-gold text-brand-charcoal text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                          <span className="absolute -top-2 -right-2 bg-brand-gold text-brand-charcoal text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-sm">
                             {cartCount}
                           </span>
                         )}
@@ -367,8 +367,8 @@ export const Header: React.FC = () => {
 
                     {/* Language */}
                     <div className="flex flex-col items-center justify-center gap-2 p-4 bg-stone-100 rounded-lg">
-                      <span className="text-xs text-stone-600 font-medium">Language</span>
                       <LanguageSwitcher isTransparent={false} />
+                      <span className="text-xs text-stone-600 font-medium">Language</span>
                     </div>
                   </div>
                 </div>
