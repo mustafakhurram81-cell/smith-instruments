@@ -141,6 +141,7 @@ export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isProductsOpen, setIsProductsOpen] = useState(false); // For mobile products dropdown
   const location = useLocation();
   const navigate = useNavigate();
   const { cartCount } = useCart();
@@ -262,9 +263,10 @@ export const Header: React.FC = () => {
               <SearchIcon size={20} />
             </button>
 
+            {/* Cart - desktop only */}
             <NavLink
               to="/quote-cart"
-              className={`relative p-2 rounded-full transition-colors ${isTransparent ? 'text-white hover:bg-white/10' : 'text-brand-charcoal hover:bg-stone-100'
+              className={`hidden md:flex relative p-2 rounded-full transition-colors ${isTransparent ? 'text-white hover:bg-white/10' : 'text-brand-charcoal hover:bg-stone-100'
                 }`}
             >
               <ShoppingCart size={20} />
@@ -274,6 +276,15 @@ export const Header: React.FC = () => {
                 </span>
               )}
             </NavLink>
+
+            {/* Search - mobile only, opens search overlay */}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className={`md:hidden p-2 rounded-full transition-colors ${isTransparent ? 'text-white hover:bg-white/10' : 'text-brand-charcoal hover:bg-stone-100'
+                }`}
+            >
+              <SearchIcon size={20} />
+            </button>
 
             <button
               className={`md:hidden focus:outline-none ${isTransparent ? 'text-white' : 'text-brand-charcoal'}`}
@@ -293,32 +304,29 @@ export const Header: React.FC = () => {
               className="md:hidden overflow-hidden bg-stone-50 border-b border-stone-200 absolute top-full left-0 right-0 shadow-lg"
             >
               <nav className="flex flex-col p-6 gap-4">
-                <div className="relative mb-4">
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    className="w-full bg-white border border-stone-200 rounded-full py-3 px-5 pl-12 text-sm outline-none focus:border-brand-gold"
-                    onClick={() => { setIsMobileOpen(false); setIsSearchOpen(true); }}
-                    readOnly
-                  />
-                  <SearchIcon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
-                </div>
-
                 <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Home</NavLink>
-                <NavLink to="/quote-cart" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif flex items-center justify-between ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>
-                  Request Quote
-                  {cartCount > 0 && <span className="bg-brand-gold text-brand-charcoal text-xs px-2 py-0.5 rounded-full">{cartCount}</span>}
-                </NavLink>
 
+                {/* Collapsible Products */}
                 <div className="space-y-2">
-                  <NavLink to="/products" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Products</NavLink>
-                  <div className="pl-4 border-l border-stone-200 ml-1 flex flex-col gap-2">
-                    {categories.slice(0, 6).map(cat => (
-                      <NavLink key={cat.name} to={`/products/${encodeURIComponent(cat.name)}`} onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400">
-                        {cat.name}
+                  <button
+                    onClick={() => setIsProductsOpen(!isProductsOpen)}
+                    className="w-full text-lg font-serif text-left text-stone-500 hover:text-brand-charcoal transition-colors flex items-center justify-between"
+                  >
+                    Products
+                    <ChevronDown size={18} className={`transition-transform ${isProductsOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {isProductsOpen && (
+                    <div className="pl-4 border-l border-stone-200 ml-1 flex flex-col gap-2 pt-2">
+                      <NavLink to="/products" onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400 hover:text-brand-gold transition-colors">
+                        All Products
                       </NavLink>
-                    ))}
-                  </div>
+                      {categories.slice(0, 6).map(cat => (
+                        <NavLink key={cat.name} to={`/products/${encodeURIComponent(cat.name)}`} onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400 hover:text-brand-gold transition-colors">
+                          {cat.name}
+                        </NavLink>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <NavLink to="/catalogues" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Catalogues</NavLink>
@@ -326,8 +334,16 @@ export const Header: React.FC = () => {
                 <NavLink to="/blog" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Blog</NavLink>
                 <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Contact</NavLink>
 
-                {/* Language switcher at bottom of mobile menu */}
+                {/* Request Quote at bottom */}
                 <div className="pt-4 mt-4 border-t border-stone-200">
+                  <NavLink to="/quote-cart" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif flex items-center justify-between ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>
+                    Request Quote
+                    {cartCount > 0 && <span className="bg-brand-gold text-brand-charcoal text-xs px-2 py-0.5 rounded-full">{cartCount}</span>}
+                  </NavLink>
+                </div>
+
+                {/* Language switcher at bottom of mobile menu */}
+                <div className="border-t border-stone-200 pt-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-stone-400">Language</span>
                     <LanguageSwitcher isTransparent={false} />
