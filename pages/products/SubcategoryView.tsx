@@ -4,7 +4,7 @@ import { Section, Button } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { ProductGridSkeleton } from '../../components/ui/Skeleton';
 import { useProductsBySubcategory } from '../../lib/queries';
-import { ChevronRight, Package, Grid, LayoutGrid } from 'lucide-react';
+import { ChevronRight, Package, Grid, LayoutGrid, Search, X } from 'lucide-react';
 import { ProductCard } from '../../components/ProductCard';
 
 export const SubcategoryView: React.FC = () => {
@@ -16,15 +16,22 @@ export const SubcategoryView: React.FC = () => {
 
     const [displayCount, setDisplayCount] = useState(24);
     const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid');
+    const [searchTerm, setSearchTerm] = useState('');
 
     const { data: products = [], isLoading: loading } = useProductsBySubcategory(category, subcategory);
+
+    // Filter products
+    const filteredProducts = products.filter(p =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.sku.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const loadMore = () => {
         setDisplayCount(prev => prev + 24);
     };
 
-    const visibleProducts = products.slice(0, displayCount);
-    const hasMore = displayCount < products.length;
+    const visibleProducts = filteredProducts.slice(0, displayCount);
+    const hasMore = displayCount < filteredProducts.length;
 
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
@@ -33,7 +40,7 @@ export const SubcategoryView: React.FC = () => {
                 description={`Browse our range of ${subcategory} for ${category}.`}
             />
 
-            <div className="bg-brand-charcoal text-white py-16 md:py-24 relative overflow-hidden">
+            <div className="bg-brand-charcoal text-white py-12 md:py-20 relative overflow-hidden">
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="flex items-center gap-2 text-xs text-stone-400 mb-4 uppercase tracking-widest flex-wrap">
                         <Link to="/products" className="hover:text-white">Products</Link>
@@ -53,29 +60,50 @@ export const SubcategoryView: React.FC = () => {
                 </div>
             </div>
 
-            <Section className="bg-stone-50">
+            <Section className="bg-stone-50 !py-12">
                 <div className="container mx-auto px-6">
                     {loading ? (
                         <ProductGridSkeleton count={12} />
                     ) : products.length > 0 ? (
                         <>
-                            <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
-                                <p className="text-stone-500">
-                                    Showing {Math.min(displayCount, products.length)} of {products.length}
-                                </p>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => setViewMode('grid')}
-                                        className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-brand-gold text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
-                                    >
-                                        <Grid size={18} />
-                                    </button>
-                                    <button
-                                        onClick={() => setViewMode('compact')}
-                                        className={`p-2 rounded-lg transition-colors ${viewMode === 'compact' ? 'bg-brand-gold text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
-                                    >
-                                        <LayoutGrid size={18} />
-                                    </button>
+                            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 sticky top-20 z-30 bg-stone-50/95 backdrop-blur-sm p-4 rounded-xl border border-stone-100 shadow-sm">
+                                <div className="relative w-full md:w-96">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" size={18} />
+                                    <input
+                                        type="text"
+                                        placeholder="Search instruments..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="w-full pl-10 pr-10 py-2 rounded-lg border border-stone-200 outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold bg-white"
+                                    />
+                                    {searchTerm && (
+                                        <button
+                                            onClick={() => setSearchTerm('')}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    )}
+                                </div>
+
+                                <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                                    <p className="text-stone-500 text-sm">
+                                        {filteredProducts.length} results
+                                    </p>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setViewMode('grid')}
+                                            className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-brand-gold text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
+                                        >
+                                            <Grid size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => setViewMode('compact')}
+                                            className={`p-2 rounded-lg transition-colors ${viewMode === 'compact' ? 'bg-brand-gold text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
+                                        >
+                                            <LayoutGrid size={18} />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 

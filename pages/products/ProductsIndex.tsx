@@ -20,7 +20,7 @@ export const ProductsIndex: React.FC = () => {
             />
 
             {/* Header */}
-            <div className="bg-brand-charcoal text-white py-16 md:py-24 relative overflow-hidden">
+            <div className="bg-brand-charcoal text-white py-12 md:py-20 relative overflow-hidden">
                 <div className="container mx-auto px-6 relative z-10 text-center">
                     <span className="text-brand-gold uppercase tracking-widest text-xs font-bold mb-4 block">
                         Our Catalog
@@ -39,7 +39,7 @@ export const ProductsIndex: React.FC = () => {
                 </div>
             </div>
 
-            <Section className="bg-stone-50">
+            <Section className="bg-stone-50 !py-12">
                 <div className="container mx-auto px-6">
                     {isLoading ? (
                         <CategoryGridSkeleton count={8} />

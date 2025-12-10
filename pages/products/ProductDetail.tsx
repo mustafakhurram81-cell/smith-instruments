@@ -208,7 +208,7 @@ export const ProductDetail: React.FC = () => {
                 </div>
             </div>
 
-            <Section className="bg-white">
+            <Section className="bg-white !py-12">
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {/* Image with Hover Zoom */}

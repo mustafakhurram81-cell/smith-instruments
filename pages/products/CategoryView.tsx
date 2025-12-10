@@ -38,7 +38,7 @@ export const CategoryView: React.FC = () => {
             />
 
             {/* Header */}
-            <div className="bg-brand-charcoal text-white py-16 md:py-24 relative overflow-hidden">
+            <div className="bg-brand-charcoal text-white py-12 md:py-20 relative overflow-hidden">
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="flex items-center gap-2 text-xs text-stone-400 mb-4 uppercase tracking-widest">
                         <Link to="/products" className="hover:text-white">Products</Link>
@@ -58,7 +58,7 @@ export const CategoryView: React.FC = () => {
                 </div>
             </div>
 
-            <Section className="bg-stone-50">
+            <Section className="bg-stone-50 !py-12">
                 <div className="container mx-auto px-6">
                     {loading ? (
                         <CategoryGridSkeleton count={6} />
