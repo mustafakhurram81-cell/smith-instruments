@@ -4,6 +4,7 @@ import { SEO } from '../components/SEO';
 import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import heroMethods from '../assets/hero-instruments.jpg';
+import heroMobile from '../assets/hero-mobile.jpg';
 
 const PRODUCTS = [
   { id: 1, name: "Plastic Surgery", icon: Scissors, desc: "Precision instruments for reconstruction" },
@@ -60,15 +61,18 @@ export const Home: React.FC = () => {
       {/* HERO */}
       <section className="relative h-screen flex items-center bg-brand-charcoal">
         <div className="absolute inset-0 z-0">
-          <img
-            src={heroMethods}
-            alt="Surgical Instruments Background"
-            className="w-full h-full object-cover object-center"
-            loading="eager"
-            fetchPriority="high"
-            width="1920"
-            height="1080"
-          />
+          <picture>
+            <source media="(max-width: 767px)" srcSet={heroMobile} />
+            <img
+              src={heroMethods}
+              alt="Surgical Instruments Background"
+              className="w-full h-full object-cover object-center"
+              loading="eager"
+              fetchPriority="high"
+              width="1920"
+              height="1080"
+            />
+          </picture>
           {/* Subtle overlay for extra contrast */}
           <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal/60 via-transparent to-transparent" />
         </div>
