@@ -43,6 +43,8 @@ export const Contact: React.FC = () => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
   // EmailJS credentials
   const SERVICE_ID = 'service_dzj0fa2';
@@ -209,39 +211,82 @@ export const Contact: React.FC = () => {
                   </div>
                 ) : (
                   <form ref={form} onSubmit={handleSubmit} className="space-y-6">
-                    {/* Note: 'name' attributes are required for EmailJS to map fields */}
-                    <div>
-                      <label className="block text-sm font-medium text-stone-700 mb-2">Full Name <span className="text-brand-gold">*</span></label>
-                      <input
-                        required
-                        type="text"
-                        name="user_name"
-                        placeholder="Dr. John Smith"
-                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
-                      />
+                    {/* Hidden input to combine names for EmailJS compatibility */}
+                    <input type="hidden" name="user_name" value={`${firstName} ${lastName}`.trim()} />
+
+                    {/* Row 1: Names */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">First Name <span className="text-brand-gold">*</span></label>
+                        <input
+                          required
+                          type="text"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          placeholder="John"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Last Name <span className="text-brand-gold">*</span></label>
+                        <input
+                          required
+                          type="text"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          placeholder="Smith"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                        />
+                      </div>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-stone-700 mb-2">Email Address <span className="text-brand-gold">*</span></label>
-                      <input
-                        required
-                        type="email"
-                        name="user_email"
-                        placeholder="john.smith@hospital.com"
-                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
-                      />
+                    {/* Row 2: Email & Country */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Email Address <span className="text-brand-gold">*</span></label>
+                        <input
+                          required
+                          type="email"
+                          name="user_email"
+                          placeholder="john.smith@hospital.com"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Country</label>
+                        <input
+                          type="text"
+                          name="country"
+                          placeholder="United States"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                        />
+                      </div>
                     </div>
 
+                    {/* Row 3: Subject Dropdown */}
                     <div>
-                      <label className="block text-sm font-medium text-stone-700 mb-2">Catalogue of Interest</label>
-                      <input
-                        type="text"
-                        name="interest"
-                        placeholder="e.g., Orthopedic Instruments"
-                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
-                      />
+                      <label className="block text-sm font-medium text-stone-700 mb-2">Subject / Interest</label>
+                      <div className="relative">
+                        <select
+                          name="interest"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal appearance-none cursor-pointer"
+                          defaultValue=""
+                        >
+                          <option value="" disabled>Select a topic...</option>
+                          <option value="General Inquiry">General Inquiry</option>
+                          <option value="Quote Request">Request a Quote</option>
+                          <option value="Custom Manufacturing">Custom Manufacturing / OEM</option>
+                          <option value="Distributorship">Distributorship Inquiry</option>
+                          <option value="Existing Order">Existing Order Support</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        </div>
+                      </div>
                     </div>
 
+                    {/* Row 4: Message */}
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-2">Message <span className="text-brand-gold">*</span></label>
                       <textarea
