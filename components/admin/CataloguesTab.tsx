@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Plus, Edit, Trash2, Save, X, Loader2, Eye, EyeOff,
     GripVertical, BookOpen, Search
@@ -23,6 +23,10 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [editingCatalogue, setEditingCatalogue] = useState<Catalogue | null>(null);
     const [saving, setSaving] = useState(false);
+
+    // Drag and drop state
+    const [draggedItem, setDraggedItem] = useState<Catalogue | null>(null);
+    const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
     // Form state
     const [formData, setFormData] = useState({
@@ -89,14 +93,12 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
         setSaving(true);
 
         if (editingCatalogue) {
-            // Update existing
             const updated = await updateCatalogue(editingCatalogue.id, formData);
             if (updated) {
                 setCatalogues(prev => prev.map(c => c.id === editingCatalogue.id ? updated : c));
             }
             setEditingCatalogue(null);
         } else {
-            // Create new
             const newCatalogue = await createCatalogue({
                 ...formData,
                 thumbnail_url: null
@@ -129,7 +131,69 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
         }
     };
 
-    const filteredCatalogues = catalogues.filter(c =>
+    // Drag and Drop handlers
+    const handleDragStart = (e: React.DragEvent, catalogue: Catalogue) => {
+        setDraggedItem(catalogue);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', catalogue.id);
+        // Add a slight delay to show the dragging state
+        setTimeout(() => {
+            (e.target as HTMLElement).style.opacity = '0.5';
+        }, 0);
+    };
+
+    const handleDragEnd = (e: React.DragEvent) => {
+        (e.target as HTMLElement).style.opacity = '1';
+        setDraggedItem(null);
+        setDragOverIndex(null);
+    };
+
+    const handleDragOver = (e: React.DragEvent, index: number) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        setDragOverIndex(index);
+    };
+
+    const handleDragLeave = () => {
+        setDragOverIndex(null);
+    };
+
+    const handleDrop = async (e: React.DragEvent, targetIndex: number) => {
+        e.preventDefault();
+        setDragOverIndex(null);
+
+        if (!draggedItem) return;
+
+        const sortedCatalogues = [...catalogues].sort((a, b) => a.display_order - b.display_order);
+        const draggedIndex = sortedCatalogues.findIndex(c => c.id === draggedItem.id);
+
+        if (draggedIndex === targetIndex) return;
+
+        // Reorder the array
+        const reordered = [...sortedCatalogues];
+        const [removed] = reordered.splice(draggedIndex, 1);
+        reordered.splice(targetIndex, 0, removed);
+
+        // Update display_order for all affected items
+        const updates: Promise<any>[] = [];
+        reordered.forEach((catalogue, index) => {
+            const newOrder = index + 1;
+            if (catalogue.display_order !== newOrder) {
+                updates.push(updateCatalogue(catalogue.id, { display_order: newOrder }));
+            }
+        });
+
+        // Optimistically update UI
+        setCatalogues(reordered.map((c, i) => ({ ...c, display_order: i + 1 })));
+
+        // Save to database
+        await Promise.all(updates);
+        setDraggedItem(null);
+    };
+
+    const sortedCatalogues = [...catalogues].sort((a, b) => a.display_order - b.display_order);
+
+    const filteredCatalogues = sortedCatalogues.filter(c =>
         c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         c.category?.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -155,9 +219,15 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                         {catalogues.length} catalogue{catalogues.length !== 1 ? 's' : ''}
                     </span>
                 </div>
-                <Button variant="primary" onClick={handleAdd}>
-                    <Plus size={16} className="mr-1" /> Add Catalogue
-                </Button>
+                <div className="flex items-center gap-2">
+                    <span className="text-xs text-stone-400">
+                        <GripVertical size={14} className="inline mr-1" />
+                        Drag rows to reorder
+                    </span>
+                    <Button variant="primary" onClick={handleAdd}>
+                        <Plus size={16} className="mr-1" /> Add Catalogue
+                    </Button>
+                </div>
             </div>
 
             {/* Catalogues List */}
@@ -178,6 +248,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                     <table className="w-full text-sm">
                         <thead className="bg-stone-50 border-b">
                             <tr>
+                                <th className="p-3 text-left w-10"></th>
                                 <th className="p-3 text-left w-12">#</th>
                                 <th className="p-3 text-left">Title</th>
                                 <th className="p-3 text-left">Category</th>
@@ -189,8 +260,25 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                         </thead>
                         <tbody>
                             {filteredCatalogues.map((catalogue, idx) => (
-                                <tr key={catalogue.id} className="border-b hover:bg-stone-50">
-                                    <td className="p-3 text-stone-400">{catalogue.display_order}</td>
+                                <tr
+                                    key={catalogue.id}
+                                    draggable={!searchQuery}
+                                    onDragStart={(e) => handleDragStart(e, catalogue)}
+                                    onDragEnd={handleDragEnd}
+                                    onDragOver={(e) => handleDragOver(e, idx)}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={(e) => handleDrop(e, idx)}
+                                    className={`border-b transition-all ${dragOverIndex === idx
+                                            ? 'bg-brand-gold/10 border-brand-gold'
+                                            : 'hover:bg-stone-50'
+                                        } ${draggedItem?.id === catalogue.id ? 'opacity-50' : ''}`}
+                                >
+                                    <td className="p-3">
+                                        <div className={`cursor-grab active:cursor-grabbing text-stone-300 hover:text-stone-500 ${searchQuery ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                                            <GripVertical size={16} />
+                                        </div>
+                                    </td>
+                                    <td className="p-3 text-stone-400 font-mono text-xs">{catalogue.display_order}</td>
                                     <td className="p-3">
                                         <div className="flex items-center gap-2">
                                             <div

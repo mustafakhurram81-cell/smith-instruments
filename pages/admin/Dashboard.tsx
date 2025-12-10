@@ -74,6 +74,11 @@ export const Dashboard: React.FC = () => {
     const [variantPage, setVariantPage] = useState(0);
     const [editingVariant, setEditingVariant] = useState<any>(null);
 
+    // Settings / Password change
+    const [passwordData, setPasswordData] = useState({ newPassword: '', confirmPassword: '' });
+    const [passwordSaving, setPasswordSaving] = useState(false);
+    const [passwordMessage, setPasswordMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
     // Get subcategories for selected category
     const subcategoriesForCategory = categoryFilter
         ? statsTree.find(c => c.name === categoryFilter)?.subcategories || []
@@ -992,10 +997,96 @@ export const Dashboard: React.FC = () => {
                 {/* Settings Tab */}
                 {activeTab === 'settings' && (
                     <div className="max-w-xl bg-white rounded-xl shadow-sm p-6">
-                        <h2 className="font-medium text-brand-charcoal mb-4">Settings</h2>
+                        <h2 className="font-medium text-brand-charcoal mb-6">Account Settings</h2>
+
+                        {/* Change Password Section */}
                         <div className="space-y-4">
-                            <p className="text-sm text-stone-500">Admin password is set in Login.tsx (currently: smith123)</p>
-                            <button onClick={handleLogout} className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100">Logout</button>
+                            <h3 className="text-sm font-medium text-stone-600 border-b pb-2">Change Password</h3>
+
+                            {passwordMessage && (
+                                <div className={`p-3 rounded-lg text-sm ${passwordMessage.type === 'success'
+                                        ? 'bg-green-50 text-green-700 border border-green-200'
+                                        : 'bg-red-50 text-red-700 border border-red-200'
+                                    }`}>
+                                    {passwordMessage.text}
+                                </div>
+                            )}
+
+                            <div>
+                                <label className="block text-sm text-stone-500 mb-1">New Password</label>
+                                <input
+                                    type="password"
+                                    value={passwordData.newPassword}
+                                    onChange={e => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                    placeholder="Enter new password"
+                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm text-stone-500 mb-1">Confirm New Password</label>
+                                <input
+                                    type="password"
+                                    value={passwordData.confirmPassword}
+                                    onChange={e => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                    placeholder="Confirm new password"
+                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                />
+                            </div>
+
+                            <button
+                                onClick={async () => {
+                                    if (passwordData.newPassword.length < 6) {
+                                        setPasswordMessage({ type: 'error', text: 'Password must be at least 6 characters' });
+                                        return;
+                                    }
+                                    if (passwordData.newPassword !== passwordData.confirmPassword) {
+                                        setPasswordMessage({ type: 'error', text: 'Passwords do not match' });
+                                        return;
+                                    }
+
+                                    setPasswordSaving(true);
+                                    setPasswordMessage(null);
+
+                                    const { error } = await supabase.auth.updateUser({
+                                        password: passwordData.newPassword
+                                    });
+
+                                    if (error) {
+                                        setPasswordMessage({ type: 'error', text: error.message });
+                                    } else {
+                                        setPasswordMessage({ type: 'success', text: 'Password updated successfully!' });
+                                        setPasswordData({ newPassword: '', confirmPassword: '' });
+                                    }
+
+                                    setPasswordSaving(false);
+                                }}
+                                disabled={passwordSaving || !passwordData.newPassword}
+                                className="px-4 py-2 bg-brand-gold text-white rounded-lg hover:bg-brand-gold/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            >
+                                {passwordSaving && <Loader2 size={16} className="animate-spin" />}
+                                Update Password
+                            </button>
+                        </div>
+
+                        {/* Divider */}
+                        <div className="border-t my-6"></div>
+
+                        {/* Logout Section */}
+                        <div className="space-y-4">
+                            <h3 className="text-sm font-medium text-stone-600 border-b pb-2">Session</h3>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm text-stone-600">Logged in as</p>
+                                    <p className="text-xs text-stone-400">{user?.email}</p>
+                                </div>
+                                <button
+                                    onClick={handleLogout}
+                                    className="px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
+                                >
+                                    Logout
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
