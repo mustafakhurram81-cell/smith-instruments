@@ -242,11 +242,11 @@ export const Home: React.FC = () => {
           </div>
           <div className="w-full md:w-1/2 text-stone-600">
             <h2 className="font-serif text-4xl text-brand-charcoal mb-6">Our Legacy, <br /><span className="text-brand-gold">Your Trust.</span></h2>
-            <p className="font-light leading-relaxed mb-8 text-lg text-stone-500">
+            <p className="font-light leading-relaxed mb-6 text-lg text-stone-500">
               Headquartered in the United States and powered by world-class manufacturing facilities in Pakistan, Smith Instruments combines the best of both worlds: American quality standards with skilled craftsmanship honed over generations in one of the world's premier surgical instrument manufacturing hubs.
             </p>
             <p className="font-light leading-relaxed mb-10 text-stone-500">
-              For over two decades, we've partnered with healthcare professionals across 20+ countries, delivering precision instruments that surgeons trust in the most critical moments. Our commitment: uncompromising quality, competitive pricing, and a satisfaction-first approach.
+              For over two decades, we've partnered with healthcare professionals across 20+ countries, delivering precision instruments that surgeons trust in the most critical moments. Every instrument that leaves our facility undergoes rigorous quality checks, ensuring it meets the exacting standards of modern medicine. Our commitment: uncompromising quality, competitive pricing, and a satisfaction-first approach that puts your needs at the forefront.
             </p>
             <Button variant="primary" onClick={() => navigate('/about')}>
               Learn More <ArrowRight size={16} className="ml-1" />
