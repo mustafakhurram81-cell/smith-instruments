@@ -17,6 +17,7 @@ export { AnimatedCounter } from './ui/AnimatedCounter';
 export { WhatsAppFloat } from './ui/WhatsAppFloat';
 export { ScrollToTop } from './ui/ScrollToTop';
 export { Pagination } from './ui/Pagination';
+export { ParallaxHeader } from './ui/ParallaxHeader';
 
 // --- SEARCH OVERLAY ---
 export const SearchOverlay: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, Suspense, lazy } from 'react';
-import { Section, Button, FadeIn } from '../components/Shared';
+import { Section, Button, FadeIn, ParallaxHeader } from '../components/Shared';
 import { Eye, Search, X, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -44,29 +44,30 @@ export const Catalogues: React.FC = () => {
         keywords="surgical catalogues, medical instruments, dental tools, cardiovascular instruments, neurosurgery tools"
       />
       {/* Header */}
-      <div className="bg-stone-50 py-24 text-center relative overflow-hidden border-b border-stone-200">
-        <h1 className="font-serif text-5xl md:text-6xl text-brand-charcoal relative z-10 mb-4">Our Catalogues</h1>
-        <p className="text-stone-500 font-light max-w-xl mx-auto relative z-10 mb-8">Digital libraries of our comprehensive instrument ranges.</p>
+      <ParallaxHeader
+        title="Our Catalogues"
+        description="Digital libraries of our comprehensive instrument ranges."
+        image="/images/headers/catalogues-header.png"
+      />
 
-        {/* Search & Filter Bar */}
-        <div className="container mx-auto px-6 relative z-20 max-w-2xl">
-          <div className="bg-white p-2 rounded-full shadow-lg border border-stone-100 flex items-center gap-2">
-            <div className="pl-4 text-stone-400">
-              <Search size={20} />
-            </div>
-            <input
-              type="text"
-              placeholder="Search catalogues..."
-              className="flex-grow bg-transparent border-none outline-none text-brand-charcoal placeholder-stone-400 h-10"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="p-2 text-stone-400 hover:text-brand-charcoal">
-                <X size={16} />
-              </button>
-            )}
+      {/* Search Bar - Overlapping the header slightly for style */}
+      <div className="container mx-auto px-6 relative z-20 -mt-7 mb-12 max-w-2xl">
+        <div className="bg-white p-2 rounded-full shadow-xl border border-stone-100 flex items-center gap-2">
+          <div className="pl-4 text-stone-400">
+            <Search size={20} />
           </div>
+          <input
+            type="text"
+            placeholder="Search catalogues..."
+            className="flex-grow bg-transparent border-none outline-none text-brand-charcoal placeholder-stone-400 h-10"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button onClick={() => setSearchQuery('')} className="p-2 text-stone-400 hover:text-brand-charcoal">
+              <X size={16} />
+            </button>
+          )}
         </div>
       </div>
 

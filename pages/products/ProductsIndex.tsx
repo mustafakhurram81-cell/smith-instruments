@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Section, FadeIn } from '../../components/Shared';
+import { Section, FadeIn, ParallaxHeader } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { CategoryGridSkeleton } from '../../components/ui/Skeleton';
 import { useCategoryDetails } from '../../lib/queries';
@@ -20,24 +20,16 @@ export const ProductsIndex: React.FC = () => {
             />
 
             {/* Header */}
-            <div className="bg-brand-charcoal text-white py-12 md:py-20 relative overflow-hidden">
-                <div className="container mx-auto px-6 relative z-10 text-center">
-                    <span className="text-brand-gold uppercase tracking-widest text-xs font-bold mb-4 block">
+            <ParallaxHeader
+                title="Precision Instruments"
+                description={!isLoading ? `${totalProducts} instruments across ${categories.length} specialties` : undefined}
+                image="/images/headers/products-header.png"
+                breadcrumbs={
+                    <span className="text-brand-gold uppercase tracking-widest text-xs font-bold block">
                         Our Catalog
                     </span>
-                    <h1 className="font-serif text-4xl md:text-6xl mb-6">
-                        Precision Instruments
-                    </h1>
-                    {!isLoading && (
-                        <p className="text-stone-400 font-light text-lg max-w-2xl mx-auto">
-                            {totalProducts} instruments across {categories.length} specialties
-                        </p>
-                    )}
-                </div>
-                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                    <div className="absolute top-[-30%] left-[10%] w-[60%] h-[60%] bg-brand-gold blur-[200px] rounded-full"></div>
-                </div>
-            </div>
+                }
+            />
 
             <Section className="bg-stone-50 !py-12">
                 <div className="container mx-auto px-6">

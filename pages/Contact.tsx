@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Section, Button, FadeIn } from '../components/Shared';
+import { Section, Button, FadeIn, ParallaxHeader } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { Plus, Minus, Phone, Mail, MapPin, MessageCircle, Clock, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
@@ -119,12 +119,11 @@ export const Contact: React.FC = () => {
       />
 
       {/* Header */}
-      <div className="bg-brand-charcoal py-20 text-center">
-        <h1 className="font-serif text-4xl md:text-5xl text-white mb-4">Contact Us</h1>
-        <p className="text-stone-400 font-light max-w-xl mx-auto px-6">
-          Reach out for quotes, custom manufacturing inquiries, or support.
-        </p>
-      </div>
+      <ParallaxHeader
+        title="Contact Us"
+        description="Reach out for quotes, custom manufacturing inquiries, or support."
+        image="/images/headers/contact-header.png"
+      />
 
       <div className="container mx-auto px-6 py-16 md:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">

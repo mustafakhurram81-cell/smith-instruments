@@ -1,9 +1,8 @@
 import React from 'react';
-import { Section, FadeIn, Button } from '../components/Shared';
+import { Section, FadeIn, Button, ParallaxHeader } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import aboutHero from '../assets/about-hero.png';
 import aboutCraftsmanship from '../assets/about-craftsmanship.png';
 import aboutQuality from '../assets/about-quality.png';
 
@@ -18,27 +17,12 @@ export const About: React.FC = () => {
       />
 
       {/* 1. CINEMATIC HERO */}
-      <div className="relative h-[60vh] flex items-center justify-center bg-brand-charcoal overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <img
-            src={aboutHero}
-            alt="Precision Manufacturing"
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-charcoal/60 via-brand-charcoal/40 to-brand-charcoal" />
-        </div>
-
-        <div className="relative z-10 container mx-auto px-6 text-center mt-20">
-          <FadeIn>
-            <span className="text-brand-gold uppercase tracking-[0.3em] text-sm font-bold mb-4 block">Est. 2002 • USA Based</span>
-            <h1 className="font-serif text-5xl md:text-7xl text-white mb-6 tracking-tight">Defining Precision</h1>
-            <p className="text-xl md:text-2xl font-light tracking-wide text-stone-300 max-w-2xl mx-auto">
-              In-house manufacturing. 50+ Artisans. One standard of excellence.
-            </p>
-          </FadeIn>
-        </div>
-      </div>
+      <ParallaxHeader
+        title="Defining Precision"
+        description="In-house manufacturing. 50+ Artisans. One standard of excellence."
+        image="/images/headers/about-header.png"
+        breadcrumbs={<span className="text-brand-gold uppercase tracking-[0.3em] text-sm font-bold block">Est. 2002 • USA Based</span>}
+      />
 
       {/* 2. THE STORY (Editorial Split) */}
       <section className="bg-stone-50 py-24">
