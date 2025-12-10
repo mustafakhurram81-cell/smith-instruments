@@ -37,28 +37,28 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         <ToastContext.Provider value={{ showToast }}>
             {children}
 
-            {/* Toast Container */}
-            <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+            {/* Toast Container - top right below header */}
+            <div className="fixed top-24 right-6 z-50 flex flex-col gap-3">
                 <AnimatePresence>
                     {toasts.map((toast) => (
                         <motion.div
                             key={toast.id}
-                            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                            initial={{ opacity: 0, y: -20, scale: 0.9 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, x: 100, scale: 0.9 }}
                             className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border backdrop-blur-sm max-w-sm ${toast.type === 'success'
-                                    ? 'bg-white border-green-200'
-                                    : toast.type === 'error'
-                                        ? 'bg-white border-red-200'
-                                        : 'bg-white border-stone-200'
+                                ? 'bg-white border-green-200'
+                                : toast.type === 'error'
+                                    ? 'bg-white border-red-200'
+                                    : 'bg-white border-stone-200'
                                 }`}
                         >
                             {/* Icon */}
                             <div className={`p-2 rounded-full ${toast.type === 'success'
-                                    ? 'bg-green-100 text-green-600'
-                                    : toast.type === 'error'
-                                        ? 'bg-red-100 text-red-600'
-                                        : 'bg-brand-gold/10 text-brand-gold'
+                                ? 'bg-green-100 text-green-600'
+                                : toast.type === 'error'
+                                    ? 'bg-red-100 text-red-600'
+                                    : 'bg-brand-gold/10 text-brand-gold'
                                 }`}>
                                 {toast.type === 'success' ? (
                                     <ShoppingCart size={18} />
