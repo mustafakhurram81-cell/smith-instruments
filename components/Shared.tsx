@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { searchProducts, Product } from '../lib/database';
 import { useCart } from './CartProvider';
-import { useCategoryDetails } from '../lib/queries';
+import { useCategoryNames } from '../lib/queries';
 import logoOriginal from '../assets/smith-logo-original.jpg';
 
 // Re-export UI components for backwards compatibility
@@ -144,8 +144,9 @@ export const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { cartCount } = useCart();
-  const { data: categoryData = [] } = useCategoryDetails();
-  const categories = categoryData.slice(0, 8);
+  const { data: categoryNames = [] } = useCategoryNames();
+  // Map strings to objects for compatibility with existing code
+  const categories = categoryNames.slice(0, 8).map(name => ({ name }));
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);

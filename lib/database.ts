@@ -264,3 +264,22 @@ export async function getCategoryDetails(): Promise<{ name: string; count: numbe
 
     return details.sort((a, b) => b.count - a.count);
 }
+
+// Optimization: Get ONLY category names for the Header (skips expensive image/count lookups)
+export async function getCategoryNames(): Promise<string[]> {
+    const { data, error } = await supabase
+        .from('products')
+        .select('category'); // We have to fetch all to get distinct in client (Supabase REST limitation without RPC)
+
+    if (error) {
+        console.error('Error fetching category names:', error);
+        return [];
+    }
+
+    const uniqueCategories = new Set<string>();
+    data?.forEach(p => {
+        if (p.category) uniqueCategories.add(p.category);
+    });
+
+    return Array.from(uniqueCategories).sort();
+}

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import {
     getCategoryDetails,
+    getCategoryNames,
     getSubcategoryDetails,
     getProductsByCategory,
     getProductsBySubcategory,
@@ -19,7 +20,17 @@ export const queryKeys = {
         ['products', 'subcategory', category, subcategory] as const,
     productBySku: (sku: string) => ['product', sku] as const,
     searchProducts: (query: string) => ['search', query] as const,
+    categoryNames: ['categoryNames'] as const,
 };
+
+// Hook to get ONLY category names (lightweight for Header)
+export function useCategoryNames() {
+    return useQuery({
+        queryKey: queryKeys.categoryNames,
+        queryFn: getCategoryNames,
+        staleTime: 1000 * 60 * 30, // 30 minutes (very stable)
+    });
+}
 
 // Hook to get category details with counts and images
 export function useCategoryDetails() {
