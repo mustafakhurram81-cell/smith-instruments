@@ -334,19 +334,31 @@ export const Header: React.FC = () => {
                 <NavLink to="/blog" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Blog</NavLink>
                 <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>Contact</NavLink>
 
-                {/* Request Quote at bottom */}
+                {/* Bottom section with Cart and Language */}
                 <div className="pt-4 mt-4 border-t border-stone-200">
-                  <NavLink to="/quote-cart" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif flex items-center justify-between ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-gold' : 'text-stone-500'}`}>
-                    Request Quote
-                    {cartCount > 0 && <span className="bg-brand-gold text-brand-charcoal text-xs px-2 py-0.5 rounded-full">{cartCount}</span>}
-                  </NavLink>
-                </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Cart */}
+                    <NavLink
+                      to="/quote-cart"
+                      onClick={() => setIsMobileOpen(false)}
+                      className="flex flex-col items-center gap-2 p-4 bg-stone-100 rounded-lg hover:bg-stone-200 transition-colors group"
+                    >
+                      <div className="relative">
+                        <ShoppingCart size={24} className="text-brand-charcoal group-hover:text-brand-gold transition-colors" />
+                        {cartCount > 0 && (
+                          <span className="absolute -top-2 -right-2 bg-brand-gold text-brand-charcoal text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                            {cartCount}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-stone-600 font-medium">Quote Cart</span>
+                    </NavLink>
 
-                {/* Language switcher at bottom of mobile menu */}
-                <div className="border-t border-stone-200 pt-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-stone-400">Language</span>
-                    <LanguageSwitcher isTransparent={false} />
+                    {/* Language */}
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-stone-100 rounded-lg">
+                      <span className="text-xs text-stone-600 font-medium">Language</span>
+                      <LanguageSwitcher isTransparent={false} />
+                    </div>
                   </div>
                 </div>
               </nav>
