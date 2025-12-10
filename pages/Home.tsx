@@ -4,6 +4,7 @@ import { SEO } from '../components/SEO';
 import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import heroMethods from '../assets/hero-instruments.jpg';
+import manufacturingImg from '../assets/manufacturing-workshop.png';
 
 const PRODUCTS = [
   { id: 1, name: "Plastic Surgery", icon: Scissors, desc: "Precision instruments for reconstruction" },
@@ -231,7 +232,7 @@ export const Home: React.FC = () => {
         <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16 relative z-10">
           <div className="w-full md:w-1/2">
             <img
-              src="https://images.unsplash.com/photo-1581093458791-9f3c3ae24ce1?auto=format&fit=crop&q=80&w=1000"
+              src={manufacturingImg}
               alt="Precision Instrument Manufacturing"
               className="rounded-sm shadow-2xl opacity-90"
               loading="lazy"
