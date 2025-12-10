@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { PrefetchNavLink } from './PrefetchLink';
 import { Menu, X, Facebook, Instagram, Mail, Phone, MapPin, ArrowRight, ShoppingCart, Search as SearchIcon, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -193,20 +194,20 @@ export const Header: React.FC = () => {
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            <NavLink to="/" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+            <PrefetchNavLink to="/" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
               ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
               : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
               }`}>
               Home
-            </NavLink>
+            </PrefetchNavLink>
 
             <div className="relative group">
-              <NavLink to="/products" className={({ isActive }) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+              <PrefetchNavLink to="/products" className={({ isActive }) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
                 ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
                 : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
                 }`}>
                 Products <ChevronDown size={14} />
-              </NavLink>
+              </PrefetchNavLink>
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white rounded-xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top translate-y-2 group-hover:translate-y-0 text-brand-charcoal border border-stone-100">
                 <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 border-l border-t border-stone-100"></div>
                 {categories.map(cat => (
@@ -223,30 +224,30 @@ export const Header: React.FC = () => {
               </div>
             </div>
 
-            <NavLink to="/catalogues" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+            <PrefetchNavLink to="/catalogues" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
               ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
               : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
               }`}>
               Catalogues
-            </NavLink>
-            <NavLink to="/about" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+            </PrefetchNavLink>
+            <PrefetchNavLink to="/about" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
               ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
               : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
               }`}>
               About Us
-            </NavLink>
-            <NavLink to="/blog" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+            </PrefetchNavLink>
+            <PrefetchNavLink to="/blog" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
               ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
               : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
               }`}>
               Blog
-            </NavLink>
-            <NavLink to="/contact" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+            </PrefetchNavLink>
+            <PrefetchNavLink to="/contact" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
               ? (isActive ? 'text-white border-b border-brand-gold' : 'text-white/80 hover:text-white')
               : (isActive ? 'text-brand-charcoal border-b border-brand-gold' : 'text-stone-500 hover:text-brand-charcoal')
               }`}>
               Contact
-            </NavLink>
+            </PrefetchNavLink>
           </nav>
 
           <div className="flex items-center gap-2">
