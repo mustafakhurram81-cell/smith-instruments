@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Section, Button, FadeIn } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { getProductBySku, getProductsBySubcategory, getProductVariants, Product } from '../../lib/database';
-import { ChevronRight, Package, Loader2, MessageCircle, Mail, ArrowRight, X, ChevronDown } from 'lucide-react';
+import { ChevronRight, Package, Loader2, Mail, ArrowRight, X, ChevronDown, Minus, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../components/CartProvider';
 
@@ -22,6 +22,7 @@ export const ProductDetail: React.FC = () => {
     const [isZoomed, setIsZoomed] = useState(false);
     const [isVariantDropdownOpen, setIsVariantDropdownOpen] = useState(false);
     const [hoverZoom, setHoverZoom] = useState({ active: false, x: 50, y: 50 });
+    const [quantity, setQuantity] = useState(1);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -123,7 +124,7 @@ export const ProductDetail: React.FC = () => {
     };
 
     const whatsappMessage = encodeURIComponent(
-        `Hi, I'm interested in the product:\n\nSKU: ${product.sku}\nName: ${product.name}\n\nPlease provide more information.`
+        `Hi, I'm interested in the product:\n\nSKU: ${product.sku}\nName: ${product.name}\nQuantity: ${quantity}\n\nPlease provide more information.`
     );
     const whatsappUrl = `https://wa.me/447778880462?text=${whatsappMessage}`;
 
@@ -344,33 +345,48 @@ export const ProductDetail: React.FC = () => {
                             {/* CTA Buttons */}
                             <div className="pt-6 border-t border-stone-200 space-y-4">
                                 <h3 className="text-lg font-medium text-brand-charcoal">Interested?</h3>
-                                <div className="flex flex-col sm:flex-row gap-4">
-                                    <Button
-                                        variant="primary"
-                                        className="flex-1 py-3"
-                                        onClick={() => {
-                                            if (product) {
-                                                addToCart(product);
-                                                // Optional: show toast or navigate
-                                            }
-                                        }}
-                                    >
-                                        <Package size={18} className="mr-2" />
-                                        Add to Quote Cart
-                                    </Button>
 
-                                    <a
-                                        href={whatsappUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex-1"
-                                    >
-                                        <Button variant="outline" className="w-full py-3">
-                                            <MessageCircle size={18} className="mr-2" />
-                                            WhatsApp Chat
-                                        </Button>
-                                    </a>
+                                {/* Quantity Selector */}
+                                <div className="flex items-center gap-4">
+                                    <span className="text-sm text-stone-600">Quantity:</span>
+                                    <div className="flex items-center border border-stone-200 rounded-lg overflow-hidden">
+                                        <button
+                                            onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                                            className="p-2 hover:bg-stone-100 transition-colors disabled:opacity-50"
+                                            disabled={quantity <= 1}
+                                        >
+                                            <Minus size={16} className="text-stone-600" />
+                                        </button>
+                                        <input
+                                            type="number"
+                                            min="1"
+                                            value={quantity}
+                                            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                                            className="w-16 text-center py-2 border-x border-stone-200 outline-none text-brand-charcoal font-medium"
+                                        />
+                                        <button
+                                            onClick={() => setQuantity(q => q + 1)}
+                                            className="p-2 hover:bg-stone-100 transition-colors"
+                                        >
+                                            <Plus size={16} className="text-stone-600" />
+                                        </button>
+                                    </div>
                                 </div>
+
+                                <Button
+                                    variant="primary"
+                                    className="w-full py-3"
+                                    onClick={() => {
+                                        if (product) {
+                                            addToCart(product, quantity);
+                                            setQuantity(1); // Reset after adding
+                                        }
+                                    }}
+                                >
+                                    <Package size={18} className="mr-2" />
+                                    Add {quantity > 1 ? `${quantity} Items` : ''} to Quote Cart
+                                </Button>
+
                                 <p className="text-xs text-stone-400">
                                     Add items to your cart and submit a single request for all prices.
                                 </p>
