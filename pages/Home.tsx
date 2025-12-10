@@ -198,7 +198,7 @@ export const Home: React.FC = () => {
               <div
                 key={`${product.id}-${idx}`}
                 className="min-w-[100%] md:min-w-[350px] shrink-0 group cursor-pointer"
-                onClick={() => navigate('/catalogues')}
+                onClick={() => navigate('/products')}
               >
                 <div className="bg-stone-50 border-none p-8 h-[320px] flex flex-col justify-between transition-all duration-300 hover:bg-stone-100 hover:shadow-lg relative overflow-hidden">
                   <div className="absolute -right-8 -top-8 w-32 h-32 bg-white rotate-45 group-hover:bg-white/50 transition-colors duration-500"></div>
@@ -212,7 +212,7 @@ export const Home: React.FC = () => {
                   </div>
 
                   <div className="flex items-center text-sm font-medium text-brand-charcoal mt-6 group-hover:text-brand-gold transition-colors">
-                    <span className="mr-2">Explore Category</span>
+                    <span className="mr-2">Explore</span>
                     <div className="w-6 h-6 rounded-full border border-stone-200 flex items-center justify-center group-hover:border-brand-gold group-hover:bg-brand-gold group-hover:text-white transition-all duration-300">
                       <ArrowRight size={12} className="-ml-0.5" />
                     </div>

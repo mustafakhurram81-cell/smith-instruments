@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect, Suspense, lazy } from 'react';
 import { Section, Button, FadeIn } from '../components/Shared';
-import { Eye, Search, Filter, X, Loader2 } from 'lucide-react';
+import { Eye, Search, X, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { getCatalogues, getCatalogueCategories, Catalogue } from '../lib/database';
+import { getCatalogues, Catalogue } from '../lib/database';
 import { CatalogueThumbnail } from '../components/CatalogueThumbnail';
 import { SEO } from '../components/SEO';
 
@@ -13,22 +13,16 @@ const FlipBookViewer = lazy(() => import('../components/FlipBookViewer').then(m 
 export const Catalogues: React.FC = () => {
   const navigate = useNavigate();
   const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
-  const [categories, setCategories] = useState<string[]>(['All']);
   const [loading, setLoading] = useState(true);
   const [selectedCatalogue, setSelectedCatalogue] = useState<Catalogue | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
 
   // Fetch catalogues from Supabase
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const [catalogueData, categoryData] = await Promise.all([
-        getCatalogues(),
-        getCatalogueCategories()
-      ]);
+      const catalogueData = await getCatalogues();
       setCatalogues(catalogueData);
-      setCategories(categoryData);
       setLoading(false);
     }
     fetchData();
@@ -38,12 +32,9 @@ export const Catalogues: React.FC = () => {
     return catalogues.filter((cat) => {
       const matchesSearch = cat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (cat.description?.toLowerCase().includes(searchQuery.toLowerCase()) || false);
-
-      const matchesCategory = selectedCategory === 'All' || cat.category === selectedCategory;
-
-      return matchesSearch && matchesCategory;
+      return matchesSearch;
     });
-  }, [catalogues, searchQuery, selectedCategory]);
+  }, [catalogues, searchQuery]);
 
   return (
     <div className="pt-20">
@@ -75,22 +66,6 @@ export const Catalogues: React.FC = () => {
                 <X size={16} />
               </button>
             )}
-          </div>
-
-          {/* Category Tags */}
-          <div className="flex flex-wrap justify-center gap-2 mt-6">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${selectedCategory === cat
-                  ? 'bg-brand-charcoal text-white shadow-md'
-                  : 'bg-white text-stone-500 border border-stone-200 hover:border-brand-gold hover:text-brand-gold'
-                  }`}
-              >
-                {cat}
-              </button>
-            ))}
           </div>
         </div>
       </div>
@@ -154,12 +129,12 @@ export const Catalogues: React.FC = () => {
                 <Search size={32} />
               </div>
               <h3 className="text-xl font-serif text-brand-charcoal mb-2">No catalogues found</h3>
-              <p className="text-stone-500">Try adjusting your search or filter criteria.</p>
+              <p className="text-stone-500">Try adjusting your search terms.</p>
               <button
-                onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
+                onClick={() => setSearchQuery('')}
                 className="mt-6 text-brand-gold hover:underline font-medium"
               >
-                Clear all filters
+                Clear search
               </button>
             </div>
           )}
