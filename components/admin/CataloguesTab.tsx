@@ -34,7 +34,6 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
         description: '',
         category: '',
         size: '',
-        color: '#262626',
         pdf_url: '',
         display_order: 0,
         is_active: true
@@ -57,7 +56,6 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
             description: '',
             category: '',
             size: '',
-            color: '#262626',
             pdf_url: '',
             display_order: catalogues.length + 1,
             is_active: true
@@ -76,7 +74,6 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
             description: catalogue.description || '',
             category: catalogue.category || '',
             size: catalogue.size || '',
-            color: catalogue.color || '#262626',
             pdf_url: catalogue.pdf_url,
             display_order: catalogue.display_order,
             is_active: catalogue.is_active
@@ -101,6 +98,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
         } else {
             const newCatalogue = await createCatalogue({
                 ...formData,
+                color: '#262626',
                 thumbnail_url: null
             });
             if (newCatalogue) {
@@ -269,8 +267,8 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                     onDragLeave={handleDragLeave}
                                     onDrop={(e) => handleDrop(e, idx)}
                                     className={`border-b transition-all ${dragOverIndex === idx
-                                            ? 'bg-brand-gold/10 border-brand-gold'
-                                            : 'hover:bg-stone-50'
+                                        ? 'bg-brand-gold/10 border-brand-gold'
+                                        : 'hover:bg-stone-50'
                                         } ${draggedItem?.id === catalogue.id ? 'opacity-50' : ''}`}
                                 >
                                     <td className="p-3">
@@ -280,13 +278,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                     </td>
                                     <td className="p-3 text-stone-400 font-mono text-xs">{catalogue.display_order}</td>
                                     <td className="p-3">
-                                        <div className="flex items-center gap-2">
-                                            <div
-                                                className="w-4 h-4 rounded"
-                                                style={{ backgroundColor: catalogue.color || '#262626' }}
-                                            />
-                                            <span className="font-medium text-brand-charcoal">{catalogue.title}</span>
-                                        </div>
+                                        <span className="font-medium text-brand-charcoal">{catalogue.title}</span>
                                     </td>
                                     <td className="p-3 text-stone-500">{catalogue.category || '—'}</td>
                                     <td className="p-3 text-stone-500">{catalogue.size || '—'}</td>
@@ -297,8 +289,8 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                         <button
                                             onClick={() => handleToggleActive(catalogue)}
                                             className={`px-2 py-1 rounded-full text-xs font-medium ${catalogue.is_active
-                                                    ? 'bg-green-50 text-green-600'
-                                                    : 'bg-stone-100 text-stone-400'
+                                                ? 'bg-green-50 text-green-600'
+                                                : 'bg-stone-100 text-stone-400'
                                                 }`}
                                         >
                                             {catalogue.is_active ? 'Active' : 'Hidden'}
@@ -433,38 +425,20 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                 </p>
                             </div>
 
-                            {/* Color & Order */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-stone-600 mb-1">
-                                        Cover Color
-                                    </label>
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="color"
-                                            value={formData.color}
-                                            onChange={e => setFormData({ ...formData, color: e.target.value })}
-                                            className="w-10 h-10 rounded border border-stone-200 cursor-pointer"
-                                        />
-                                        <input
-                                            type="text"
-                                            value={formData.color}
-                                            onChange={e => setFormData({ ...formData, color: e.target.value })}
-                                            className="flex-1 px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold font-mono text-sm"
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-stone-600 mb-1">
-                                        Display Order
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={formData.display_order}
-                                        onChange={e => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })}
-                                        className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
-                                    />
-                                </div>
+                            {/* Display Order */}
+                            <div>
+                                <label className="block text-sm font-medium text-stone-600 mb-1">
+                                    Display Order
+                                </label>
+                                <input
+                                    type="number"
+                                    value={formData.display_order}
+                                    onChange={e => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })}
+                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                />
+                                <p className="text-xs text-stone-400 mt-1">
+                                    Or use drag & drop to reorder in the table
+                                </p>
                             </div>
 
                             {/* Active Toggle */}

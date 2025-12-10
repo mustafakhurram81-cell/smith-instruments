@@ -7,11 +7,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.vers
 
 interface CatalogueThumbnailProps {
     url: string;
-    color: string;
     title: string;
 }
 
-export const CatalogueThumbnail: React.FC<CatalogueThumbnailProps> = ({ url, color, title }) => {
+export const CatalogueThumbnail: React.FC<CatalogueThumbnailProps> = ({ url, title }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 

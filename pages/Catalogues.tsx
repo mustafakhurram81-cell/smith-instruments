@@ -112,7 +112,7 @@ export const Catalogues: React.FC = () => {
 
                       {/* Front Cover */}
                       <div className="absolute inset-0 bg-white rounded-r-md shadow-xl overflow-hidden border-l-[6px] border-stone-800">
-                        <CatalogueThumbnail url={cat.pdf_url} color={cat.color} title="" />
+                        <CatalogueThumbnail url={cat.pdf_url} title="" />
 
                         {/* Spine shadow */}
                         <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black/20 to-transparent"></div>
