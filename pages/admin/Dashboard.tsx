@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../../components/Shared';
 import { Link, useNavigate } from 'react-router-dom';
-import { DashboardHeader, OverviewTab, CategoriesTab } from '../../components/admin';
+import { DashboardHeader, OverviewTab, CategoriesTab, CataloguesTab } from '../../components/admin';
 
 interface VariantGroup {
     parent_sku: string;
@@ -982,6 +982,11 @@ export const Dashboard: React.FC = () => {
                             })}
                         </div>
                     </div>
+                )}
+
+                {/* Catalogues Tab */}
+                {activeTab === 'catalogues' && (
+                    <CataloguesTab onRefresh={fetchStats} />
                 )}
 
                 {/* Settings Tab */}
