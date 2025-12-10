@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS public.user_roles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    role TEXT NOT NULL DEFAULT 'editor' CHECK (role IN ('admin', 'editor')),
+    role TEXT NOT NULL DEFAULT 'manager' CHECK (role IN ('admin', 'manager')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     UNIQUE(user_id)
@@ -33,12 +33,12 @@ CREATE POLICY "Admins can manage roles" ON public.user_roles
 CREATE INDEX IF NOT EXISTS idx_user_roles_user_id ON public.user_roles(user_id);
 
 -- Function to automatically create a role entry when a new user signs up
--- Default role is 'editor' - you can manually change to 'admin' in Supabase
+-- Default role is 'manager' - you can manually change to 'admin' in Supabase
 CREATE OR REPLACE FUNCTION public.handle_new_user_role()
 RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO public.user_roles (user_id, role)
-    VALUES (NEW.id, 'editor')
+    VALUES (NEW.id, 'manager')
     ON CONFLICT (user_id) DO NOTHING;
     RETURN NEW;
 END;
@@ -57,4 +57,5 @@ GRANT SELECT ON public.user_roles TO authenticated;
 -- 1. Insert a row for your existing admin user(s):
 --    INSERT INTO public.user_roles (user_id, role) VALUES ('YOUR_USER_UUID', 'admin');
 -- 2. You can find user UUIDs in the Supabase Dashboard under Authentication > Users
+
 

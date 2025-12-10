@@ -2,8 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
-// User roles: 'admin' has full access, 'editor' cannot import/export
-export type UserRole = 'admin' | 'editor' | null;
+// User roles: 'admin' has full access, 'manager' cannot import/export
+export type UserRole = 'admin' | 'manager' | null;
 
 interface AuthContextType {
     session: Session | null;
@@ -40,15 +40,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             if (error) {
                 console.warn('Could not fetch user role:', error.message);
-                // Default to editor if no role found (safe default)
-                setUserRole('editor');
+                // Default to manager if no role found (safe default)
+                setUserRole('manager');
                 return;
             }
 
-            setUserRole(data?.role as UserRole || 'editor');
+            setUserRole(data?.role as UserRole || 'manager');
         } catch (err) {
             console.warn('Error fetching user role:', err);
-            setUserRole('editor');
+            setUserRole('manager');
         }
     };
 
