@@ -30,7 +30,10 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   React.useEffect(() => {
-    window.scrollTo(0, 0);
+    // Use startTransition to defer scroll until after navigation is complete
+    React.startTransition(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    });
   }, [pathname]);
 
   return null;
