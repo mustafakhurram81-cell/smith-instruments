@@ -4,3 +4,4 @@ export { OverviewTab } from './OverviewTab';
 export { CategoriesTab } from './CategoriesTab';
 export { CataloguesTab } from './CataloguesTab';
 export { QuotesTab } from './QuotesTab';
+export { UsersTab } from './UsersTab';
