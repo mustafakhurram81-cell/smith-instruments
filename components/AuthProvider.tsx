@@ -29,8 +29,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [loading, setLoading] = useState(true);
     const [userRole, setUserRole] = useState<UserRole>(null);
 
+    // ADMIN EMAILS - These users are always admins (temporary override)
+    const ADMIN_EMAILS = ['mustafakhurram81@gmail.com'];
+
     // Fetch user role from database
-    const fetchUserRole = async (userId: string) => {
+    const fetchUserRole = async (userId: string, userEmail?: string) => {
+        // Temporary override: Check if email is in admin list
+        if (userEmail && ADMIN_EMAILS.includes(userEmail.toLowerCase())) {
+            setUserRole('admin');
+            return;
+        }
+
         try {
             const { data, error } = await supabase
                 .from('user_roles')
@@ -58,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setSession(session);
             setUser(session?.user ?? null);
             if (session?.user) {
-                fetchUserRole(session.user.id);
+                fetchUserRole(session.user.id, session.user.email);
             }
             setLoading(false);
         });
@@ -68,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setSession(session);
             setUser(session?.user ?? null);
             if (session?.user) {
-                fetchUserRole(session.user.id);
+                fetchUserRole(session.user.id, session.user.email);
             } else {
                 setUserRole(null);
             }
