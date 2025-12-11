@@ -178,7 +178,7 @@ export const Header: React.FC = () => {
 
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
-              <div className="h-14 w-56 relative overflow-hidden flex items-center">
+              <div className="h-16 w-64 relative overflow-hidden flex items-center">
                 <img
                   src={logoTransparent}
                   alt="Smith Instruments"
@@ -389,7 +389,7 @@ export const Footer: React.FC = () => {
 
           {/* Brand */}
           <div className="space-y-5">
-            <div className="h-12 w-44 relative overflow-hidden">
+            <div className="h-14 w-52 relative overflow-hidden">
               <img
                 src={logoTransparent}
                 alt="Smith Instruments"
