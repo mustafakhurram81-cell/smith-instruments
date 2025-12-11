@@ -94,28 +94,33 @@ export const Catalogues: React.FC = () => {
                         <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black/20 to-transparent"></div>
 
                         {/* Hover Overlay */}
-                        <div className="absolute inset-0 bg-brand-charcoal/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 backdrop-blur-[1px]">
-                          <div className="flex flex-col gap-3 w-3/4">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedCatalogue(cat);
-                              }}
-                              className="bg-white/10 hover:bg-brand-gold hover:text-brand-charcoal text-white py-2 px-4 rounded-full flex items-center justify-center gap-2 text-sm font-medium transition-all transform hover:scale-105 border border-white/20"
-                            >
-                              <Eye size={16} /> View
-                            </button>
-                            <a
-                              href={cat.pdf_url}
-                              download
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="bg-white/10 hover:bg-white hover:text-brand-charcoal text-white py-2 px-4 rounded-full flex items-center justify-center gap-2 text-sm font-medium transition-all transform hover:scale-105 border border-white/20"
-                            >
-                              <Download size={16} /> Download
-                            </a>
-                          </div>
+                        <div className="absolute inset-0 bg-brand-charcoal/80 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 backdrop-blur-[1px]">
+
+                          {/* View Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedCatalogue(cat);
+                            }}
+                            className="w-12 h-12 bg-brand-gold text-brand-charcoal rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+                            title="View Catalogue"
+                          >
+                            <Eye size={20} />
+                          </button>
+
+                          {/* Download Button */}
+                          <a
+                            href={cat.pdf_url}
+                            download
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-12 h-12 bg-white text-brand-charcoal rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+                            title="Download PDF"
+                          >
+                            <Download size={20} />
+                          </a>
+
                         </div>
                       </div>
 
