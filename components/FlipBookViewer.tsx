@@ -19,7 +19,6 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [showControls, setShowControls] = useState(true);
-    const [pageOrientations, setPageOrientations] = useState<Record<number, 'portrait' | 'landscape'>>({});
 
     const book = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -126,12 +125,8 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
         setTimeout(() => setLoading(false), 500);
     };
 
-    const onPageLoadSuccess = (pageNum: number, page: any) => {
+    const onPageLoadSuccess = () => {
         setLoadedPages(prev => prev + 1);
-        // Detect page orientation
-        const { width, height } = page;
-        const orientation = width > height ? 'landscape' : 'portrait';
-        setPageOrientations(prev => ({ ...prev, [pageNum]: orientation }));
     };
 
     const loadProgress = numPages > 0 ? Math.round((loadedPages / numPages) * 100) : 0;
@@ -256,33 +251,20 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                                 ref={book}
                                 className="shadow-2xl"
                             >
-                                {Array.from({ length: numPages }, (_, i) => {
-                                    const pageNum = i + 1;
-                                    const isLandscape = pageOrientations[pageNum] === 'landscape';
-
-                                    return (
-                                        <div key={i} className="bg-white overflow-hidden flex items-center justify-center">
-                                            <div
-                                                className={isLandscape ? 'transform rotate-0' : ''}
-                                                style={isLandscape ? {
-                                                    transform: 'rotate(0deg) scale(0.7)',
-                                                    transformOrigin: 'center center'
-                                                } : {}}
-                                            >
-                                                <Page
-                                                    pageNumber={pageNum}
-                                                    width={isLandscape ? bookHeight : bookWidth}
-                                                    renderTextLayer={false}
-                                                    renderAnnotationLayer={false}
-                                                    onLoadSuccess={(page) => onPageLoadSuccess(pageNum, page)}
-                                                    loading={
-                                                        <div className="w-full h-full bg-stone-100 animate-pulse" />
-                                                    }
-                                                />
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                {Array.from({ length: numPages }, (_, i) => (
+                                    <div key={i} className="bg-white overflow-hidden">
+                                        <Page
+                                            pageNumber={i + 1}
+                                            width={bookWidth}
+                                            renderTextLayer={false}
+                                            renderAnnotationLayer={false}
+                                            onLoadSuccess={onPageLoadSuccess}
+                                            loading={
+                                                <div className="w-full h-full bg-stone-100 animate-pulse" />
+                                            }
+                                        />
+                                    </div>
+                                ))}
                             </HTMLFlipBook>
                         </motion.div>
                     )}
