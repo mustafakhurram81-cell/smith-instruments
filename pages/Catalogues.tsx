@@ -50,9 +50,9 @@ export const Catalogues: React.FC = () => {
         image="/images/headers/catalogues-header.png"
       />
 
-      {/* Search Bar - Overlapping the header slightly for style */}
-      <div className="container mx-auto px-6 relative z-20 -mt-7 mb-12 max-w-2xl">
-        <div className="bg-white p-2 rounded-full shadow-xl border border-stone-100 flex items-center gap-2">
+      {/* Search Bar */}
+      <div className="container mx-auto px-6 mt-12 mb-12 max-w-2xl">
+        <div className="bg-white p-2 rounded-full shadow-lg border border-stone-200 flex items-center gap-2">
           <div className="pl-4 text-stone-400">
             <Search size={20} />
           </div>
