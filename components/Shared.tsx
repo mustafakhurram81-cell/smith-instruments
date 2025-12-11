@@ -7,7 +7,7 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { searchProducts, Product } from '../lib/database';
 import { useCart } from './CartProvider';
 import { useCategoryNames } from '../lib/queries';
-import logoOriginal from '../assets/smith-logo-original.jpg';
+import logoTransparent from '../assets/Gemini_Generated_Image_zhuph7zhuph7zhup-removebg-preview.png';
 
 // Re-export UI components for backwards compatibility
 export { Button } from './ui/Button';
@@ -180,15 +180,11 @@ export const Header: React.FC = () => {
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
               <div className="h-12 w-48 relative overflow-hidden flex items-center">
                 <img
-                  src={logoOriginal}
+                  src={logoTransparent}
                   alt="Smith Instruments"
-                  // Use CSS filters to create the white version from the original:
-                  // 1. Invert: White BG -> Black, Dark Text -> White, Gold -> Blue
-                  // 2. Hue-rotate 180deg: Blue -> Gold (restores the monogram color), Black -> Black, White -> White
-                  // 3. Mix-blend-mode screen: Black BG becomes transparent
                   className={`w-full h-full object-contain transition-all duration-300 ${isTransparent
-                    ? 'filter invert hue-rotate-180 mix-blend-screen'
-                    : 'mix-blend-multiply'
+                    ? 'brightness-0 invert'
+                    : ''
                     }`}
                 />
               </div>
@@ -395,9 +391,9 @@ export const Footer: React.FC = () => {
           <div className="space-y-5">
             <div className="h-10 w-36 relative overflow-hidden">
               <img
-                src={logoOriginal}
+                src={logoTransparent}
                 alt="Smith Instruments"
-                className="w-full h-full object-contain filter invert hue-rotate-180 mix-blend-screen opacity-90"
+                className="w-full h-full object-contain brightness-0 invert opacity-90"
               />
             </div>
             <p className="text-sm font-light leading-relaxed text-stone-400">
