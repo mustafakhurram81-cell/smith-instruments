@@ -29,9 +29,9 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
     const touchStartX = useRef<number>(0);
     const touchStartY = useRef<number>(0);
 
-    // Calculate fixed dimensions
-    const baseWidth = Math.min(500, window.innerWidth * 0.4);
-    const baseHeight = baseWidth * 1.4;
+    // Calculate fixed dimensions - A4 ratio is 1:1.414
+    const baseWidth = Math.min(450, window.innerWidth * 0.38);
+    const baseHeight = baseWidth * 1.414;
     const bookWidth = baseWidth;
     const bookHeight = baseHeight;
 
@@ -252,10 +252,10 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                                 className="shadow-2xl"
                             >
                                 {Array.from({ length: numPages }, (_, i) => (
-                                    <div key={i} className="bg-white overflow-hidden flex items-center justify-center">
+                                    <div key={i} className="bg-white overflow-hidden">
                                         <Page
                                             pageNumber={i + 1}
-                                            height={bookHeight}
+                                            width={bookWidth}
                                             renderTextLayer={false}
                                             renderAnnotationLayer={false}
                                             onLoadSuccess={onPageLoadSuccess}
