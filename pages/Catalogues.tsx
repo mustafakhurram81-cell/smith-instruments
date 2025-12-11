@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, Suspense, lazy } from 'react';
 import { Section, Button, FadeIn, ParallaxHeader } from '../components/Shared';
-import { Eye, Search, X, Loader2 } from 'lucide-react';
+import { Eye, Search, X, Loader2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { getCatalogues, Catalogue } from '../lib/database';
@@ -94,10 +94,27 @@ export const Catalogues: React.FC = () => {
                         <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black/20 to-transparent"></div>
 
                         {/* Hover Overlay */}
-                        <div className="absolute inset-0 bg-brand-charcoal/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <div className="flex items-center gap-2 text-white font-medium">
-                            <Eye size={18} />
-                            View Catalogue
+                        <div className="absolute inset-0 bg-brand-charcoal/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 backdrop-blur-[1px]">
+                          <div className="flex flex-col gap-3 w-3/4">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedCatalogue(cat);
+                              }}
+                              className="bg-white/10 hover:bg-brand-gold hover:text-brand-charcoal text-white py-2 px-4 rounded-full flex items-center justify-center gap-2 text-sm font-medium transition-all transform hover:scale-105 border border-white/20"
+                            >
+                              <Eye size={16} /> View
+                            </button>
+                            <a
+                              href={cat.pdf_url}
+                              download
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="bg-white/10 hover:bg-white hover:text-brand-charcoal text-white py-2 px-4 rounded-full flex items-center justify-center gap-2 text-sm font-medium transition-all transform hover:scale-105 border border-white/20"
+                            >
+                              <Download size={16} /> Download
+                            </a>
                           </div>
                         </div>
                       </div>
