@@ -159,8 +159,28 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
 
             {/* PDF Styles */}
             <style>{`
-                .react-pdf__Page { display: flex !important; align-items: center !important; justify-content: center !important; width: 100% !important; height: 100% !important; background: white !important; }
-                .react-pdf__Page__canvas { max-width: 100% !important; max-height: 100% !important; width: auto !important; height: auto !important; object-fit: contain !important; }
+                .react-pdf__Page { 
+                    display: flex !important; 
+                    align-items: center !important; 
+                    justify-content: center !important; 
+                    width: 100% !important; 
+                    height: 100% !important; 
+                    background: white !important;
+                    overflow: hidden !important;
+                }
+                .react-pdf__Page__canvas { 
+                    max-width: 100% !important; 
+                    max-height: 100% !important; 
+                    width: auto !important; 
+                    height: auto !important; 
+                    object-fit: contain !important;
+                    margin: auto !important;
+                }
+                .react-pdf__Document {
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                }
             `}</style>
 
             {/* Top Controls */}
@@ -232,10 +252,10 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                                 className="shadow-2xl"
                             >
                                 {Array.from({ length: numPages }, (_, i) => (
-                                    <div key={i} className="bg-white overflow-hidden">
+                                    <div key={i} className="bg-white overflow-hidden flex items-center justify-center">
                                         <Page
                                             pageNumber={i + 1}
-                                            width={bookWidth}
+                                            height={bookHeight}
                                             renderTextLayer={false}
                                             renderAnnotationLayer={false}
                                             onLoadSuccess={onPageLoadSuccess}
@@ -243,8 +263,6 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                                                 <div className="w-full h-full bg-stone-100 animate-pulse" />
                                             }
                                         />
-                                        {/* Page shadow effect */}
-                                        <div className={`absolute top-0 bottom-0 w-8 pointer-events-none ${i % 2 === 0 ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'} from-black/10 to-transparent`} />
                                     </div>
                                 ))}
                             </HTMLFlipBook>

@@ -24,23 +24,23 @@ export const CatalogueThumbnail: React.FC<CatalogueThumbnailProps> = ({ url, tit
     }
 
     return (
-        <div className="w-full h-full relative bg-stone-100 overflow-hidden">
+        <div className="w-full h-full relative bg-stone-100 overflow-hidden flex items-center justify-center">
             <div className="absolute inset-0 flex items-center justify-center z-0">
                 <Loader2 className="animate-spin text-stone-300" size={24} />
             </div>
             <Document
                 file={url}
-                className="w-full h-full"
+                className="w-full h-full flex items-center justify-center"
                 loading={null}
                 onLoadError={() => setError(true)}
             >
                 <Page
                     pageNumber={1}
-                    width={260}
+                    height={340}
                     renderTextLayer={false}
                     renderAnnotationLayer={false}
                     onLoadSuccess={() => setLoading(false)}
-                    className={`w-full h-full object-cover transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}
+                    className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}
                 />
             </Document>
             {/* Overlay for Title if needed, or just rely on the PDF cover */}
