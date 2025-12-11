@@ -176,7 +176,8 @@ export const Header: React.FC = () => {
         }`}>
         <div className="container mx-auto px-6 flex items-center justify-between">
 
-          <div className="flex items-center gap-6">
+          {/* Left: Logo */}
+          <div className="flex-1 flex items-center">
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
               <div className="h-16 w-64 relative overflow-hidden flex items-center">
                 <img
@@ -247,8 +248,8 @@ export const Header: React.FC = () => {
               Contact
             </PrefetchNavLink>
           </nav>
-
-          <div className="flex items-center gap-2">
+          {/* Right: Icons */}
+          <div className="flex-1 flex items-center justify-end gap-2">
             {/* Hide language switcher on mobile, show on desktop */}
             <div className="hidden md:block">
               <LanguageSwitcher isTransparent={isTransparent} />
