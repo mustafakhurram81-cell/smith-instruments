@@ -7,3 +7,5 @@ export { QuotesTab } from './QuotesTab';
 export { UsersTab } from './UsersTab';
 export { ImportModal } from './ImportModal';
 export { ActivityTab } from './ActivityTab';
+export { ProductsTab } from './ProductsTab';
+export { VariantsTab } from './VariantsTab';
