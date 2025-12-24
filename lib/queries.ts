@@ -7,6 +7,7 @@ import {
     getProductsBySubcategory,
     getProductBySku,
     searchProducts,
+    getCatalogues,
     Product
 } from './database';
 
@@ -21,6 +22,7 @@ export const queryKeys = {
     productBySku: (sku: string) => ['product', sku] as const,
     searchProducts: (query: string) => ['search', query] as const,
     categoryNames: ['categoryNames'] as const,
+    catalogues: ['catalogues'] as const,
 };
 
 // Hook to get ONLY category names (lightweight for Header)
@@ -90,3 +92,13 @@ export function useSearchProducts(query: string) {
         staleTime: 1000 * 60 * 2, // 2 minutes for search
     });
 }
+
+// Hook for catalogues (stable data, long cache)
+export function useCatalogues() {
+    return useQuery({
+        queryKey: queryKeys.catalogues,
+        queryFn: getCatalogues,
+        staleTime: 1000 * 60 * 10, // 10 minutes
+    });
+}
+

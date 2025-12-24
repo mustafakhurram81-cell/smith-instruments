@@ -1,9 +1,10 @@
-import React, { useState, useMemo, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useMemo, Suspense, lazy } from 'react';
 import { Section, Button, FadeIn, ParallaxHeader } from '../components/Shared';
 import { Eye, Search, X, Loader2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { getCatalogues, Catalogue } from '../lib/database';
+import { AnimatePresence } from 'framer-motion';
+import { Catalogue } from '../lib/database';
+import { useCatalogues } from '../lib/queries';
 import { CatalogueThumbnail } from '../components/CatalogueThumbnail';
 import { SEO } from '../components/SEO';
 
@@ -12,21 +13,9 @@ const FlipBookViewer = lazy(() => import('../components/FlipBookViewer').then(m 
 
 export const Catalogues: React.FC = () => {
   const navigate = useNavigate();
-  const [catalogues, setCatalogues] = useState<Catalogue[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: catalogues = [], isLoading: loading } = useCatalogues();
   const [selectedCatalogue, setSelectedCatalogue] = useState<Catalogue | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Fetch catalogues from Supabase
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      const catalogueData = await getCatalogues();
-      setCatalogues(catalogueData);
-      setLoading(false);
-    }
-    fetchData();
-  }, []);
 
   const filteredCatalogues = useMemo(() => {
     return catalogues.filter((cat) => {
@@ -81,14 +70,19 @@ export const Catalogues: React.FC = () => {
           ) : filteredCatalogues.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
               {filteredCatalogues.map((cat, idx) => (
-                <FadeIn key={cat.title} delay={idx * 0.1}>
+                // Cap the animation delay to prevent long waits
+                <FadeIn key={cat.id || cat.title} delay={Math.min(idx * 0.05, 0.5)}>
                   <div className="group cursor-pointer" onClick={() => setSelectedCatalogue(cat)}>
                     {/* Book Container */}
                     <div className="relative w-[240px] h-[340px] mx-auto transition-transform duration-300 group-hover:-translate-y-2">
 
                       {/* Front Cover */}
                       <div className="absolute inset-0 bg-white rounded-r-md shadow-xl overflow-hidden border-l-[6px] border-stone-800">
-                        <CatalogueThumbnail url={cat.pdf_url} title="" />
+                        <CatalogueThumbnail
+                          url={cat.pdf_url}
+                          title={cat.title}
+                          thumbnailUrl={cat.thumbnail_url}
+                        />
 
                         {/* Spine shadow */}
                         <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black/20 to-transparent"></div>
