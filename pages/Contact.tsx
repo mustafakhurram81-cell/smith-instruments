@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Section, Button, FadeIn, ParallaxHeader } from '../components/Shared';
 import { SEO } from '../components/SEO';
-import { Plus, Minus, Phone, Mail, MapPin, MessageCircle, Clock, Loader2 } from 'lucide-react';
+import { Plus, Minus, Phone, Mail, MapPin, MessageCircle, Clock, Loader2, Award, ShieldCheck } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -13,6 +13,20 @@ const FAQS = [
   { q: "Are your products certified?", a: "Yes, Smith Instruments is ISO 9001, ISO 13485 certified, and our products are CE marked and FDA compliant." },
 ];
 
+// FAQ Schema for structured data (appears in Google search results)
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": FAQS.map(faq => ({
+    "@type": "Question",
+    "name": faq.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.a
+    }
+  }))
+};
+
 const AccordionItem: React.FC<{ item: { q: string, a: string } }> = ({ item }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -22,7 +36,7 @@ const AccordionItem: React.FC<{ item: { q: string, a: string } }> = ({ item }) =
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="font-serif text-lg text-brand-charcoal group-hover:text-stone-600 transition-colors">{item.q}</span>
-        {isOpen ? <Minus size={20} className="text-brand-gold shrink-0 ml-4" /> : <Plus size={20} className="text-stone-400 shrink-0 ml-4" />}
+        {isOpen ? <Minus size={20} className="text-brand-orange shrink-0 ml-4" /> : <Plus size={20} className="text-stone-400 shrink-0 ml-4" />}
       </button>
       <div
         className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
@@ -35,8 +49,8 @@ const AccordionItem: React.FC<{ item: { q: string, a: string } }> = ({ item }) =
   );
 };
 
-// reCAPTCHA site key (invisible)
-const RECAPTCHA_SITE_KEY = '6LeQ7SYsAAAAAFCJMoKk758pTNV0U1LOxFALbI6n';
+// reCAPTCHA site key from environment variables (invisible reCAPTCHA)
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 export const Contact: React.FC = () => {
   const form = useRef<HTMLFormElement>(null);
@@ -116,6 +130,8 @@ export const Contact: React.FC = () => {
       <SEO
         title="Contact Us"
         description="Get in touch with Smith Instruments for quotes, custom manufacturing inquiries, or support. Global shipping available."
+        keywords="contact surgical instruments supplier, request quote medical tools, custom OEM surgical manufacturing, buy surgical instruments online, surgical instrument distributor inquiry"
+        structuredData={faqSchema}
       />
 
       {/* Header */}
@@ -138,7 +154,7 @@ export const Contact: React.FC = () => {
                 <div className="space-y-8">
                   {/* Phone */}
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-brand-charcoal text-brand-gold flex items-center justify-center shrink-0 shadow-sm">
+                    <div className="w-12 h-12 rounded-full bg-stone-100 text-brand-charcoal flex items-center justify-center shrink-0 shadow-sm border border-stone-200">
                       <Phone size={20} />
                     </div>
                     <div>
@@ -150,7 +166,7 @@ export const Contact: React.FC = () => {
 
                   {/* Email */}
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-brand-charcoal text-brand-gold flex items-center justify-center shrink-0 shadow-sm">
+                    <div className="w-12 h-12 rounded-full bg-stone-100 text-brand-charcoal flex items-center justify-center shrink-0 shadow-sm border border-stone-200">
                       <Mail size={20} />
                     </div>
                     <div>
@@ -162,7 +178,7 @@ export const Contact: React.FC = () => {
 
                   {/* Location */}
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-brand-charcoal text-brand-gold flex items-center justify-center shrink-0 shadow-sm">
+                    <div className="w-12 h-12 rounded-full bg-stone-100 text-brand-charcoal flex items-center justify-center shrink-0 shadow-sm border border-stone-200">
                       <MapPin size={20} />
                     </div>
                     <div>
@@ -216,8 +232,8 @@ export const Contact: React.FC = () => {
                 <h3 className="font-serif text-3xl text-brand-charcoal mb-8">Send Us a Message</h3>
 
                 {formStatus === 'success' ? (
-                  <div className="bg-stone-50 text-brand-charcoal p-8 border border-brand-gold/50 text-center rounded-sm">
-                    <div className="w-16 h-16 bg-brand-gold text-brand-charcoal rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="bg-stone-50 text-brand-charcoal p-8 border border-brand-orange/50 text-center rounded-sm">
+                    <div className="w-16 h-16 bg-brand-orange text-brand-charcoal rounded-full flex items-center justify-center mx-auto mb-4">
                       <MessageCircle size={32} />
                     </div>
                     <h4 className="font-serif text-2xl mb-2 text-brand-charcoal">Inquiry Sent</h4>
@@ -236,7 +252,7 @@ export const Contact: React.FC = () => {
                     {/* Row 1: Full Name + Phone */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-2">Full Name <span className="text-brand-gold">*</span></label>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Full Name <span className="text-brand-orange">*</span></label>
                         <input
                           required
                           type="text"
@@ -244,7 +260,7 @@ export const Contact: React.FC = () => {
                           value={formData.user_name}
                           onChange={(e) => setFormData({ ...formData, user_name: e.target.value })}
                           placeholder="Dr. John Smith"
-                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
                       </div>
                       <div>
@@ -255,7 +271,7 @@ export const Contact: React.FC = () => {
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           placeholder="+1 (555) 000-0000"
-                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
                       </div>
                     </div>
@@ -263,7 +279,7 @@ export const Contact: React.FC = () => {
                     {/* Row 2: Email + Country */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-2">Email Address <span className="text-brand-gold">*</span></label>
+                        <label className="block text-sm font-medium text-stone-700 mb-2">Email Address <span className="text-brand-orange">*</span></label>
                         <input
                           required
                           type="email"
@@ -271,7 +287,7 @@ export const Contact: React.FC = () => {
                           value={formData.user_email}
                           onChange={(e) => setFormData({ ...formData, user_email: e.target.value })}
                           placeholder="john.smith@hospital.com"
-                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
                       </div>
                       <div>
@@ -282,7 +298,7 @@ export const Contact: React.FC = () => {
                           value={formData.country}
                           onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                           placeholder="United States"
-                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
                       </div>
                     </div>
@@ -295,7 +311,7 @@ export const Contact: React.FC = () => {
                           name="interest"
                           value={formData.interest}
                           onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal appearance-none cursor-pointer"
+                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal appearance-none cursor-pointer"
                         >
                           <option value="" disabled>Select a topic...</option>
                           <option value="General Inquiry">General Inquiry</option>
@@ -312,7 +328,7 @@ export const Contact: React.FC = () => {
 
                     {/* Row 4: Message */}
                     <div>
-                      <label className="block text-sm font-medium text-stone-700 mb-2">Message <span className="text-brand-gold">*</span></label>
+                      <label className="block text-sm font-medium text-stone-700 mb-2">Message <span className="text-brand-orange">*</span></label>
                       <textarea
                         required
                         rows={6}
@@ -320,7 +336,7 @@ export const Contact: React.FC = () => {
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         placeholder="Tell us about your requirements or questions..."
-                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all outline-none text-brand-charcoal placeholder-stone-300 resize-none"
+                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300 resize-none"
                       ></textarea>
                       <p className="text-xs text-stone-400 mt-1 text-right">0/1000 characters</p>
                     </div>
@@ -354,7 +370,7 @@ export const Contact: React.FC = () => {
                     {/* Google reCAPTCHA Legal Text (Required when hiding the badge) */}
                     <div className="text-[10px] text-stone-400 space-y-2 mt-4">
                       <p>
-                        Protected by reCAPTCHA. Google <a href="https://policies.google.com/privacy" className="hover:text-brand-gold underline decoration-stone-300">Privacy</a> & <a href="https://policies.google.com/terms" className="hover:text-brand-gold underline decoration-stone-300">Terms</a>.
+                        Protected by reCAPTCHA. Google <a href="https://policies.google.com/privacy" className="hover:text-brand-orange underline decoration-stone-300">Privacy</a> & <a href="https://policies.google.com/terms" className="hover:text-brand-orange underline decoration-stone-300">Terms</a>.
                       </p>
                       <p>
                         <strong>Privacy:</strong> We use your info solely to respond. No third parties.
@@ -370,7 +386,7 @@ export const Contact: React.FC = () => {
       </div >
 
       {/* FAQ SECTION */}
-      < section className="bg-brand-gold/5 bg-noise py-24 border-t border-stone-200" >
+      < section className="bg-stone-50 bg-noise py-24 border-t border-stone-200" >
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-12">
             <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4">Frequently Asked Questions</h2>

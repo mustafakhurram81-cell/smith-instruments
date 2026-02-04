@@ -170,7 +170,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                             <div className="text-center">
-                                <div className="text-2xl font-bold text-brand-gold">{quoteStats.thisWeek}</div>
+                                <div className="text-2xl font-bold text-brand-orange">{quoteStats.thisWeek}</div>
                                 <div className="text-xs text-stone-400">This Week</div>
                             </div>
                             <div className="text-center">
@@ -186,7 +186,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                             <div key={idx} className="flex-1 flex flex-col items-center gap-1">
                                 <div className="text-xs font-medium text-stone-500">{day.count}</div>
                                 <div
-                                    className="w-full bg-brand-gold/20 rounded-t transition-all hover:bg-brand-gold/40"
+                                    className="w-full bg-brand-orange/20 rounded-t transition-all hover:bg-brand-orange/40"
                                     style={{
                                         height: `${(day.count / maxDailyCount) * 100}%`,
                                         minHeight: day.count > 0 ? '8px' : '2px',
@@ -194,7 +194,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                                     }}
                                 >
                                     <div
-                                        className="w-full h-full bg-brand-gold rounded-t"
+                                        className="w-full h-full bg-brand-orange rounded-t"
                                         style={{ opacity: day.count > 0 ? 1 : 0 }}
                                     />
                                 </div>
@@ -217,7 +217,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="font-medium text-brand-charcoal">Recent Quotes</h2>
-                        <a href="#" onClick={() => {/* navigate to quotes tab */ }} className="text-xs text-brand-gold hover:underline">
+                        <a href="#" onClick={() => {/* navigate to quotes tab */ }} className="text-xs text-brand-orange hover:underline">
                             View All →
                         </a>
                     </div>
@@ -266,7 +266,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="font-medium text-brand-charcoal">Category Breakdown</h2>
-                    <button onClick={onRefresh} className="text-brand-gold text-sm hover:underline flex items-center gap-1">
+                    <button onClick={onRefresh} className="text-brand-orange text-sm hover:underline flex items-center gap-1">
                         <RefreshCw size={14} /> Refresh
                     </button>
                 </div>
@@ -276,7 +276,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                             <div className="w-28 text-sm truncate" title={cat.name}>{cat.name}</div>
                             <div className="flex-1 h-5 bg-stone-100 rounded-full overflow-hidden">
                                 <div
-                                    className="h-full bg-gradient-to-r from-brand-gold to-brand-gold/70 rounded-full transition-all"
+                                    className="h-full bg-gradient-to-r from-brand-orange to-brand-orange/70 rounded-full transition-all"
                                     style={{ width: `${Math.max((cat.count / stats.products) * 100, 2)}%` }}
                                 />
                             </div>

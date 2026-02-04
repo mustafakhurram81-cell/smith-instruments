@@ -355,7 +355,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                             fetchProducts(searchQuery, categoryFilter, subcategoryFilter, 0, f.id);
                         }}
                         className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${quickFilter === f.id
-                            ? 'bg-brand-gold text-white shadow-md'
+                            ? 'bg-brand-orange text-white shadow-md'
                             : 'bg-white text-stone-600 hover:bg-stone-50 border border-stone-200'
                             }`}
                     >
@@ -376,7 +376,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && handleSearch()}
-                            className="w-full pl-9 pr-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:border-brand-gold"
+                            className="w-full pl-9 pr-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:!border-stone-400"
                         />
                     </div>
                     <select
@@ -481,7 +481,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                     <th className="p-3 text-left">
                                         <button
                                             onClick={() => handleSort('sku')}
-                                            className="flex items-center gap-1 hover:text-brand-gold"
+                                            className="flex items-center gap-1 hover:text-brand-orange"
                                         >
                                             SKU
                                             {sortBy === 'sku' && <ArrowUpDown size={14} className={sortOrder === 'desc' ? 'rotate-180' : ''} />}
@@ -490,7 +490,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                     <th className="p-3 text-left">
                                         <button
                                             onClick={() => handleSort('name')}
-                                            className="flex items-center gap-1 hover:text-brand-gold"
+                                            className="flex items-center gap-1 hover:text-brand-orange"
                                         >
                                             Name
                                             {sortBy === 'name' && <ArrowUpDown size={14} className={sortOrder === 'desc' ? 'rotate-180' : ''} />}
@@ -499,7 +499,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                     <th className="p-3 text-left">
                                         <button
                                             onClick={() => handleSort('category')}
-                                            className="flex items-center gap-1 hover:text-brand-gold"
+                                            className="flex items-center gap-1 hover:text-brand-orange"
                                         >
                                             Category
                                             {sortBy === 'category' && <ArrowUpDown size={14} className={sortOrder === 'desc' ? 'rotate-180' : ''} />}
@@ -515,7 +515,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                     <tr key={product.id} className="border-b hover:bg-stone-50">
                                         <td className="p-3">
                                             <button onClick={() => toggleSelect(product.id)} className="text-stone-400 hover:text-brand-charcoal">
-                                                {selectedIds.has(product.id) ? <CheckSquare size={18} className="text-brand-gold" /> : <Square size={18} />}
+                                                {selectedIds.has(product.id) ? <CheckSquare size={18} className="text-brand-orange" /> : <Square size={18} />}
                                             </button>
                                         </td>
                                         <td className="p-3">
@@ -525,7 +525,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                             >
                                                 {uploadingImage === product.id ? (
                                                     <div className="w-full h-full flex items-center justify-center">
-                                                        <Loader2 size={16} className="animate-spin text-brand-gold" />
+                                                        <Loader2 size={16} className="animate-spin text-brand-orange" />
                                                     </div>
                                                 ) : product.image_url ? (
                                                     <img src={product.image_url} alt="" className="w-full h-full object-cover" />
@@ -539,7 +539,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="p-3 font-mono text-brand-gold">{product.sku}</td>
+                                        <td className="p-3 font-mono text-brand-orange">{product.sku}</td>
                                         <td className="p-3 max-w-[200px]">
                                             {inlineEdit?.id === product.id && inlineEdit.field === 'name' ? (
                                                 <input
@@ -548,7 +548,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                                     onChange={e => setInlineEdit({ ...inlineEdit, value: e.target.value })}
                                                     onBlur={handleInlineSave}
                                                     onKeyDown={e => e.key === 'Enter' && handleInlineSave()}
-                                                    className="w-full px-2 py-1 border border-brand-gold rounded text-sm outline-none"
+                                                    className="w-full px-2 py-1 border border-brand-orange rounded text-sm outline-none"
                                                 />
                                             ) : (
                                                 <span
@@ -568,7 +568,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                                     value={inlineEdit.value}
                                                     onChange={e => { setInlineEdit({ ...inlineEdit, value: e.target.value }); }}
                                                     onBlur={handleInlineSave}
-                                                    className="px-2 py-1 border border-brand-gold rounded text-sm outline-none"
+                                                    className="px-2 py-1 border border-brand-orange rounded text-sm outline-none"
                                                 >
                                                     {categoryStats.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                                                 </select>
@@ -752,7 +752,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                             <div>
                                 <h3 className="font-medium text-brand-charcoal">Link as Variant</h3>
                                 <p className="text-sm text-stone-500 mt-1">
-                                    Making <span className="font-mono text-brand-gold">{linkingProduct.sku}</span> a variant of...
+                                    Making <span className="font-mono text-brand-orange">{linkingProduct.sku}</span> a variant of...
                                 </p>
                             </div>
                             <button
@@ -779,7 +779,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                         setParentSearchQuery(e.target.value);
                                         searchParentProducts(e.target.value);
                                     }}
-                                    className="w-full pl-10 pr-4 py-3 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                    className="w-full pl-10 pr-4 py-3 border border-stone-200 rounded-lg outline-none focus:!border-stone-400"
                                     autoFocus
                                 />
                                 {parentSearching && (
@@ -800,7 +800,7 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                                 key={result.id}
                                                 onClick={() => handleLinkVariant(result.sku)}
                                                 disabled={linkingSaving}
-                                                className="w-full flex items-center gap-3 p-3 border border-stone-200 rounded-lg hover:border-brand-gold hover:bg-brand-gold/5 transition-colors text-left disabled:opacity-50"
+                                                className="w-full flex items-center gap-3 p-3 border border-stone-200 rounded-lg hover:border-brand-orange hover:bg-brand-orange/5 transition-colors text-left disabled:opacity-50"
                                             >
                                                 <div className="w-10 h-10 bg-stone-100 rounded overflow-hidden flex-shrink-0">
                                                     {result.image_url ? (
@@ -812,12 +812,12 @@ export const ProductsTab: React.FC<ProductsTabProps> = ({ categoryStats, onRefre
                                                     )}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="font-mono text-brand-gold text-sm">{result.sku}</p>
+                                                    <p className="font-mono text-brand-orange text-sm">{result.sku}</p>
                                                     <p className="text-sm text-stone-600 truncate">{result.name}</p>
                                                 </div>
                                                 <div className="flex-shrink-0">
                                                     {linkingSaving ? (
-                                                        <Loader2 size={18} className="text-brand-gold animate-spin" />
+                                                        <Loader2 size={18} className="text-brand-orange animate-spin" />
                                                     ) : (
                                                         <Link2 size={18} className="text-stone-400" />
                                                     )}

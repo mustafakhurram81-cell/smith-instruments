@@ -95,8 +95,8 @@ export const ActivityTab: React.FC = () => {
             {/* Header */}
             <div className="bg-white rounded-xl shadow-sm p-4 flex justify-between items-center flex-wrap gap-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 bg-brand-gold/10 rounded-lg">
-                        <Activity size={20} className="text-brand-gold" />
+                    <div className="p-2 bg-brand-orange/10 rounded-lg">
+                        <Activity size={20} className="text-brand-orange" />
                     </div>
                     <div>
                         <h2 className="font-medium text-brand-charcoal">Activity Log</h2>
@@ -127,7 +127,7 @@ export const ActivityTab: React.FC = () => {
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 {loading ? (
                     <div className="p-12 text-center">
-                        <Loader2 className="animate-spin mx-auto text-brand-gold" size={32} />
+                        <Loader2 className="animate-spin mx-auto text-brand-orange" size={32} />
                     </div>
                 ) : logs.length === 0 ? (
                     <div className="p-12 text-center text-stone-500">

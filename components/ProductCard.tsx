@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Package } from 'lucide-react';
+import { Package, Loader2 } from 'lucide-react';
 import { FadeIn } from './Shared';
 import { LazyImage } from './ui/LazyImage';
 
@@ -37,39 +37,51 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     const isCompact = viewMode === 'compact';
 
     return (
-        <FadeIn delay={Math.min(index * 0.02, 0.5)}>
-            <div
-                onClick={handleClick}
-                className="group cursor-pointer bg-white border border-stone-100 hover:border-stone-200 hover:shadow-md transition-all duration-300"
-            >
-                <div className="bg-stone-50 relative overflow-hidden aspect-square">
-                    {product.image_url ? (
-                        <LazyImage
-                            src={product.image_url}
-                            alt={product.name}
-                            className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
-                            containerClassName="w-full h-full"
-                            placeholder={
-                                <div className="w-full h-full bg-stone-100 animate-pulse flex items-center justify-center">
-                                    <Package className="text-stone-300" size={isCompact ? 32 : 48} />
-                                </div>
-                            }
-                        />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                            <Package className="text-stone-300" size={isCompact ? 32 : 48} />
-                        </div>
-                    )}
-                </div>
-                <div className={`border-t border-stone-100 ${isCompact ? 'p-3' : 'p-4'}`}>
-                    <p className={`text-brand-gold font-mono mb-1 ${isCompact ? 'text-[10px]' : 'text-xs'}`}>
-                        {product.sku}
-                    </p>
-                    <h3 className={`font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors ${isCompact ? 'text-xs line-clamp-1' : 'text-sm line-clamp-2'}`}>
+        <div
+            onClick={handleClick}
+            className="group cursor-pointer h-full bg-white border border-stone-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
+        >
+            <div className={`bg-stone-50 relative overflow-hidden flex items-center justify-center p-6 ${isCompact ? 'aspect-video' : 'aspect-square'}`}>
+
+                {product.image_url ? (
+                    <LazyImage
+                        src={product.image_url}
+                        alt={product.name}
+                        className="relative z-10 w-full h-full object-contain mix-blend-multiply transition-transform duration-300"
+                        containerClassName="w-full h-full"
+                        placeholder={
+                            <div className="w-full h-full flex items-center justify-center">
+                                <Loader2 className="animate-spin text-stone-300" size={24} />
+                            </div>
+                        }
+                    />
+                ) : (
+                    <div className="relative z-10 w-full h-full flex items-center justify-center">
+                        <Package className="text-stone-300" size={isCompact ? 24 : 40} strokeWidth={1.5} />
+                    </div>
+                )}
+            </div>
+
+            <div className={`border-t border-stone-100 bg-white flex flex-col justify-between flex-grow ${isCompact ? 'p-3' : 'p-5'}`}>
+                <div>
+                    <div className="flex justify-between items-start mb-1">
+                        <span className={`font-mono text-brand-orange bg-brand-orange/5 px-2 py-0.5 rounded text-[10px] tracking-wide`}>
+                            {product.sku}
+                        </span>
+                    </div>
+
+                    <h3 className={`font-serif text-brand-charcoal group-hover:text-brand-orange transition-colors ${isCompact ? 'text-sm line-clamp-1' : 'text-lg leading-tight line-clamp-2'}`}>
                         {product.name}
                     </h3>
                 </div>
+
+                {!isCompact && (
+                    <div className="mt-4 pt-3 border-t border-stone-50 flex items-center justify-between text-xs text-stone-400">
+                        <span>Medical Grade Steel</span>
+                        <span className="group-hover:translate-x-1 transition-transform duration-300 text-brand-orange font-bold">View Details →</span>
+                    </div>
+                )}
             </div>
-        </FadeIn>
+        </div>
     );
 };

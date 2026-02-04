@@ -45,7 +45,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                         {userEmail && <span className="text-xs text-stone-400">{userEmail}</span>}
                         {userRole && (
                             <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${userRole === 'admin'
-                                ? 'bg-brand-gold text-brand-charcoal'
+                                ? 'bg-brand-orange text-brand-charcoal'
                                 : 'bg-stone-600 text-stone-300'
                                 }`}>
                                 {userRole === 'admin' ? 'Admin' : 'Manager'}
@@ -64,7 +64,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                         <button
                             key={tab.id}
                             onClick={() => onTabChange(tab.id)}
-                            className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id ? 'border-brand-gold text-brand-charcoal' : 'border-transparent text-stone-500 hover:text-brand-charcoal'
+                            className={`flex items-center gap-2 px-4 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id ? 'border-brand-orange text-brand-charcoal' : 'border-transparent text-stone-500 hover:text-brand-charcoal'
                                 }`}
                         >
                             <tab.icon size={18} />

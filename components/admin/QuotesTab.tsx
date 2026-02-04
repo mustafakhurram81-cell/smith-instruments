@@ -136,7 +136,7 @@ export const QuotesTab: React.FC = () => {
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && fetchQuotes()}
-                        className="w-full pl-9 pr-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:border-brand-gold"
+                        className="w-full pl-9 pr-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:!border-stone-400"
                     />
                 </div>
                 <div className="flex gap-2">
@@ -162,7 +162,7 @@ export const QuotesTab: React.FC = () => {
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 {loading ? (
                     <div className="p-12 text-center">
-                        <Loader2 className="animate-spin mx-auto text-brand-gold" size={32} />
+                        <Loader2 className="animate-spin mx-auto text-brand-orange" size={32} />
                     </div>
                 ) : quotes.length === 0 ? (
                     <div className="p-12 text-center text-stone-500">
@@ -206,7 +206,7 @@ export const QuotesTab: React.FC = () => {
                                         </div>
 
                                         <div className="text-center">
-                                            <div className="text-lg font-bold text-brand-gold">{quote.products.length}</div>
+                                            <div className="text-lg font-bold text-brand-orange">{quote.products.length}</div>
                                             <div className="text-xs text-stone-400">items</div>
                                         </div>
 
@@ -229,7 +229,7 @@ export const QuotesTab: React.FC = () => {
                                                     <div className="space-y-2 text-sm">
                                                         <div className="flex items-center gap-2 text-stone-600">
                                                             <Mail size={14} className="text-stone-400" />
-                                                            <a href={`mailto:${quote.customer_email}`} className="text-brand-gold hover:underline">
+                                                            <a href={`mailto:${quote.customer_email}`} className="text-brand-orange hover:underline">
                                                                 {quote.customer_email}
                                                             </a>
                                                         </div>
@@ -277,7 +277,7 @@ export const QuotesTab: React.FC = () => {
                                                                     )}
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
-                                                                    <div className="text-xs text-brand-gold font-mono">{product.sku}</div>
+                                                                    <div className="text-xs text-brand-orange font-mono">{product.sku}</div>
                                                                     <div className="text-sm text-brand-charcoal truncate">{product.name}</div>
                                                                 </div>
                                                                 <div className="text-sm font-medium text-stone-600">
@@ -293,7 +293,7 @@ export const QuotesTab: React.FC = () => {
                                             <div className="flex gap-2 mt-4 pt-4 border-t border-stone-200">
                                                 <a
                                                     href={`mailto:${quote.customer_email}?subject=Quote Request - Smith Instruments`}
-                                                    className="px-3 py-1.5 bg-brand-gold text-white text-sm rounded-lg hover:bg-brand-gold/90 transition-colors flex items-center gap-1"
+                                                    className="px-3 py-1.5 bg-brand-orange text-white text-sm rounded-lg hover:bg-brand-orange/90 transition-colors flex items-center gap-1"
                                                 >
                                                     <Mail size={14} /> Reply via Email
                                                 </a>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Section, Button, FadeIn, AnimatedCounter } from '../components/Shared';
+import { LogoCloud } from '../components/LogoCloud';
 import { SEO } from '../components/SEO';
-import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, ChevronLeft, ChevronRight, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope } from 'lucide-react';
+import { ProductCard } from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
-import heroMethods from '../assets/hero-instruments.jpg';
+import heroMethods from '../assets/hero-minimal.png';
 import manufacturingImg from '../assets/manufacturing-workshop.png';
 
 const PRODUCTS = [
@@ -57,6 +59,7 @@ export const Home: React.FC = () => {
       <SEO
         title="Home"
         description="Smith Instruments: Premium manufacturer of precision surgical instruments. ISO certified, global shipping, and custom OEM solutions for healthcare professionals."
+        keywords="surgical instruments manufacturer, precision medical tools, German stainless steel instruments, plastic surgery instruments, cardiovascular surgical tools, custom OEM surgical instruments, buy surgical instruments"
       />
       {/* HERO */}
       <section className="relative h-screen flex items-center bg-brand-charcoal">
@@ -81,13 +84,13 @@ export const Home: React.FC = () => {
           <div className="max-w-2xl">
             <FadeIn>
               <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.1] mb-6 md:mb-8">
-                We Mold the Metal <span className="block md:inline italic font-light text-brand-gold">to Serve Life.</span>
+                We Mold the Metal <span className="block md:inline italic font-light text-brand-orange">to Serve Life.</span>
               </h1>
               <p className="max-w-xl text-stone-300 text-base sm:text-lg md:text-xl font-light leading-relaxed mb-8 md:mb-12">
                 Crafting precision surgical instruments with unwavering commitment to quality and innovation for healthcare professionals worldwide.
               </p>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-4 sm:gap-6">
-                <Button onClick={() => navigate('/catalogues')} variant="primary" className="shadow-lg shadow-brand-gold/20 px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
+                <Button onClick={() => navigate('/catalogues')} variant="primary" className="px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
                   Explore Catalogue <ArrowRight size={16} className="ml-2 flex-shrink-0" />
                 </Button>
                 <Button onClick={() => navigate('/about')} variant="outline" className="text-white border-white hover:bg-white hover:text-brand-charcoal px-6 sm:px-10 text-sm sm:text-base whitespace-nowrap">
@@ -98,59 +101,62 @@ export const Home: React.FC = () => {
           </div>
         </div>
 
-        <div className="absolute bottom-10 left-10 animate-pulse flex items-center gap-4">
+        <div className="absolute bottom-10 left-10 flex items-center gap-4">
           <div className="w-12 h-[1px] bg-white/30" />
           <span className="text-xs uppercase tracking-widest text-white/50">Scroll</span>
         </div>
       </section>
 
-      {/* IMPACT COUNTERS */}
-      <section className="bg-brand-gold/5 bg-noise py-24 border-y border-stone-200/50">
+      {/* TRUSTED BY LOGOS */}
+      <LogoCloud />
+
+      {/* IMPACT COUNTERS - GRID STYLE */}
+      <section className="bg-white border-y border-stone-200">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl text-brand-charcoal">Our Impact</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-stone-200">
             <FadeIn delay={0.1}>
-              <div className="p-4">
-                <div className="flex items-center justify-center font-serif text-6xl md:text-7xl text-brand-gold mb-2">
+              <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
+                <div className="flex items-center justify-center font-serif text-6xl md:text-7xl text-brand-charcoal mb-4">
                   <AnimatedCounter to={20} />
-                  <span>+</span>
+                  <span className="text-brand-orange">+</span>
                 </div>
-                <span className="text-sm uppercase tracking-widest text-brand-charcoal font-medium">Years of Experience</span>
+                <span className="text-xs uppercase tracking-[0.2em] text-stone-500 font-bold">Years of Experience</span>
               </div>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <div className="p-4">
-                <div className="flex items-center justify-center font-serif text-6xl md:text-7xl text-brand-gold mb-2">
+              <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
+                <div className="flex items-center justify-center font-serif text-6xl md:text-7xl text-brand-charcoal mb-4">
                   <AnimatedCounter to={20} />
-                  <span>+</span>
+                  <span className="text-brand-orange">+</span>
                 </div>
-                <span className="text-sm uppercase tracking-widest text-brand-charcoal font-medium">Countries Served</span>
+                <span className="text-xs uppercase tracking-[0.2em] text-stone-500 font-bold">Countries Served</span>
               </div>
             </FadeIn>
             <FadeIn delay={0.3}>
-              <div className="p-4">
-                <div className="flex items-center justify-center font-serif text-6xl md:text-7xl text-brand-gold mb-2">
+              <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
+                <div className="flex items-center justify-center font-serif text-6xl md:text-7xl text-brand-charcoal mb-4">
                   <AnimatedCounter to={50} />
-                  <span>+</span>
+                  <span className="text-brand-orange">+</span>
                 </div>
-                <span className="text-sm uppercase tracking-widest text-brand-charcoal font-medium">Global Clients</span>
+                <span className="text-xs uppercase tracking-[0.2em] text-stone-500 font-bold">Global Clients</span>
               </div>
             </FadeIn>
           </div>
         </div>
       </section>
 
-      {/* WHY CHOOSE US */}
-      <Section className="bg-white">
-        <div className="container mx-auto px-6">
-          <div className="mb-20 text-center">
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Why Choose Us?</h2>
-            <p className="text-stone-500 font-light">Precision, reliability, and partnership in every instrument we create.</p>
+      {/* WHY CHOOSE US - GRID CARD STYLE */}
+      <Section className="bg-stone-50 relative border-b border-stone-200">
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="mb-20 max-w-2xl">
+            <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Why Choose Us</span>
+            <h2 className="font-serif text-4xl md:text-5xl text-brand-charcoal mb-6 text-balance">Precision Engineering, <br />Human Connection.</h2>
+            <p className="text-stone-500 text-lg font-light leading-relaxed">
+              We combine the scalability of a global manufacturer with the personalized attention of a boutique partner.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { icon: ShieldCheck, title: "Medical-Grade Steel", desc: "Using only the highest quality materials for durability and performance." },
               { icon: PenTool, title: "Customizable", desc: "Tailored solutions to meet the specific needs of your surgical team." },
@@ -158,12 +164,12 @@ export const Home: React.FC = () => {
               { icon: Truck, title: "Fast Delivery", desc: "Efficient logistics to ensure your instruments arrive on time, every time." }
             ].map((item, idx) => (
               <FadeIn key={idx} delay={idx * 0.1}>
-                <div className="group p-8 bg-stone-50 rounded-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full text-center border border-stone-100">
-                  <div className="w-12 h-12 mx-auto bg-white border border-stone-100 rounded-full flex items-center justify-center mb-6 shadow-sm group-hover:bg-brand-gold group-hover:border-brand-gold transition-colors duration-300">
-                    <item.icon className="w-6 h-6 text-brand-charcoal transition-colors duration-300" strokeWidth={1.5} />
+                <div className="group h-full bg-white p-8 rounded-lg border border-stone-200 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                  <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center mb-6">
+                    <item.icon className="w-6 h-6 text-brand-orange" strokeWidth={1.5} />
                   </div>
-                  <h3 className="font-serif text-lg font-bold mb-3 text-brand-charcoal">{item.title}</h3>
-                  <p className="text-stone-500 font-light leading-relaxed text-sm">{item.desc}</p>
+                  <h3 className="font-serif text-xl font-semibold mb-3 text-brand-charcoal">{item.title}</h3>
+                  <p className="text-stone-500 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </FadeIn>
             ))}
@@ -172,17 +178,17 @@ export const Home: React.FC = () => {
       </Section>
 
       {/* PRODUCTS CAROUSEL */}
-      <Section className="bg-brand-gold/5 bg-noise overflow-hidden relative">
+      <Section className="bg-white overflow-hidden relative border-b border-stone-200">
         <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-2xl">
             <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Our Products</h2>
             <p className="text-stone-500 font-light text-lg">A comprehensive range of instruments for every surgical specialty.</p>
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={prevSlide} className="w-12 h-12 border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:text-white transition-colors">
+            <button onClick={prevSlide} className="w-10 h-10 rounded-md border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:border-brand-charcoal hover:text-white transition-colors">
               <ChevronLeft size={20} />
             </button>
-            <button onClick={nextSlide} className="w-12 h-12 border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:text-white transition-colors">
+            <button onClick={nextSlide} className="w-10 h-10 rounded-md border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:border-brand-charcoal hover:text-white transition-colors">
               <ChevronRight size={20} />
             </button>
           </div>
@@ -201,22 +207,19 @@ export const Home: React.FC = () => {
                 className="min-w-[100%] md:min-w-[350px] shrink-0 group cursor-pointer"
                 onClick={() => navigate('/products')}
               >
-                <div className="bg-stone-50 border-none p-8 h-[320px] flex flex-col justify-between transition-all duration-300 hover:bg-stone-100 hover:shadow-lg relative overflow-hidden">
-                  <div className="absolute -right-8 -top-8 w-32 h-32 bg-white rotate-45 group-hover:bg-white/50 transition-colors duration-500"></div>
+                <div className="bg-white rounded-lg border border-stone-200 p-8 h-[320px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
 
                   <div>
-                    <div className="w-14 h-14 bg-white flex items-center justify-center mb-6 shadow-sm group-hover:shadow-md transition-all">
-                      <product.icon size={28} className="text-brand-charcoal group-hover:text-brand-gold transition-colors duration-300" strokeWidth={1.5} />
+                    <div className="w-14 h-14 rounded-lg bg-stone-100 flex items-center justify-center mb-6">
+                      <product.icon size={28} className="text-brand-orange" strokeWidth={1.5} />
                     </div>
                     <h3 className="font-serif text-2xl text-brand-charcoal mb-2">{product.name}</h3>
                     <p className="text-stone-500 text-sm leading-relaxed">{product.desc}</p>
                   </div>
 
-                  <div className="flex items-center text-sm font-medium text-brand-charcoal mt-6 group-hover:text-brand-gold transition-colors">
+                  <div className="flex items-center text-sm font-medium text-stone-500 mt-6 group-hover:text-brand-orange transition-colors">
                     <span className="mr-2">Explore</span>
-                    <div className="w-6 h-6 rounded-full border border-stone-200 flex items-center justify-center group-hover:border-brand-gold group-hover:bg-brand-gold group-hover:text-white transition-all duration-300">
-                      <ArrowRight size={12} className="-ml-0.5" />
-                    </div>
+                    <ArrowRight size={14} />
                   </div>
                 </div>
               </div>
@@ -234,14 +237,14 @@ export const Home: React.FC = () => {
             <img
               src={manufacturingImg}
               alt="Precision Instrument Manufacturing"
-              className="rounded-sm shadow-2xl opacity-90"
+              className="rounded-md shadow-lg"
               loading="lazy"
               width="600"
               height="400"
             />
           </div>
           <div className="w-full md:w-1/2 text-stone-600">
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-6">Our Legacy, <br /><span className="text-brand-gold">Your Trust.</span></h2>
+            <h2 className="font-serif text-4xl text-brand-charcoal mb-6">Our Legacy, <br /><span className="text-brand-orange">Your Trust.</span></h2>
             <p className="font-light leading-relaxed mb-6 text-lg text-stone-500">
               Headquartered in the United States and powered by world-class manufacturing facilities in Pakistan, Smith Instruments combines the best of both worlds: American quality standards with skilled craftsmanship honed over generations in one of the world's premier surgical instrument manufacturing hubs.
             </p>
@@ -253,10 +256,10 @@ export const Home: React.FC = () => {
             </Button>
           </div>
         </div>
-      </Section>
+      </Section >
 
       {/* TESTIMONIALS */}
-      <Section className="bg-brand-gold/5 bg-noise">
+      < Section className="bg-stone-50" >
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Trusted by Professionals</h2>
@@ -266,26 +269,20 @@ export const Home: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((t, i) => (
               <FadeIn key={t.id} delay={i * 0.2}>
-                <div className="bg-white p-10 shadow-sm h-full flex flex-col justify-between rounded-sm relative overflow-hidden group hover:shadow-xl transition-all duration-500 border border-stone-100">
-                  <div className="absolute -top-4 -right-4 text-9xl font-serif text-stone-100 group-hover:text-brand-gold/10 transition-colors select-none pointer-events-none">
-                    "
+                <div className="bg-white p-8 rounded-lg border border-stone-200 hover:border-brand-orange/30 transition-all relative">
+                  <div className="flex gap-1 mb-4">
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <Star key={star} size={16} className="text-brand-orange fill-brand-orange" />
+                    ))}
                   </div>
-
-                  <div className="relative z-10">
-                    <Quote size={24} className="text-brand-gold mb-6" />
-                    <p className="font-serif text-brand-charcoal text-xl leading-relaxed mb-8">
-                      {t.text}
-                    </p>
-                  </div>
-
-                  <div className="relative z-10 flex items-center gap-4 pt-6 border-t border-stone-50">
-                    <div className="w-12 h-12 bg-stone-100 rounded-full flex items-center justify-center font-serif font-bold text-xl text-brand-charcoal group-hover:bg-brand-gold group-hover:text-brand-charcoal transition-colors duration-500">
-                      {t.author.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-bold text-brand-charcoal">{t.author}</p>
-                      <p className="text-xs text-stone-500 uppercase tracking-wide font-medium">{t.role}</p>
-                      <p className="text-xs text-brand-gold mt-1">{t.location}</p>
+                  <p className="text-stone-600 italic mb-6 leading-relaxed relative z-10">"{t.text}"</p>
+                  <div className="mt-auto">
+                    <h4 className="font-serif text-brand-charcoal text-lg">{t.author}</h4>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-brand-orange font-bold uppercase tracking-wider">{t.role}</p>
+                      <div className="flex items-center gap-1 bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-medium">
+                        <ShieldCheck size={10} /> Verified
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -293,7 +290,7 @@ export const Home: React.FC = () => {
             ))}
           </div>
         </div>
-      </Section>
-    </div>
+      </Section >
+    </div >
   );
 };

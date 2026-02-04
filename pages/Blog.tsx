@@ -11,7 +11,7 @@ export const Blog: React.FC = () => {
       <div className="flex-grow flex items-center justify-center">
         <Section className="text-center">
           <FadeIn>
-            <div className="w-20 h-20 bg-brand-charcoal text-brand-gold rounded-full flex items-center justify-center mx-auto mb-8">
+            <div className="w-20 h-20 bg-brand-charcoal text-brand-orange rounded-full flex items-center justify-center mx-auto mb-8">
               <Clock size={40} />
             </div>
             <h1 className="font-serif text-5xl md:text-7xl text-brand-charcoal mb-6">Coming Soon</h1>

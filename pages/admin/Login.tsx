@@ -32,7 +32,7 @@ export const Login: React.FC = () => {
     return (
         <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-                <div className="bg-brand-charcoal p-8 text-center border-b border-brand-gold/20">
+                <div className="bg-brand-charcoal p-8 text-center border-b border-brand-orange/20">
                     <h1 className="font-serif text-2xl text-white mb-2">Smith Instruments</h1>
                     <p className="text-stone-400 text-sm">Secure Admin Access</p>
                 </div>
@@ -54,7 +54,7 @@ export const Login: React.FC = () => {
                                 required
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:border-brand-gold outline-none transition-colors"
+                                className="w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:border-stone-400 outline-none transition-colors"
                                 placeholder="admin@smith-instruments.com"
                             />
                         </div>
@@ -69,7 +69,7 @@ export const Login: React.FC = () => {
                                 required
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:border-brand-gold outline-none transition-colors"
+                                className="w-full pl-10 pr-4 py-2 border border-stone-300 rounded-lg focus:border-stone-400 outline-none transition-colors"
                                 placeholder="••••••••"
                             />
                         </div>

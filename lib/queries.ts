@@ -8,6 +8,16 @@ import {
     getProductBySku,
     searchProducts,
     getCatalogues,
+    getInstrumentTypes,
+    getInstrumentCategories,
+    getInstrumentSubcategories,
+    // New dual navigation
+    getSpecialtyCategories,
+    getSpecialtySubcategories,
+    getProductsBySpecialty,
+    getInstrumentCategoriesNew,
+    getInstrumentSubcategoriesNew,
+    getProductsByInstrument,
     Product
 } from './database';
 
@@ -102,3 +112,92 @@ export function useCatalogues() {
     });
 }
 
+// Hook for instrument types (for dual navigation)
+export function useInstrumentTypes() {
+    return useQuery({
+        queryKey: ['instrumentTypes'] as const,
+        queryFn: getInstrumentTypes,
+        staleTime: 1000 * 60 * 10, // 10 minutes
+    });
+}
+
+// Hook for instrument categories (parent level for "Browse by Instrument Type")
+export function useInstrumentCategories() {
+    return useQuery({
+        queryKey: ['instrumentCategories'] as const,
+        queryFn: getInstrumentCategories,
+        staleTime: 1000 * 60 * 10, // 10 minutes
+    });
+}
+
+// Hook for subcategories within an instrument category
+export function useInstrumentSubcategories(instrumentCategory: string) {
+    return useQuery({
+        queryKey: ['instrumentSubcategories', instrumentCategory] as const,
+        queryFn: () => getInstrumentSubcategories(instrumentCategory),
+        enabled: !!instrumentCategory,
+        staleTime: 1000 * 60 * 10,
+    });
+}
+
+// ═══════════════════════════════════════════════════════════
+// DUAL NAVIGATION HOOKS (using new database columns)
+// ═══════════════════════════════════════════════════════════
+
+// Hook for specialty categories (from new column)
+export function useSpecialtyCategories() {
+    return useQuery({
+        queryKey: ['specialtyCategories'] as const,
+        queryFn: getSpecialtyCategories,
+        staleTime: 1000 * 60 * 10,
+    });
+}
+
+// Hook for specialty subcategories
+export function useSpecialtySubcategories(category: string) {
+    return useQuery({
+        queryKey: ['specialtySubcategories', category] as const,
+        queryFn: () => getSpecialtySubcategories(category),
+        enabled: !!category,
+        staleTime: 1000 * 60 * 10,
+    });
+}
+
+// Hook for products by specialty
+export function useProductsBySpecialty(category: string, subcategory?: string) {
+    return useQuery({
+        queryKey: ['productsBySpecialty', category, subcategory] as const,
+        queryFn: () => getProductsBySpecialty(category, subcategory),
+        enabled: !!category,
+        staleTime: 1000 * 60 * 5,
+    });
+}
+
+// Hook for instrument categories (from new column)
+export function useInstrumentCategoriesNew() {
+    return useQuery({
+        queryKey: ['instrumentCategoriesNew'] as const,
+        queryFn: getInstrumentCategoriesNew,
+        staleTime: 1000 * 60 * 10,
+    });
+}
+
+// Hook for instrument subcategories (from new column)
+export function useInstrumentSubcategoriesNew(category: string) {
+    return useQuery({
+        queryKey: ['instrumentSubcategoriesNew', category] as const,
+        queryFn: () => getInstrumentSubcategoriesNew(category),
+        enabled: !!category,
+        staleTime: 1000 * 60 * 10,
+    });
+}
+
+// Hook for products by instrument
+export function useProductsByInstrument(category: string, subcategory?: string) {
+    return useQuery({
+        queryKey: ['productsByInstrument', category, subcategory] as const,
+        queryFn: () => getProductsByInstrument(category, subcategory),
+        enabled: !!category,
+        staleTime: 1000 * 60 * 5,
+    });
+}

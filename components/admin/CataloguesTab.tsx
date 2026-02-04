@@ -210,7 +210,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                             placeholder="Search catalogues..."
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            className="pl-9 pr-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:border-brand-gold w-64"
+                            className="pl-9 pr-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:!border-stone-400 w-64"
                         />
                     </div>
                     <span className="text-sm text-stone-500">
@@ -232,13 +232,13 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 {loading ? (
                     <div className="p-8 flex justify-center">
-                        <Loader2 className="w-8 h-8 text-brand-gold animate-spin" />
+                        <Loader2 className="w-8 h-8 text-brand-orange animate-spin" />
                     </div>
                 ) : filteredCatalogues.length === 0 ? (
                     <div className="p-8 text-center text-stone-500">
                         <BookOpen size={48} className="mx-auto mb-4 text-stone-300" />
                         <p>No catalogues found</p>
-                        <button onClick={handleAdd} className="mt-2 text-brand-gold hover:underline">
+                        <button onClick={handleAdd} className="mt-2 text-brand-orange hover:underline">
                             Add your first catalogue
                         </button>
                     </div>
@@ -267,7 +267,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                     onDragLeave={handleDragLeave}
                                     onDrop={(e) => handleDrop(e, idx)}
                                     className={`border-b transition-all ${dragOverIndex === idx
-                                        ? 'bg-brand-gold/10 border-brand-gold'
+                                        ? 'bg-brand-orange/10 border-brand-orange'
                                         : 'hover:bg-stone-50'
                                         } ${draggedItem?.id === catalogue.id ? 'opacity-50' : ''}`}
                                 >
@@ -359,7 +359,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                     value={formData.title}
                                     onChange={e => setFormData({ ...formData, title: e.target.value })}
                                     placeholder="e.g., Plastic Surgery"
-                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:!border-stone-400"
                                 />
                             </div>
 
@@ -373,7 +373,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                     onChange={e => setFormData({ ...formData, description: e.target.value })}
                                     placeholder="Brief description..."
                                     rows={2}
-                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:!border-stone-400"
                                 />
                             </div>
 
@@ -386,7 +386,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                     <select
                                         value={formData.category}
                                         onChange={e => setFormData({ ...formData, category: e.target.value })}
-                                        className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                        className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:!border-stone-400"
                                     >
                                         <option value="">Select category</option>
                                         {CATEGORY_OPTIONS.map(cat => (
@@ -403,7 +403,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                         value={formData.size}
                                         onChange={e => setFormData({ ...formData, size: e.target.value })}
                                         placeholder="e.g., 8MB"
-                                        className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                        className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:!border-stone-400"
                                     />
                                 </div>
                             </div>
@@ -418,7 +418,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                     value={formData.pdf_url}
                                     onChange={e => setFormData({ ...formData, pdf_url: e.target.value })}
                                     placeholder="/catalogues/your-file.pdf"
-                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold font-mono text-sm"
+                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:!border-stone-400 font-mono text-sm"
                                 />
                                 <p className="text-xs text-stone-400 mt-1">
                                     Place PDF in public/catalogues/ folder, then enter path like /catalogues/filename.pdf
@@ -434,7 +434,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                     type="number"
                                     value={formData.display_order}
                                     onChange={e => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })}
-                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:!border-stone-400"
                                 />
                                 <p className="text-xs text-stone-400 mt-1">
                                     Or use drag & drop to reorder in the table
@@ -448,7 +448,7 @@ export const CataloguesTab: React.FC<CataloguesTabProps> = ({ onRefresh }) => {
                                     id="is_active"
                                     checked={formData.is_active}
                                     onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
-                                    className="w-4 h-4 accent-brand-gold"
+                                    className="w-4 h-4 accent-brand-orange"
                                 />
                                 <label htmlFor="is_active" className="text-sm text-stone-600">
                                     Active (visible on website)

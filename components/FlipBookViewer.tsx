@@ -147,7 +147,7 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                 >
                     <div className="w-48 h-1 bg-stone-700 rounded-full overflow-hidden mb-4">
                         <motion.div
-                            className="h-full bg-brand-gold"
+                            className="h-full bg-brand-orange"
                             initial={{ width: 0 }}
                             animate={{ width: `${loadProgress}%` }}
                             transition={{ duration: 0.3 }}

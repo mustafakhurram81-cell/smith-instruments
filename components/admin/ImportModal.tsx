@@ -212,7 +212,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onSuc
                             />
                             <div
                                 onClick={() => fileInputRef.current?.click()}
-                                className="border-2 border-dashed border-stone-300 rounded-xl p-12 cursor-pointer hover:border-brand-gold hover:bg-stone-50 transition-colors"
+                                className="border-2 border-dashed border-stone-300 rounded-xl p-12 cursor-pointer hover:border-brand-orange hover:bg-stone-50 transition-colors"
                             >
                                 <Upload size={48} className="mx-auto mb-4 text-stone-400" />
                                 <p className="text-lg font-medium text-brand-charcoal mb-2">
@@ -239,7 +239,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onSuc
                         <div>
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-4">
-                                    <FileText size={20} className="text-brand-gold" />
+                                    <FileText size={20} className="text-brand-orange" />
                                     <span className="font-medium">{file?.name}</span>
                                     <span className="text-sm text-stone-500">
                                         {preview.length} products to import
@@ -305,7 +305,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({ isOpen, onClose, onSuc
 
                     {step === 'importing' && (
                         <div className="text-center py-12">
-                            <Loader2 size={48} className="mx-auto mb-4 animate-spin text-brand-gold" />
+                            <Loader2 size={48} className="mx-auto mb-4 animate-spin text-brand-orange" />
                             <p className="text-lg font-medium text-brand-charcoal">Importing products...</p>
                             <p className="text-sm text-stone-500">Please wait, this may take a moment.</p>
                         </div>

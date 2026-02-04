@@ -250,7 +250,7 @@ export const Dashboard: React.FC = () => {
                                                 onClick={() => toggleExpand(cat.name)}
                                             >
                                                 {isExpanded ? <ChevronDown size={18} className="text-stone-400" /> : <ChevronRight size={18} className="text-stone-400" />}
-                                                <FolderOpen size={18} className="text-brand-gold" />
+                                                <FolderOpen size={18} className="text-brand-orange" />
                                                 <span className="font-medium">{cat.name}</span>
                                                 <span className="text-xs px-2 py-0.5 bg-white border border-stone-200 rounded-full text-stone-500">
                                                     {cat.count} total
@@ -291,7 +291,7 @@ export const Dashboard: React.FC = () => {
                                                                     const newName = prompt('Rename subcategory to:', sub.name);
                                                                     if (newName) handleRenameSubcategory(cat.name, sub.name, newName);
                                                                 }}
-                                                                className="p-1.5 hover:bg-stone-100 rounded text-stone-400 hover:text-brand-gold"
+                                                                className="p-1.5 hover:bg-stone-100 rounded text-stone-400 hover:text-brand-orange"
                                                                 title="Rename Subcategory"
                                                             >
                                                                 <FolderEdit size={14} />
@@ -356,7 +356,7 @@ export const Dashboard: React.FC = () => {
                                     value={passwordData.newPassword}
                                     onChange={e => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                                     placeholder="Enter new password"
-                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:!border-stone-400"
                                 />
                             </div>
 
@@ -367,14 +367,14 @@ export const Dashboard: React.FC = () => {
                                     value={passwordData.confirmPassword}
                                     onChange={e => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
                                     placeholder="Confirm new password"
-                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:border-brand-gold"
+                                    className="w-full px-3 py-2 border border-stone-200 rounded-lg outline-none focus:!border-stone-400"
                                 />
                             </div>
 
                             <button
                                 onClick={handlePasswordChange}
                                 disabled={passwordSaving || !passwordData.newPassword}
-                                className="px-4 py-2 bg-brand-gold text-white rounded-lg hover:bg-brand-gold/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                className="px-4 py-2 bg-brand-orange text-white rounded-lg hover:bg-brand-orange/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                             >
                                 {passwordSaving && <Loader2 size={16} className="animate-spin" />}
                                 Update Password

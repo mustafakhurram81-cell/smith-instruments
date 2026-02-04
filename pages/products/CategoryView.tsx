@@ -40,7 +40,7 @@ export const CategoryView: React.FC = () => {
                     <div className="flex items-center gap-2 text-xs text-stone-400 mb-4 uppercase tracking-widest">
                         <Link to="/products" className="hover:text-white">Products</Link>
                         <ChevronRight size={12} />
-                        <span className="text-brand-gold">{category}</span>
+                        <span className="text-brand-orange">{category}</span>
                     </div>
 
                     <h1 className="font-serif text-4xl md:text-6xl mb-4">{category}</h1>
@@ -51,7 +51,7 @@ export const CategoryView: React.FC = () => {
                     </p>
                 </div>
                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                    <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-brand-gold blur-[150px] rounded-full"></div>
+                    <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-brand-orange blur-[150px] rounded-full"></div>
                 </div>
             </div>
 
@@ -67,14 +67,14 @@ export const CategoryView: React.FC = () => {
                                     <FadeIn key={sub.name} delay={idx * 0.05}>
                                         <div
                                             onClick={() => navigate(`/products/${encodeURIComponent(category)}/${encodeURIComponent(sub.name)}`)}
-                                            className="group cursor-pointer relative h-64 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500"
+                                            className="group cursor-pointer relative h-64 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
                                         >
-                                            <div className="absolute inset-0 bg-stone-200">
+                                            <div className="absolute inset-0 bg-white">
                                                 {sub.image ? (
                                                     <img
                                                         src={sub.image}
                                                         alt={sub.name}
-                                                        className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
+                                                        className="w-full h-full object-cover opacity-90"
                                                     />
                                                 ) : (
                                                     <div className="w-full h-full bg-gradient-to-br from-stone-200 to-stone-300 flex items-center justify-center">
@@ -83,20 +83,20 @@ export const CategoryView: React.FC = () => {
                                                 )}
                                             </div>
 
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
 
                                             <div className="absolute bottom-0 left-0 w-full p-6">
                                                 <div className="flex justify-between items-end">
                                                     <div>
-                                                        <h3 className="font-serif text-2xl text-white mb-1 group-hover:text-brand-gold transition-colors">
+                                                        <h3 className="font-serif text-2xl text-white mb-1 group-hover:text-brand-orange transition-colors">
                                                             {sub.name}
                                                         </h3>
                                                         <p className="text-stone-300 text-sm">
                                                             {sub.count} instruments
                                                         </p>
                                                     </div>
-                                                    <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-brand-gold group-hover:text-brand-charcoal transition-all">
-                                                        <ArrowRight size={18} />
+                                                    <div className="w-12 h-12 rounded-full bg-brand-orange flex items-center justify-center text-brand-charcoal group-hover:scale-110 transition-transform">
+                                                        <ArrowRight size={20} />
                                                     </div>
                                                 </div>
                                             </div>

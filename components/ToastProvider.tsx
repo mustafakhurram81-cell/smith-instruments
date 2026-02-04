@@ -60,7 +60,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                                 ? 'bg-green-100 text-green-600'
                                 : toast.type === 'error'
                                     ? 'bg-red-100 text-red-600'
-                                    : 'bg-brand-gold/10 text-brand-gold'
+                                    : 'bg-brand-orange/10 text-brand-orange'
                                 }`}>
                                 {toast.type === 'success' ? (
                                     <ShoppingCart size={16} strokeWidth={2.5} />
@@ -79,7 +79,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                                 {toast.productName && (
                                     <p className="text-xs text-stone-500 mt-1 truncate font-medium">
                                         {toast.quantity && toast.quantity > 1 ? (
-                                            <span className="text-brand-gold font-bold">{toast.quantity}x </span>
+                                            <span className="text-brand-orange font-bold">{toast.quantity}x </span>
                                         ) : ''}
                                         {toast.productName}
                                     </p>
@@ -101,7 +101,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                                     transition={{ duration: 3, ease: "linear" }}
                                     className={`h-full ${toast.type === 'success' ? 'bg-green-500' :
                                         toast.type === 'error' ? 'bg-red-500' :
-                                            'bg-brand-gold'
+                                            'bg-brand-orange'
                                         }`}
                                 />
                             </div>

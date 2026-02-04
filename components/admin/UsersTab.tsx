@@ -164,7 +164,7 @@ export const UsersTab: React.FC = () => {
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 {loading ? (
                     <div className="p-12 text-center">
-                        <Loader2 className="animate-spin mx-auto text-brand-gold" size={32} />
+                        <Loader2 className="animate-spin mx-auto text-brand-orange" size={32} />
                     </div>
                 ) : error ? (
                     <div className="p-12 text-center text-red-500">

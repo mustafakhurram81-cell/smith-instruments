@@ -15,7 +15,7 @@ export const TermsOfService: React.FC = () => {
             <div className="bg-brand-charcoal text-white py-16 md:py-24">
                 <div className="container mx-auto px-6 text-center">
                     <FadeIn>
-                        <FileText className="w-16 h-16 text-brand-gold mx-auto mb-6" />
+                        <FileText className="w-16 h-16 text-brand-orange mx-auto mb-6" />
                         <h1 className="font-serif text-4xl md:text-6xl mb-4">Terms of Service</h1>
                         <p className="text-stone-400 font-light">Last updated: December 2024</p>
                     </FadeIn>
@@ -30,7 +30,7 @@ export const TermsOfService: React.FC = () => {
                                 {/* Acceptance */}
                                 <div>
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
-                                        <Scale className="text-brand-gold" size={24} />
+                                        <Scale className="text-brand-orange" size={24} />
                                         Acceptance of Terms
                                     </h2>
                                     <p className="text-stone-600 leading-relaxed">
@@ -41,7 +41,7 @@ export const TermsOfService: React.FC = () => {
                                 {/* Products & Services */}
                                 <div>
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
-                                        <Package className="text-brand-gold" size={24} />
+                                        <Package className="text-brand-orange" size={24} />
                                         Products & Services
                                     </h2>
                                     <div className="space-y-4 text-stone-600">
@@ -60,7 +60,7 @@ export const TermsOfService: React.FC = () => {
                                 {/* Payment Terms */}
                                 <div>
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4">Payment Terms</h2>
-                                    <div className="bg-brand-gold/10 p-6 rounded-lg border border-brand-gold/30">
+                                    <div className="bg-brand-orange/10 p-6 rounded-lg border border-brand-orange/30">
                                         <p className="text-brand-charcoal font-medium mb-2">Our Unique Trust Model:</p>
                                         <p className="text-stone-600">
                                             Payment is due only after you have received and inspected your order. If the products do not meet your expectations, you may return them at no cost within 14 days.
@@ -71,7 +71,7 @@ export const TermsOfService: React.FC = () => {
                                 {/* Returns & Refunds */}
                                 <div>
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
-                                        <RefreshCw className="text-brand-gold" size={24} />
+                                        <RefreshCw className="text-brand-orange" size={24} />
                                         Returns & Refunds
                                     </h2>
                                     <ul className="list-disc list-inside space-y-2 ml-4 text-stone-600">
@@ -100,7 +100,7 @@ export const TermsOfService: React.FC = () => {
                                 {/* Limitation of Liability */}
                                 <div>
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
-                                        <AlertTriangle className="text-brand-gold" size={24} />
+                                        <AlertTriangle className="text-brand-orange" size={24} />
                                         Limitation of Liability
                                     </h2>
                                     <p className="text-stone-600 leading-relaxed">
@@ -111,7 +111,7 @@ export const TermsOfService: React.FC = () => {
                                 {/* Governing Law */}
                                 <div>
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
-                                        <Gavel className="text-brand-gold" size={24} />
+                                        <Gavel className="text-brand-orange" size={24} />
                                         Governing Law
                                     </h2>
                                     <p className="text-stone-600 leading-relaxed">

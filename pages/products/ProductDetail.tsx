@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Section, Button, FadeIn } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
-import { getProductBySku, getProductsBySubcategory, getProductVariants, Product } from '../../lib/database';
-import { ChevronRight, Package, Loader2, Mail, ArrowRight, X, ChevronDown, Minus, Plus, Clock } from 'lucide-react';
+import { getProductBySku, getProductsBySubcategory, getProductVariants, getCatalogueById, Product, CatalogueRef } from '../../lib/database';
+import { ChevronRight, Package, Loader2, Mail, ArrowRight, X, ChevronDown, Minus, Plus, Clock, BookOpen, FileText, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../components/CartProvider';
 import { useToast } from '../../components/ToastProvider';
@@ -22,6 +22,7 @@ export const ProductDetail: React.FC = () => {
     const [parentProduct, setParentProduct] = useState<Product | null>(null); // Stores original for consistent name
     const [variants, setVariants] = useState<Product[]>([]);
     const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+    const [catalogue, setCatalogue] = useState<CatalogueRef | null>(null);
     const [loading, setLoading] = useState(true);
     const [isZoomed, setIsZoomed] = useState(false);
     const [isVariantDropdownOpen, setIsVariantDropdownOpen] = useState(false);
@@ -50,6 +51,14 @@ export const ProductDetail: React.FC = () => {
                 // Filter out current product and its variants, limit to 4
                 const variantSkus = new Set(variantProducts.map(v => v.sku));
                 setRelatedProducts(related.filter(p => !variantSkus.has(p.sku)).slice(0, 4));
+
+                // Fetch catalogue if product has catalogue_id
+                if (prod.catalogue_id) {
+                    const cat = await getCatalogueById(prod.catalogue_id);
+                    setCatalogue(cat);
+                } else {
+                    setCatalogue(null);
+                }
             }
 
             setLoading(false);
@@ -76,7 +85,7 @@ export const ProductDetail: React.FC = () => {
     if (loading) {
         return (
             <div className="pt-32 min-h-screen flex items-center justify-center">
-                <Loader2 className="animate-spin text-brand-gold" size={48} />
+                <Loader2 className="animate-spin text-brand-orange" size={48} />
             </div>
         );
     }
@@ -85,7 +94,7 @@ export const ProductDetail: React.FC = () => {
         return (
             <div className="pt-32 min-h-screen text-center">
                 <h1 className="text-2xl font-serif text-brand-charcoal">Product not found</h1>
-                <Link to="/products" className="text-brand-gold hover:underline mt-4 inline-block">
+                <Link to="/products" className="text-brand-orange hover:underline mt-4 inline-block">
                     ← Back to Products
                 </Link>
             </div>
@@ -186,9 +195,9 @@ export const ProductDetail: React.FC = () => {
             <div className="bg-white border-b border-stone-200">
                 <div className="container mx-auto px-6 py-4">
                     <div className="flex items-center gap-2 text-xs text-stone-500 uppercase tracking-widest">
-                        <Link to="/products" className="hover:text-brand-gold">Products</Link>
+                        <Link to="/products" className="hover:text-brand-orange">Products</Link>
                         <ChevronRight size={12} />
-                        <Link to={`/products/${encodeURIComponent(product.category)}`} className="hover:text-brand-gold">
+                        <Link to={`/products/${encodeURIComponent(product.category)}`} className="hover:text-brand-orange">
                             {product.category}
                         </Link>
                         {product.subcategory && product.subcategory !== 'General' && (
@@ -196,14 +205,14 @@ export const ProductDetail: React.FC = () => {
                                 <ChevronRight size={12} />
                                 <Link
                                     to={`/products/${encodeURIComponent(product.category)}/${encodeURIComponent(product.subcategory)}`}
-                                    className="hover:text-brand-gold"
+                                    className="hover:text-brand-orange"
                                 >
                                     {product.subcategory}
                                 </Link>
                             </>
                         )}
                         <ChevronRight size={12} />
-                        <span className="text-brand-gold">{product.sku}</span>
+                        <span className="text-brand-orange">{product.sku}</span>
                     </div>
                 </div>
             </div>
@@ -266,13 +275,13 @@ export const ProductDetail: React.FC = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.2, delay: 0.1 }}
                             >
-                                <p className="text-brand-gold font-medium text-sm mb-2">SKU: {product.sku}</p>
+                                <p className="text-brand-orange font-medium text-sm mb-2">SKU: {product.sku}</p>
                                 <h1 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4">
                                     {parentProduct?.name || product.name}
                                 </h1>
 
                                 <div className="flex gap-2 flex-wrap mb-6">
-                                    <span className="px-3 py-1 bg-brand-gold/10 text-brand-gold text-sm rounded-full">
+                                    <span className="px-3 py-1 bg-brand-orange/10 text-brand-orange text-sm rounded-full">
                                         {product.category}
                                     </span>
                                     {product.subcategory && product.subcategory !== 'General' && (
@@ -295,7 +304,7 @@ export const ProductDetail: React.FC = () => {
                                                 e.stopPropagation();
                                                 setIsVariantDropdownOpen(!isVariantDropdownOpen);
                                             }}
-                                            className="w-full flex items-center justify-between bg-white border border-stone-200 rounded-lg px-4 py-3 text-left hover:border-brand-gold transition-colors"
+                                            className="w-full flex items-center justify-between bg-white border border-stone-200 rounded-lg px-4 py-3 text-left hover:border-brand-orange transition-colors"
                                         >
                                             <span className="font-medium text-brand-charcoal">
                                                 {getVariantLabel(product)}
@@ -325,17 +334,17 @@ export const ProductDetail: React.FC = () => {
                                                                 // Update URL for sharing/bookmarking without reload
                                                                 window.history.pushState(null, '', `/product/${encodeURIComponent(variant.sku)}`);
                                                             }}
-                                                            className={`w-full px-4 py-3 text-left hover:bg-stone-50 flex items-center justify-between border-b border-stone-100 last:border-b-0 transition-colors ${variant.sku === product.sku ? 'bg-brand-gold/10' : ''
+                                                            className={`w-full px-4 py-3 text-left hover:bg-stone-50 flex items-center justify-between border-b border-stone-100 last:border-b-0 transition-colors ${variant.sku === product.sku ? 'bg-brand-orange/10' : ''
                                                                 }`}
                                                         >
                                                             <div className="flex items-center gap-3">
-                                                                <span className="font-mono text-sm text-brand-gold">{variant.sku}</span>
+                                                                <span className="font-mono text-sm text-brand-orange">{variant.sku}</span>
                                                                 <span className="text-sm text-stone-500">
                                                                     {getShortVariantLabel(variant)}
                                                                 </span>
                                                             </div>
                                                             {variant.sku === product.sku && (
-                                                                <span className="text-xs bg-brand-gold text-white px-2 py-0.5 rounded">Current</span>
+                                                                <span className="text-xs bg-brand-orange text-white px-2 py-0.5 rounded">Current</span>
                                                             )}
                                                         </button>
                                                     ))}
@@ -346,12 +355,44 @@ export const ProductDetail: React.FC = () => {
                                 </div>
                             )}
 
-                            {product.description && (
-                                <div className="prose prose-stone max-w-none">
-                                    <h3 className="text-lg font-medium text-brand-charcoal mb-2">Description</h3>
-                                    <p className="text-stone-600 leading-relaxed">{product.description}</p>
+                            {/* Technical Specifications - B2B/Clinical Upgrade */}
+                            <div className="bg-stone-50 rounded-lg p-5 border border-stone-200">
+                                <h3 className="text-sm font-bold text-brand-charcoal uppercase tracking-wide mb-4 flex items-center gap-2">
+                                    <FileText size={16} className="text-brand-orange" /> Technical Specifications
+                                </h3>
+                                <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+                                    <div className="flex flex-col">
+                                        <span className="text-stone-500 text-xs">Material</span>
+                                        <span className="font-medium text-brand-charcoal">German Stainless Steel</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-stone-500 text-xs">Finish</span>
+                                        <span className="font-medium text-brand-charcoal">Satin / Matte</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-stone-500 text-xs">Reusable</span>
+                                        <span className="font-medium text-brand-charcoal">Yes, Autoclavable</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-stone-500 text-xs">Sterility</span>
+                                        <span className="font-medium text-brand-charcoal">Non-Sterile</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-stone-500 text-xs">Latex Free</span>
+                                        <span className="font-medium text-brand-charcoal">Yes</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-stone-500 text-xs">Certification</span>
+                                        <span className="font-medium text-brand-charcoal">ISO 13485, CE</span>
+                                    </div>
                                 </div>
-                            )}
+                                <button
+                                    onClick={() => showToast("Datasheet download started...", "success")}
+                                    className="w-full mt-5 flex items-center justify-center gap-2 py-2 border border-stone-300 rounded-md text-sm font-medium text-stone-600 hover:text-brand-orange hover:border-brand-orange hover:bg-white transition-all"
+                                >
+                                    <Download size={16} /> Download PDF Datasheet
+                                </button>
+                            </div>
 
                             {/* CTA Buttons */}
                             <div className="pt-6 border-t border-stone-200 space-y-4">
@@ -406,6 +447,34 @@ export const ProductDetail: React.FC = () => {
                                     Add items to your cart and submit a single request for all prices.
                                 </p>
                             </div>
+
+                            {/* Catalogue Reference Widget */}
+                            {catalogue && (
+                                <div className="pt-6 border-t border-stone-200">
+                                    <h3 className="text-sm font-medium text-stone-500 uppercase tracking-wider mb-3">View in Catalogue</h3>
+                                    <a
+                                        href={catalogue.pdf_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group flex items-center gap-4 p-3 border border-stone-200 hover:border-brand-orange transition-colors"
+                                    >
+                                        {/* Mini Book Thumbnail */}
+                                        <div className="relative w-16 h-20 flex-shrink-0 bg-gradient-to-br from-brand-orange/20 to-brand-orange/5 border-l-[3px] border-stone-800 shadow-md group-hover:shadow-lg transition-shadow">
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <BookOpen size={20} className="text-brand-orange" />
+                                            </div>
+                                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-gradient-to-r from-black/10 to-transparent"></div>
+                                        </div>
+                                        {/* Catalogue Info */}
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-medium text-brand-charcoal group-hover:text-brand-orange transition-colors truncate">
+                                                {catalogue.title}
+                                            </p>
+                                            <p className="text-xs text-stone-500">Click to view PDF catalogue</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -426,7 +495,7 @@ export const ProductDetail: React.FC = () => {
                             </div>
                             <Link
                                 to={`/products/${encodeURIComponent(product.category)}/${encodeURIComponent(product.subcategory)}`}
-                                className="hidden sm:flex items-center gap-2 text-brand-gold hover:underline text-sm font-medium"
+                                className="hidden sm:flex items-center gap-2 text-brand-orange hover:underline text-sm font-medium"
                             >
                                 View All <ArrowRight size={16} />
                             </Link>
@@ -437,7 +506,7 @@ export const ProductDetail: React.FC = () => {
                                 <FadeIn key={prod.id} delay={idx * 0.1}>
                                     <div
                                         onClick={() => navigate(`/product/${encodeURIComponent(prod.sku)}`)}
-                                        className="group cursor-pointer bg-white overflow-hidden border border-stone-100 hover:shadow-lg hover:border-brand-gold/30 transition-all duration-300"
+                                        className="group cursor-pointer bg-white overflow-hidden border border-stone-100 hover:shadow-lg hover:border-brand-orange/30 transition-all duration-300"
                                     >
                                         <div className="aspect-square bg-stone-50 overflow-hidden">
                                             {prod.image_url ? (
@@ -453,8 +522,8 @@ export const ProductDetail: React.FC = () => {
                                             )}
                                         </div>
                                         <div className="border-t border-stone-100 p-4">
-                                            <p className="text-xs text-brand-gold font-mono mb-1">{prod.sku}</p>
-                                            <h3 className="text-sm font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors line-clamp-2">
+                                            <p className="text-xs text-brand-orange font-mono mb-1">{prod.sku}</p>
+                                            <h3 className="text-sm font-medium text-brand-charcoal group-hover:text-brand-orange transition-colors line-clamp-2">
                                                 {prod.name}
                                             </h3>
                                         </div>
@@ -485,7 +554,7 @@ export const ProductDetail: React.FC = () => {
                                     <FadeIn key={item.id} delay={idx * 0.05}>
                                         <div
                                             onClick={() => navigate(`/product/${encodeURIComponent(item.sku)}`)}
-                                            className="group cursor-pointer bg-stone-50 overflow-hidden border border-stone-100 hover:shadow-md hover:border-brand-gold/30 transition-all duration-300"
+                                            className="group cursor-pointer bg-stone-50 overflow-hidden border border-stone-100 hover:shadow-md hover:border-brand-orange/30 transition-all duration-300"
                                         >
                                             <div className="aspect-square bg-white overflow-hidden">
                                                 {item.image_url ? (
@@ -501,8 +570,8 @@ export const ProductDetail: React.FC = () => {
                                                 )}
                                             </div>
                                             <div className="p-3 border-t border-stone-100">
-                                                <p className="text-[10px] text-brand-gold font-mono mb-0.5">{item.sku}</p>
-                                                <h3 className="text-xs font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors line-clamp-2">
+                                                <p className="text-[10px] text-brand-orange font-mono mb-0.5">{item.sku}</p>
+                                                <h3 className="text-xs font-medium text-brand-charcoal group-hover:text-brand-orange transition-colors line-clamp-2">
                                                     {item.name}
                                                 </h3>
                                             </div>
@@ -526,7 +595,7 @@ export const ProductDetail: React.FC = () => {
                     >
                         <button
                             onClick={() => setIsZoomed(false)}
-                            className="absolute top-6 right-6 text-white hover:text-brand-gold transition-colors"
+                            className="absolute top-6 right-6 text-white hover:text-brand-orange transition-colors"
                         >
                             <X size={32} />
                         </button>

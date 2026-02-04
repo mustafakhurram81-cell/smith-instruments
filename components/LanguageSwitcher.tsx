@@ -121,7 +121,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ isTransparen
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: idx * 0.03 }}
                                     className={`flex items-center justify-between w-full px-3 py-2 text-xs transition-colors ${currentLang === lang.code
-                                        ? 'bg-brand-gold/10 text-brand-gold font-medium'
+                                        ? 'bg-brand-orange/10 text-brand-orange font-medium'
                                         : 'text-stone-600 hover:bg-stone-50 hover:text-stone-800'
                                         }`}
                                 >

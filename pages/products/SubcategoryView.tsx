@@ -49,7 +49,7 @@ export const SubcategoryView: React.FC = () => {
                         <ChevronRight size={12} />
                         <Link to={`/products/${encodeURIComponent(category)}`} className="hover:text-white">{category}</Link>
                         <ChevronRight size={12} />
-                        <span className="text-brand-gold">{subcategory}</span>
+                        <span className="text-brand-orange">{subcategory}</span>
                     </div>
 
                     <h1 className="font-serif text-4xl md:text-6xl mb-4">{subcategory}</h1>
@@ -58,7 +58,7 @@ export const SubcategoryView: React.FC = () => {
                     </p>
                 </div>
                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                    <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-brand-gold blur-[150px] rounded-full"></div>
+                    <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-brand-orange blur-[150px] rounded-full"></div>
                 </div>
             </div>
 
@@ -76,7 +76,7 @@ export const SubcategoryView: React.FC = () => {
                                         placeholder="Search instruments..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-10 pr-10 py-2 rounded-lg border border-stone-200 outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold bg-white"
+                                        className="w-full pl-10 pr-10 py-2 rounded-lg border border-stone-200 outline-none focus:!border-stone-400 focus:!ring-0 bg-white"
                                     />
                                     {searchTerm && (
                                         <button
@@ -95,13 +95,13 @@ export const SubcategoryView: React.FC = () => {
                                     <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => setViewMode('grid')}
-                                            className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-brand-gold text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
+                                            className={`p-2 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-brand-orange text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
                                         >
                                             <Grid size={18} />
                                         </button>
                                         <button
                                             onClick={() => setViewMode('compact')}
-                                            className={`p-2 rounded-lg transition-colors ${viewMode === 'compact' ? 'bg-brand-gold text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
+                                            className={`p-2 rounded-lg transition-colors ${viewMode === 'compact' ? 'bg-brand-orange text-white' : 'bg-white text-stone-500 hover:bg-stone-100'}`}
                                         >
                                             <LayoutGrid size={18} />
                                         </button>

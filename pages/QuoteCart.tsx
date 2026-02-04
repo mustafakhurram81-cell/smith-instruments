@@ -131,7 +131,7 @@ export const QuoteCart: React.FC = () => {
             <SEO title="Request a Quote" description="Submit your list of surgical instruments for a custom price quote." />
             <div className="container mx-auto px-6">
                 <h1 className="text-3xl md:text-4xl font-serif text-brand-charcoal mb-2">Request a Quote</h1>
-                <Link to="/products" className="text-brand-gold hover:underline text-sm mb-8 inline-block flex items-center">
+                <Link to="/products" className="text-brand-orange hover:underline text-sm mb-8 inline-block flex items-center">
                     <ArrowLeft size={14} className="mr-1" /> Continue Browsing
                 </Link>
 
@@ -156,7 +156,7 @@ export const QuoteCart: React.FC = () => {
 
                                         {/* Details */}
                                         <div className="flex-grow">
-                                            <div className="text-xs text-brand-gold font-mono mb-1">{item.sku}</div>
+                                            <div className="text-xs text-brand-orange font-mono mb-1">{item.sku}</div>
                                             <h3 className="font-medium text-brand-charcoal">{item.name}</h3>
                                         </div>
 
@@ -165,7 +165,7 @@ export const QuoteCart: React.FC = () => {
                                             <div className="flex items-center border border-stone-200 rounded-lg bg-white">
                                                 <button
                                                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                                    className="p-2 hover:text-brand-gold"
+                                                    className="p-2 hover:text-brand-orange"
                                                     disabled={item.quantity <= 1}
                                                 >
                                                     <Minus size={14} />
@@ -173,7 +173,7 @@ export const QuoteCart: React.FC = () => {
                                                 <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
                                                 <button
                                                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                    className="p-2 hover:text-brand-gold"
+                                                    className="p-2 hover:text-brand-orange"
                                                 >
                                                     <Plus size={14} />
                                                 </button>
@@ -194,14 +194,14 @@ export const QuoteCart: React.FC = () => {
 
                     {/* Submission Form */}
                     <div className="lg:col-span-1">
-                        <div className="bg-white p-6 rounded-xl shadow-xl border-t-4 border-brand-gold sticky top-24">
+                        <div className="bg-white p-6 rounded-xl shadow-xl border-t-4 border-brand-orange sticky top-24">
                             <h2 className="text-xl font-medium mb-6">Contact Details</h2>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium text-stone-600 mb-1">Full Name *</label>
                                     <input
                                         required
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all"
                                         value={formData.name}
                                         onChange={e => setFormData({ ...formData, name: e.target.value })}
                                     />
@@ -213,7 +213,7 @@ export const QuoteCart: React.FC = () => {
                                         <input
                                             type="email"
                                             required
-                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all"
                                             value={formData.email}
                                             onChange={e => setFormData({ ...formData, email: e.target.value })}
                                         />
@@ -221,7 +221,7 @@ export const QuoteCart: React.FC = () => {
                                     <div>
                                         <label className="block text-sm font-medium text-stone-600 mb-1">Country</label>
                                         <input
-                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all"
                                             value={formData.country}
                                             onChange={e => setFormData({ ...formData, country: e.target.value })}
                                             placeholder="e.g. USA"
@@ -232,7 +232,7 @@ export const QuoteCart: React.FC = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-stone-600 mb-1">Phone (Optional)</label>
                                     <input
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all"
+                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all"
                                         value={formData.phone}
                                         onChange={e => setFormData({ ...formData, phone: e.target.value })}
                                     />
@@ -241,7 +241,7 @@ export const QuoteCart: React.FC = () => {
                                     <label className="block text-sm font-medium text-stone-600 mb-1">Additional Notes</label>
                                     <textarea
                                         rows={3}
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all resize-none"
+                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all resize-none"
                                         value={formData.message}
                                         onChange={e => setFormData({ ...formData, message: e.target.value })}
                                         placeholder="Any specific requirements?"

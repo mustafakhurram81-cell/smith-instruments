@@ -95,7 +95,7 @@ export const VariantsTab: React.FC<VariantsTabProps> = ({ onRefreshStats }) => {
                         value={variantSearchQuery}
                         onChange={e => setVariantSearchQuery(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && fetchVariantGroups(variantSearchQuery, 0)}
-                        className="w-full pl-9 pr-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:border-brand-gold"
+                        className="w-full pl-9 pr-3 py-2 border border-stone-200 rounded-lg text-sm outline-none focus:!border-stone-400"
                     />
                 </div>
                 <Button variant="outline" onClick={() => fetchVariantGroups(variantSearchQuery, 0)}>
@@ -106,7 +106,7 @@ export const VariantsTab: React.FC<VariantsTabProps> = ({ onRefreshStats }) => {
             {/* Variant Groups */}
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                 {variantsLoading ? (
-                    <div className="p-12 text-center"><Loader2 className="animate-spin mx-auto text-brand-gold" size={32} /></div>
+                    <div className="p-12 text-center"><Loader2 className="animate-spin mx-auto text-brand-orange" size={32} /></div>
                 ) : (
                     <div className="divide-y">
                         {variantGroups.length === 0 ? (
@@ -124,8 +124,8 @@ export const VariantsTab: React.FC<VariantsTabProps> = ({ onRefreshStats }) => {
                                             ) : (
                                                 <ChevronRight size={18} className="text-stone-400" />
                                             )}
-                                            <Layers size={18} className="text-brand-gold" />
-                                            <span className="font-mono text-brand-gold">{group.parent_sku}</span>
+                                            <Layers size={18} className="text-brand-orange" />
+                                            <span className="font-mono text-brand-orange">{group.parent_sku}</span>
                                             <span className="text-stone-600">{group.parent_name}</span>
                                         </div>
                                         <span className="px-3 py-1 bg-indigo-50 text-indigo-600 text-sm rounded-full">
@@ -150,7 +150,7 @@ export const VariantsTab: React.FC<VariantsTabProps> = ({ onRefreshStats }) => {
                                                 <tbody>
                                                     {group.variants.map(variant => (
                                                         <tr key={variant.id} className="border-t border-stone-200 hover:bg-white">
-                                                            <td className="p-3 pl-12 font-mono text-brand-gold">{variant.sku}</td>
+                                                            <td className="p-3 pl-12 font-mono text-brand-orange">{variant.sku}</td>
                                                             <td className="p-3 text-stone-600 max-w-[200px] truncate">{variant.description}</td>
                                                             <td className="p-3 text-stone-500">{variant.specifications?.fig || variant.specifications?.figure || '—'}</td>
                                                             <td className="p-3 text-stone-500">{variant.specifications?.length || '—'}</td>

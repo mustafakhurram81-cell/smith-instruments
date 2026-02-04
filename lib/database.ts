@@ -11,6 +11,31 @@ export interface Product {
     image_url: string;
     specifications: any;
     variant_group?: string; // Groups products that are variations of each other
+    catalogue_id?: string; // Links to the catalogue this product appears in
+    // Dual navigation fields
+    instrument_category?: string;
+    instrument_subcategory?: string;
+    specialty_category?: string;
+    specialty_subcategory?: string;
+}
+
+// Catalogue reference type (subset of full Catalogue)
+export interface CatalogueRef {
+    id: string;
+    title: string;
+    pdf_url: string;
+}
+
+// Get catalogue by ID
+export async function getCatalogueById(id: string): Promise<CatalogueRef | null> {
+    const { data, error } = await supabase
+        .from('catalogues')
+        .select('id, title, pdf_url')
+        .eq('id', id)
+        .single();
+
+    if (error) return null;
+    return data;
 }
 
 // Get subcategories for a category with counts and images - with pagination
@@ -65,6 +90,496 @@ export async function getSubcategoryDetails(category: string): Promise<{ name: s
     }));
 
     return details.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// ═══════════════════════════════════════════════════════════
+// INSTRUMENT CATEGORY GROUPINGS
+// Maps subcategories to parent instrument categories for "Browse by Instrument Type"
+// ═══════════════════════════════════════════════════════════
+
+export const INSTRUMENT_CATEGORY_MAP: Record<string, string> = {
+    // Cutting Instruments
+    'Scissors': 'Cutting Instruments',
+    'Scalpels & Handles': 'Cutting Instruments',
+    'Bone Cutting Instruments': 'Cutting Instruments',
+    'Bone Cutting': 'Cutting Instruments',
+
+    // Forceps & Clamps  
+    'Tissue Forceps': 'Forceps & Clamps',
+    'Hemostatic Forceps': 'Forceps & Clamps',
+    'Sponge & Swab Forceps': 'Forceps & Clamps',
+    'Sponge Forceps': 'Forceps & Clamps',
+
+    // Retractors
+    'General Retractors': 'Retractors',
+
+    // Suturing & Wound Care
+    'Needle Holders & Suturing': 'Suturing & Wound Care',
+    'Needle Holders': 'Suturing & Wound Care',
+    'Probes & Sounds': 'Suturing & Wound Care',
+    'Dressing Instruments': 'Suturing & Wound Care',
+    'Dressing': 'Suturing & Wound Care',
+
+    // Access Instruments
+    'Trocars & Cannulas': 'Access Instruments',
+
+    // Specialty Instruments (procedure-specific)
+    'Cardiovascular': 'Specialty Instruments',
+    'Neurosurgery': 'Specialty Instruments',
+    'GI & Abdominal': 'Specialty Instruments',
+    'Gynecology': 'Specialty Instruments',
+    'Obstetrics': 'Specialty Instruments',
+    'Hepatobiliary & Urology': 'Specialty Instruments',
+    'Rhinology (Nose)': 'Specialty Instruments',
+    'Otology (Ear)': 'Specialty Instruments',
+    'Oral & Maxillofacial': 'Specialty Instruments',
+    'Craniofacial': 'Specialty Instruments',
+    'Laryngoscopy & Tonsillectomy': 'Specialty Instruments',
+    'Tracheotomy': 'Specialty Instruments',
+    'Dermatology': 'Specialty Instruments',
+
+    // Accessories & Diagnostics
+    'Holloware & Basins': 'Accessories & Diagnostics',
+    'Calipers & Measuring': 'Accessories & Diagnostics',
+    'Diagnostic Instruments': 'Accessories & Diagnostics',
+    'Anaesthesia': 'Accessories & Diagnostics',
+    'Dissecting Kits': 'Accessories & Diagnostics',
+    'Instrument Sets': 'Accessories & Diagnostics',
+};
+
+// Get parent instrument category for a subcategory
+export function getInstrumentCategoryFor(subcategory: string): string {
+    return INSTRUMENT_CATEGORY_MAP[subcategory] || 'Other Instruments';
+}
+
+// Get instrument categories (parent level) with counts and images
+export async function getInstrumentCategories(): Promise<{ name: string; count: number; image: string; subcategories: string[] }[]> {
+    const PAGE_SIZE = 1000;
+    let allProducts: { subcategory: string; image_url: string }[] = [];
+    let from = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('subcategory, image_url')
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching products for instrument categories:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
+    }
+
+    // Group by instrument category
+    const categoryData: Record<string, { count: number; image: string; subcategories: Set<string> }> = {};
+
+    allProducts.forEach(p => {
+        if (p.subcategory && p.subcategory !== 'General') {
+            const instrumentCategory = getInstrumentCategoryFor(p.subcategory);
+
+            if (!categoryData[instrumentCategory]) {
+                categoryData[instrumentCategory] = { count: 0, image: '', subcategories: new Set() };
+            }
+
+            categoryData[instrumentCategory].count++;
+            categoryData[instrumentCategory].subcategories.add(p.subcategory);
+
+            if (!categoryData[instrumentCategory].image && p.image_url) {
+                categoryData[instrumentCategory].image = p.image_url;
+            }
+        }
+    });
+
+    return Object.entries(categoryData)
+        .map(([name, data]) => ({
+            name,
+            count: data.count,
+            image: data.image,
+            subcategories: Array.from(data.subcategories).sort()
+        }))
+        .sort((a, b) => b.count - a.count);
+}
+
+// Get subcategories within an instrument category
+export async function getInstrumentSubcategories(instrumentCategory: string): Promise<{ name: string; count: number; image: string }[]> {
+    const PAGE_SIZE = 1000;
+    let allProducts: { subcategory: string; image_url: string }[] = [];
+    let from = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('subcategory, image_url')
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching products:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
+    }
+
+    // Filter to subcategories that belong to this instrument category
+    const counts: Record<string, number> = {};
+    const images: Record<string, string> = {};
+
+    allProducts.forEach(p => {
+        if (p.subcategory && p.subcategory !== 'General') {
+            const parentCategory = getInstrumentCategoryFor(p.subcategory);
+            if (parentCategory === instrumentCategory) {
+                counts[p.subcategory] = (counts[p.subcategory] || 0) + 1;
+                if (!images[p.subcategory] && p.image_url) {
+                    images[p.subcategory] = p.image_url;
+                }
+            }
+        }
+    });
+
+    return Object.entries(counts)
+        .map(([name, count]) => ({
+            name,
+            count,
+            image: images[name] || ''
+        }))
+        .sort((a, b) => b.count - a.count);
+}
+
+// Get all instrument types (subcategories) across all categories with counts
+export async function getInstrumentTypes(): Promise<{ name: string; count: number; image: string }[]> {
+    const PAGE_SIZE = 1000;
+    let allProducts: { subcategory: string; image_url: string }[] = [];
+    let from = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('subcategory, image_url')
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching instrument types:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
+    }
+
+    // Aggregate by subcategory
+    const counts: Record<string, number> = {};
+    const images: Record<string, string> = {};
+
+    allProducts.forEach(p => {
+        if (p.subcategory && p.subcategory !== 'General') {
+            counts[p.subcategory] = (counts[p.subcategory] || 0) + 1;
+            if (!images[p.subcategory] && p.image_url) {
+                images[p.subcategory] = p.image_url;
+            }
+        }
+    });
+
+    return Object.entries(counts)
+        .map(([name, count]) => ({
+            name,
+            count,
+            image: images[name] || ''
+        }))
+        .sort((a, b) => b.count - a.count); // Sort by count descending
+}
+
+// ═══════════════════════════════════════════════════════════
+// DUAL NAVIGATION QUERIES (using new columns)
+// ═══════════════════════════════════════════════════════════
+
+// Get specialty categories with counts and images
+export async function getSpecialtyCategories(): Promise<{ name: string; count: number; image: string }[]> {
+    const PAGE_SIZE = 1000;
+    let allProducts: { specialty_category: string; image_url: string }[] = [];
+    let from = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('specialty_category, image_url')
+            .not('specialty_category', 'is', null)
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching specialty categories:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
+    }
+
+    const counts: Record<string, number> = {};
+    const images: Record<string, string> = {};
+
+    allProducts.forEach(p => {
+        if (p.specialty_category) {
+            counts[p.specialty_category] = (counts[p.specialty_category] || 0) + 1;
+            if (!images[p.specialty_category] && p.image_url) {
+                images[p.specialty_category] = p.image_url;
+            }
+        }
+    });
+
+    return Object.entries(counts)
+        .map(([name, count]) => ({
+            name,
+            count,
+            image: images[name] || ''
+        }))
+        .sort((a, b) => b.count - a.count);
+}
+
+// Get specialty subcategories for a category
+export async function getSpecialtySubcategories(category: string): Promise<{ name: string; count: number; image: string }[]> {
+    const PAGE_SIZE = 1000;
+    let allProducts: { specialty_subcategory: string; image_url: string }[] = [];
+    let from = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('specialty_subcategory, image_url')
+            .eq('specialty_category', category)
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching specialty subcategories:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
+    }
+
+    const counts: Record<string, number> = {};
+    const images: Record<string, string> = {};
+
+    allProducts.forEach(p => {
+        if (p.specialty_subcategory) {
+            counts[p.specialty_subcategory] = (counts[p.specialty_subcategory] || 0) + 1;
+            if (!images[p.specialty_subcategory] && p.image_url) {
+                images[p.specialty_subcategory] = p.image_url;
+            }
+        }
+    });
+
+    return Object.entries(counts)
+        .map(([name, count]) => ({
+            name,
+            count,
+            image: images[name] || ''
+        }))
+        .sort((a, b) => b.count - a.count);
+}
+
+// Get products by specialty category and subcategory
+export async function getProductsBySpecialty(category: string, subcategory?: string): Promise<Product[]> {
+    const PAGE_SIZE = 1000;
+    let allProducts: Product[] = [];
+    let from = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+        let query = supabase
+            .from('products')
+            .select('*')
+            .eq('specialty_category', category);
+
+        if (subcategory) {
+            query = query.eq('specialty_subcategory', subcategory);
+        }
+
+        const { data, error } = await query.range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching products by specialty:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
+    }
+
+    return allProducts;
+}
+
+// Get instrument categories with counts and images (from new column)
+export async function getInstrumentCategoriesNew(): Promise<{ name: string; count: number; image: string }[]> {
+    const PAGE_SIZE = 1000;
+    let allProducts: { instrument_category: string; image_url: string }[] = [];
+    let from = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('instrument_category, image_url')
+            .not('instrument_category', 'is', null)
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching instrument categories:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
+    }
+
+    const counts: Record<string, number> = {};
+    const images: Record<string, string> = {};
+
+    allProducts.forEach(p => {
+        if (p.instrument_category) {
+            counts[p.instrument_category] = (counts[p.instrument_category] || 0) + 1;
+            if (!images[p.instrument_category] && p.image_url) {
+                images[p.instrument_category] = p.image_url;
+            }
+        }
+    });
+
+    return Object.entries(counts)
+        .map(([name, count]) => ({
+            name,
+            count,
+            image: images[name] || ''
+        }))
+        .sort((a, b) => b.count - a.count);
+}
+
+// Get instrument subcategories for a category (from new column)
+export async function getInstrumentSubcategoriesNew(category: string): Promise<{ name: string; count: number; image: string }[]> {
+    const PAGE_SIZE = 1000;
+    let allProducts: { instrument_subcategory: string; image_url: string }[] = [];
+    let from = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+        const { data, error } = await supabase
+            .from('products')
+            .select('instrument_subcategory, image_url')
+            .eq('instrument_category', category)
+            .range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching instrument subcategories:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
+    }
+
+    const counts: Record<string, number> = {};
+    const images: Record<string, string> = {};
+
+    allProducts.forEach(p => {
+        if (p.instrument_subcategory) {
+            counts[p.instrument_subcategory] = (counts[p.instrument_subcategory] || 0) + 1;
+            if (!images[p.instrument_subcategory] && p.image_url) {
+                images[p.instrument_subcategory] = p.image_url;
+            }
+        }
+    });
+
+    return Object.entries(counts)
+        .map(([name, count]) => ({
+            name,
+            count,
+            image: images[name] || ''
+        }))
+        .sort((a, b) => b.count - a.count);
+}
+
+// Get products by instrument category and subcategory
+export async function getProductsByInstrument(category: string, subcategory?: string): Promise<Product[]> {
+    const PAGE_SIZE = 1000;
+    let allProducts: Product[] = [];
+    let from = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+        let query = supabase
+            .from('products')
+            .select('*')
+            .eq('instrument_category', category);
+
+        if (subcategory) {
+            query = query.eq('instrument_subcategory', subcategory);
+        }
+
+        const { data, error } = await query.range(from, from + PAGE_SIZE - 1);
+
+        if (error) {
+            console.error('Error fetching products by instrument:', error);
+            break;
+        }
+
+        if (data && data.length > 0) {
+            allProducts = [...allProducts, ...data];
+            from += PAGE_SIZE;
+            hasMore = data.length === PAGE_SIZE;
+        } else {
+            hasMore = false;
+        }
+    }
+
+    return allProducts;
 }
 
 // Get products by category - with pagination to get ALL

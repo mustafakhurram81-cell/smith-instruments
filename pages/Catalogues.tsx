@@ -30,7 +30,7 @@ export const Catalogues: React.FC = () => {
       <SEO
         title="Surgical Instrument Catalogues"
         description="Browse our comprehensive digital library of surgical instruments including General Surgery, Dental, Cardiovascular, and more."
-        keywords="surgical catalogues, medical instruments, dental tools, cardiovascular instruments, neurosurgery tools"
+        keywords="surgical instrument catalogs PDF, medical equipment brochures, download surgical tool catalog, plastic surgery instruments catalog, dental instruments catalog, orthopedic instruments brochure, cardiovascular surgical tools PDF"
       />
       {/* Header */}
       <ParallaxHeader
@@ -48,7 +48,7 @@ export const Catalogues: React.FC = () => {
           <input
             type="text"
             placeholder="Search catalogues..."
-            className="flex-grow bg-transparent border-none outline-none text-brand-charcoal placeholder-stone-400 h-10"
+            className="flex-grow bg-transparent border-none !outline-none !ring-0 !shadow-none text-brand-charcoal placeholder-stone-400 h-10"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -65,7 +65,7 @@ export const Catalogues: React.FC = () => {
         <div className="container mx-auto px-6">
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-10 h-10 text-brand-gold animate-spin" />
+              <Loader2 className="w-10 h-10 text-brand-orange animate-spin" />
             </div>
           ) : filteredCatalogues.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
@@ -96,7 +96,7 @@ export const Catalogues: React.FC = () => {
                               e.stopPropagation();
                               setSelectedCatalogue(cat);
                             }}
-                            className="w-12 h-12 bg-brand-gold text-brand-charcoal rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+                            className="w-12 h-12 bg-brand-orange text-brand-charcoal rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
                             title="View Catalogue"
                           >
                             <Eye size={20} />
@@ -131,7 +131,7 @@ export const Catalogues: React.FC = () => {
 
                     {/* Title Below */}
                     <div className="text-center mt-6">
-                      <h3 className="font-serif text-lg text-brand-charcoal group-hover:text-brand-gold transition-colors">
+                      <h3 className="font-serif text-lg text-brand-charcoal group-hover:text-brand-orange transition-colors">
                         {cat.title}
                       </h3>
                       <p className="text-xs text-stone-400 mt-1">{cat.size}</p>
@@ -149,7 +149,7 @@ export const Catalogues: React.FC = () => {
               <p className="text-stone-500">Try adjusting your search terms.</p>
               <button
                 onClick={() => setSearchQuery('')}
-                className="mt-6 text-brand-gold hover:underline font-medium"
+                className="mt-6 text-brand-orange hover:underline font-medium"
               >
                 Clear search
               </button>
@@ -159,7 +159,7 @@ export const Catalogues: React.FC = () => {
       </Section>
 
       {/* Custom Solution CTA */}
-      <section className="py-24 bg-brand-gold/5 bg-noise">
+      <section className="py-24 bg-stone-50 bg-noise border-t border-stone-200">
         <div className="container mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl md:text-4xl mb-6 text-brand-charcoal">Can't find what you need?</h2>
           <p className="mb-10 text-stone-500 font-light text-lg">We offer OEM manufacturing and custom instrument modification.</p>
@@ -174,7 +174,7 @@ export const Catalogues: React.FC = () => {
         {selectedCatalogue && (
           <Suspense fallback={
             <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
-              <Loader2 className="w-12 h-12 text-brand-gold animate-spin" />
+              <Loader2 className="w-12 h-12 text-brand-orange animate-spin" />
             </div>
           }>
             <FlipBookViewer catalogue={selectedCatalogue} onClose={() => setSelectedCatalogue(null)} />

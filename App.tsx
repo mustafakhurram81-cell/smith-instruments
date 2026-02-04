@@ -19,7 +19,11 @@ const ProductsIndex = lazy(() => import('./pages/products/ProductsIndex').then(m
 const CategoryView = lazy(() => import('./pages/products/CategoryView').then(module => ({ default: module.CategoryView })));
 const SubcategoryView = lazy(() => import('./pages/products/SubcategoryView').then(module => ({ default: module.SubcategoryView })));
 const ProductDetail = lazy(() => import('./pages/products/ProductDetail').then(module => ({ default: module.ProductDetail })));
+const InstrumentTypeView = lazy(() => import('./pages/products/InstrumentTypeView').then(module => ({ default: module.InstrumentTypeView })));
+const InstrumentCategoryView = lazy(() => import('./pages/products/InstrumentCategoryView').then(module => ({ default: module.InstrumentCategoryView })));
+const SpecialtyCategoryView = lazy(() => import('./pages/products/SpecialtyCategoryView').then(module => ({ default: module.SpecialtyCategoryView })));
 const QuoteCart = lazy(() => import('./pages/QuoteCart').then(module => ({ default: module.QuoteCart })));
+const NotFound = lazy(() => import('./pages/NotFound').then(module => ({ default: module.NotFound })));
 
 // Admin Pages
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout').then(module => ({ default: module.AdminLayout })));
@@ -42,7 +46,7 @@ const ScrollToTop = () => {
 
 const PageLoader = () => (
   <div className="min-h-[60vh] flex items-center justify-center">
-    <Loader2 className="w-10 h-10 text-brand-gold animate-spin" />
+    <Loader2 className="w-10 h-10 text-brand-orange animate-spin" />
   </div>
 );
 
@@ -51,7 +55,7 @@ const AppContent: React.FC = () => {
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
-    <div className="flex flex-col min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-brand-gold/30">
+    <div className="flex flex-col min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-brand-orange/30">
       {!isAdminRoute && <Header />}
       <main className="flex-grow">
         <Suspense fallback={<PageLoader />}>
@@ -67,6 +71,14 @@ const AppContent: React.FC = () => {
 
             {/* Product Routes */}
             <Route path="/products" element={<ProductsIndex />} />
+            {/* Instrument Type Navigation */}
+            <Route path="/products/instruments/:categoryName" element={<InstrumentCategoryView />} />
+            <Route path="/products/instruments/:categoryName/:subcategoryName" element={<InstrumentCategoryView />} />
+            {/* Specialty Navigation */}
+            <Route path="/products/specialty/:categoryName" element={<SpecialtyCategoryView />} />
+            <Route path="/products/specialty/:categoryName/:subcategoryName" element={<SpecialtyCategoryView />} />
+            {/* Legacy routes for backwards compatibility */}
+            <Route path="/products/browse" element={<InstrumentTypeView />} />
             <Route path="/products/:categoryName" element={<CategoryView />} />
             <Route path="/products/:categoryName/:subcategoryName" element={<SubcategoryView />} />
             <Route path="/products/:categoryName/:subcategoryName/:productSKU" element={<ProductDetail />} />
@@ -80,7 +92,11 @@ const AppContent: React.FC = () => {
                 <Route index element={<Dashboard />} />
               </Route>
             </Route>
+
+            {/* 404 Catch-all Route - must be last */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
+
         </Suspense>
       </main>
       {!isAdminRoute && <Footer />}

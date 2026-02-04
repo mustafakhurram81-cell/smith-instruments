@@ -15,7 +15,7 @@ export const PrivacyPolicy: React.FC = () => {
             <div className="bg-brand-charcoal text-white py-16 md:py-24">
                 <div className="container mx-auto px-6 text-center">
                     <FadeIn>
-                        <Shield className="w-16 h-16 text-brand-gold mx-auto mb-6" />
+                        <Shield className="w-16 h-16 text-brand-orange mx-auto mb-6" />
                         <h1 className="font-serif text-4xl md:text-6xl mb-4">Privacy Policy</h1>
                         <p className="text-stone-400 font-light">Last updated: December 2024</p>
                     </FadeIn>
@@ -30,7 +30,7 @@ export const PrivacyPolicy: React.FC = () => {
                                 {/* Introduction */}
                                 <div>
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
-                                        <Eye className="text-brand-gold" size={24} />
+                                        <Eye className="text-brand-orange" size={24} />
                                         Introduction
                                     </h2>
                                     <p className="text-stone-600 leading-relaxed">
@@ -41,7 +41,7 @@ export const PrivacyPolicy: React.FC = () => {
                                 {/* Information We Collect */}
                                 <div>
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
-                                        <Database className="text-brand-gold" size={24} />
+                                        <Database className="text-brand-orange" size={24} />
                                         Information We Collect
                                     </h2>
                                     <div className="space-y-4 text-stone-600">
@@ -65,7 +65,7 @@ export const PrivacyPolicy: React.FC = () => {
                                 {/* How We Use Your Information */}
                                 <div>
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
-                                        <Lock className="text-brand-gold" size={24} />
+                                        <Lock className="text-brand-orange" size={24} />
                                         How We Use Your Information
                                     </h2>
                                     <ul className="list-disc list-inside space-y-2 ml-4 text-stone-600">
@@ -116,7 +116,7 @@ export const PrivacyPolicy: React.FC = () => {
                                 {/* Contact */}
                                 <div className="bg-stone-50 p-8 rounded-lg border border-stone-200">
                                     <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
-                                        <Mail className="text-brand-gold" size={24} />
+                                        <Mail className="text-brand-orange" size={24} />
                                         Contact Us
                                     </h2>
                                     <p className="text-stone-600">

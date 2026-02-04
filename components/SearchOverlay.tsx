@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search as SearchIcon, Loader2, ArrowRight, X } from 'lucide-react';
+import { Search as SearchIcon, Loader2, ArrowRight, X, TrendingUp, Scissors, Stethoscope } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { searchProducts } from '../lib/database';
 import type { Product } from '../types';
@@ -88,7 +88,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                         <div className="max-h-[60vh] overflow-y-auto p-4">
                             {loading ? (
                                 <div className="flex justify-center py-8">
-                                    <Loader2 className="animate-spin text-brand-gold" />
+                                    <Loader2 className="animate-spin text-brand-orange" />
                                 </div>
                             ) : results.length > 0 ? (
                                 <div className="grid gap-2">
@@ -96,7 +96,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                                         <div
                                             key={prod.id}
                                             onClick={() => handleSelect(prod.sku)}
-                                            className="flex items-center gap-4 p-3 hover:bg-stone-50 rounded-lg cursor-pointer transition-colors group"
+                                            className="flex items-center gap-4 p-3 hover:bg-stone-50 border-b border-stone-50 last:border-0 cursor-pointer transition-colors group"
                                         >
                                             <div className="w-12 h-12 bg-stone-200 rounded-md overflow-hidden flex-shrink-0 border border-stone-200">
                                                 {prod.image_url ? (
@@ -106,10 +106,10 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                                                 )}
                                             </div>
                                             <div>
-                                                <h4 className="font-medium text-brand-charcoal group-hover:text-brand-gold transition-colors">{prod.name}</h4>
+                                                <h4 className="font-medium text-brand-charcoal group-hover:text-brand-orange transition-colors">{prod.name}</h4>
                                                 <p className="text-xs text-stone-500 font-mono">{prod.sku}</p>
                                             </div>
-                                            <ArrowRight className="ml-auto text-stone-300 group-hover:text-brand-gold opacity-0 group-hover:opacity-100 transition-all" size={16} />
+                                            <ArrowRight className="ml-auto text-gray-300 group-hover:text-brand-orange opacity-0 group-hover:opacity-100 transition-all" size={16} />
                                         </div>
                                     ))}
                                 </div>
@@ -118,8 +118,24 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                                     No products found for "{query}"
                                 </div>
                             ) : (
-                                <div className="text-center py-12 text-stone-300">
-                                    Type to search our catalog...
+                                <div className="p-4">
+                                    <div className="flex items-center gap-2 mb-4 text-xs font-bold text-stone-400 uppercase tracking-wider">
+                                        <TrendingUp size={14} className="text-brand-orange" /> Quick Links
+                                    </div>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        <button onClick={() => { setQuery("Scissors"); inputRef.current?.focus(); }} className="flex items-center gap-2 p-3 bg-stone-50 hover:bg-white hover:shadow-md border border-stone-100 rounded-lg transition-all text-left group">
+                                            <Scissors size={18} className="text-stone-400 group-hover:text-brand-orange" />
+                                            <span className="text-sm font-medium text-brand-charcoal">Scissors</span>
+                                        </button>
+                                        <button onClick={() => { setQuery("Forceps"); inputRef.current?.focus(); }} className="flex items-center gap-2 p-3 bg-stone-50 hover:bg-white hover:shadow-md border border-stone-100 rounded-lg transition-all text-left group">
+                                            <Stethoscope size={18} className="text-stone-400 group-hover:text-brand-orange" />
+                                            <span className="text-sm font-medium text-brand-charcoal">Forceps</span>
+                                        </button>
+                                        <button onClick={() => { setQuery("Retractor"); inputRef.current?.focus(); }} className="flex items-center gap-2 p-3 bg-stone-50 hover:bg-white hover:shadow-md border border-stone-100 rounded-lg transition-all text-left group">
+                                            <SearchIcon size={18} className="text-stone-400 group-hover:text-brand-orange" />
+                                            <span className="text-sm font-medium text-brand-charcoal">Retractors</span>
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>
