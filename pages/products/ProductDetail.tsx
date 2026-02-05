@@ -222,7 +222,7 @@ export const ProductDetail: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {/* Image with Hover Zoom */}
                         <div
-                            className="bg-stone-50 border border-stone-100 overflow-hidden aspect-square flex items-center justify-center relative cursor-zoom-in group"
+                            className="bg-white border border-stone-100 overflow-hidden aspect-square flex items-center justify-center relative cursor-zoom-in group"
                             onClick={() => product.image_url && setIsZoomed(true)}
                             onMouseMove={(e) => {
                                 if (!product.image_url) return;
