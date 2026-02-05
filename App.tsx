@@ -6,6 +6,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { CartProvider } from './components/CartProvider';
 import { ToastProvider } from './components/ToastProvider';
 import { Loader2 } from 'lucide-react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Lazy load pages
 const Home = lazy(() => import('./pages/Home').then(module => ({ default: module.Home })));
@@ -113,6 +114,7 @@ function App() {
           <Router>
             <ScrollToTop />
             <AppContent />
+            <SpeedInsights />
           </Router>
         </ToastProvider>
       </CartProvider>
