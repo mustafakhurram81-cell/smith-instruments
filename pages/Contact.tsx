@@ -116,6 +116,14 @@ export const Contact: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formStatus === 'sending') return;
+
+    // Check if reCAPTCHA is configured
+    if (!RECAPTCHA_SITE_KEY) {
+      setErrorMessage("Form submission is temporarily unavailable. Please contact us via WhatsApp or email.");
+      setFormStatus('error');
+      return;
+    }
+
     if (recaptchaRef.current) {
       recaptchaRef.current.execute();
     } else {
@@ -342,12 +350,14 @@ export const Contact: React.FC = () => {
                     </div>
 
                     {/* Invisible reCAPTCHA - validates on form submit */}
-                    <ReCAPTCHA
-                      ref={recaptchaRef}
-                      sitekey={RECAPTCHA_SITE_KEY}
-                      onChange={handleCaptchaChange}
-                      size="invisible"
-                    />
+                    {RECAPTCHA_SITE_KEY && (
+                      <ReCAPTCHA
+                        ref={recaptchaRef}
+                        sitekey={RECAPTCHA_SITE_KEY}
+                        onChange={handleCaptchaChange}
+                        size="invisible"
+                      />
+                    )}
 
                     {/* Hide the floating badge via CSS since we are displaying the legal text manually */}
                     <style>{`
