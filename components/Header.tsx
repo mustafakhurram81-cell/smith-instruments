@@ -7,7 +7,7 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { useCart } from './CartProvider';
 import { useCategoryNames } from '../lib/queries';
 import { SearchOverlay } from './SearchOverlay';
-import logoTransparent from '../assets/Gemini_Generated_Image_zhuph7zhuph7zhup-removebg-preview.png';
+import logoTransparent from '../assets/smith instruments logo.png';
 
 export const Header: React.FC = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -82,8 +82,8 @@ export const Header: React.FC = () => {
                             {/* Animated Dropdown - Belkins Style */}
                             <div
                                 className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 ease-out ${isProductsOpen
-                                        ? 'opacity-100 translate-y-0 pointer-events-auto'
-                                        : 'opacity-0 -translate-y-2 pointer-events-none'
+                                    ? 'opacity-100 translate-y-0 pointer-events-auto'
+                                    : 'opacity-0 -translate-y-2 pointer-events-none'
                                     }`}
                             >
                                 <div className="w-56 bg-white border border-stone-200 rounded-md shadow-lg py-2 text-brand-charcoal">
