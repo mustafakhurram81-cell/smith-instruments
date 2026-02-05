@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Facebook, Instagram, Mail, Phone, MapPin, ArrowRight, CreditCard, Lock } from 'lucide-react';
-import logoTransparent from '../assets/Gemini_Generated_Image_zhuph7zhuph7zhup-removebg-preview.png';
+import logoTransparent from '../assets/smith instruments logo.png';
 import { SOCIAL_LINKS, CONTACT_INFO } from '../constants';
 
 export const Footer: React.FC = () => {
