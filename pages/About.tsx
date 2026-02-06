@@ -164,9 +164,9 @@ export const About: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
             {[
-              { name: "John Smith", role: "Master Craftsman", img: "https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=400", quote: "Precision isn't a metric. It's a feeling." },
-              { name: "Sarah Chen", role: "Head of Quality", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400", quote: "Every instrument passes through my hands first." },
-              { name: "David Miller", role: "Production Director", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400", quote: "We combine tradition with technology." }
+              { name: "Khurram Munir", role: "Production Director", img: "https://ui-avatars.com/api/?name=Khurram+Munir&size=400&background=f97316&color=ffffff&bold=true", quote: "Quality is never an accident; it's the result of intelligent effort." },
+              { name: "Usama Munir", role: "Customer Relations & Finance", img: "https://ui-avatars.com/api/?name=Usama+Munir&size=400&background=1c1917&color=ffffff&bold=true", quote: "Building lasting partnerships, one conversation at a time." },
+              { name: "Mustafa Khurram", role: "Head of Marketing", img: "https://ui-avatars.com/api/?name=Mustafa+Khurram&size=400&background=57534e&color=ffffff&bold=true", quote: "Sharing our story of precision with the world." }
             ].map((member, i) => (
               <FadeIn key={i} delay={i * 0.1}>
                 <div className="text-center group">

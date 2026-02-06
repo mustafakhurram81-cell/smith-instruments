@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Section, Button, FadeIn, AnimatedCounter } from '../components/Shared';
-import { LogoCloud } from '../components/LogoCloud';
+
 import { SEO } from '../components/SEO';
-import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, ChevronLeft, ChevronRight, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope } from 'lucide-react';
+import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope } from 'lucide-react';
 import { ProductCard } from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
 import heroMethods from '../assets/hero-minimal.png';
@@ -26,32 +26,47 @@ const TESTIMONIALS = [
 export const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  // Carousel Logic
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const infiniteProducts = [...PRODUCTS, ...PRODUCTS, ...PRODUCTS];
+  // Professional Infinite Carousel Logic
+  const [isPaused, setIsPaused] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const animationStartTime = useRef(Date.now());
+  const pausedTime = useRef(0);
 
-  const [isMobile, setIsMobile] = useState(false);
+  // Duplicate products for seamless loop (we need 2 copies for the infinite effect)
+  const duplicatedProducts = [...PRODUCTS, ...PRODUCTS];
 
+  // Animation duration: 30s total, divided by number of products = time per slide
+  const ANIMATION_DURATION = 30000; // 30 seconds
+  const TIME_PER_SLIDE = ANIMATION_DURATION / PRODUCTS.length;
+
+  // Lightweight time-based slide tracking (optimized for Chrome)
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+    const updateActiveSlide = () => {
+      if (!isPaused) {
+        const elapsed = Date.now() - animationStartTime.current - pausedTime.current;
+        const currentSlide = Math.floor((elapsed % ANIMATION_DURATION) / TIME_PER_SLIDE) % PRODUCTS.length;
+        setActiveSlide(currentSlide);
+      }
+    };
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      nextSlide();
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [currentSlide]);
+    // Update every 500ms instead of every frame for better performance
+    const intervalId = setInterval(updateActiveSlide, 500);
+    return () => clearInterval(intervalId);
+  }, [isPaused]);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % PRODUCTS.length);
+  // Track paused duration for accurate slide position
+  const pauseStartTime = useRef(0);
+
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+    pauseStartTime.current = Date.now();
   };
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + PRODUCTS.length) % PRODUCTS.length);
+  const handleMouseLeave = () => {
+    if (pauseStartTime.current > 0) {
+      pausedTime.current += Date.now() - pauseStartTime.current;
+    }
+    setIsPaused(false);
   };
 
   return (
@@ -107,8 +122,7 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* TRUSTED BY LOGOS */}
-      <LogoCloud />
+
 
       {/* IMPACT COUNTERS - GRID STYLE */}
       <section className="bg-white border-y border-stone-200">
@@ -177,55 +191,85 @@ export const Home: React.FC = () => {
         </div>
       </Section>
 
-      {/* PRODUCTS CAROUSEL */}
+      {/* PRODUCTS CAROUSEL - Professional Infinite Loop */}
       <Section className="bg-white overflow-hidden relative border-b border-stone-200">
         <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Our Products</h2>
+            <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Our Specialties</span>
+            <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Explore Our Products</h2>
             <p className="text-stone-500 font-light text-lg">A comprehensive range of instruments for every surgical specialty.</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <button onClick={prevSlide} className="w-10 h-10 rounded-md border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:border-brand-charcoal hover:text-white transition-colors">
-              <ChevronLeft size={20} />
-            </button>
-            <button onClick={nextSlide} className="w-10 h-10 rounded-md border border-stone-300 flex items-center justify-center hover:bg-brand-charcoal hover:border-brand-charcoal hover:text-white transition-colors">
-              <ChevronRight size={20} />
-            </button>
           </div>
         </div>
 
-        <div className="container mx-auto px-6 overflow-hidden">
+        {/* Infinite Carousel Container */}
+        <div
+          className="relative w-full overflow-hidden"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {/* Gradient fade masks for professional look */}
+          <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+          {/* Scrolling track */}
           <div
-            className="flex gap-6 transition-transform duration-700 ease-in-out"
+            className="flex gap-6 py-4"
             style={{
-              transform: `translateX(calc(-${currentSlide} * ${isMobile ? '(100% + 24px)' : '(350px + 24px)'}))`
+              animation: `scroll 30s linear infinite`,
+              animationPlayState: isPaused ? 'paused' : 'running',
+              width: 'max-content'
             }}
           >
-            {infiniteProducts.map((product, idx) => (
+            {duplicatedProducts.map((product, idx) => (
               <div
                 key={`${product.id}-${idx}`}
-                className="min-w-[100%] md:min-w-[350px] shrink-0 group cursor-pointer"
+                className="w-[280px] md:w-[350px] shrink-0 group cursor-pointer"
                 onClick={() => navigate('/products')}
               >
-                <div className="bg-white rounded-lg border border-stone-200 p-8 h-[320px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-
+                <div className="bg-white rounded-lg border border-stone-200 p-8 h-[320px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-brand-orange/30">
                   <div>
-                    <div className="w-14 h-14 rounded-lg bg-stone-100 flex items-center justify-center mb-6">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-brand-orange/10 to-brand-orange/5 flex items-center justify-center mb-6 group-hover:from-brand-orange/20 group-hover:to-brand-orange/10 transition-all duration-300">
                       <product.icon size={28} className="text-brand-orange" strokeWidth={1.5} />
                     </div>
-                    <h3 className="font-serif text-2xl text-brand-charcoal mb-2">{product.name}</h3>
+                    <h3 className="font-serif text-2xl text-brand-charcoal mb-2 group-hover:text-brand-orange transition-colors duration-300">{product.name}</h3>
                     <p className="text-stone-500 text-sm leading-relaxed">{product.desc}</p>
                   </div>
 
                   <div className="flex items-center text-sm font-medium text-stone-500 mt-6 group-hover:text-brand-orange transition-colors">
                     <span className="mr-2">Explore</span>
-                    <ArrowRight size={14} />
+                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Dot Indicators */}
+        <div className="flex justify-center items-center gap-2 mt-8">
+          {PRODUCTS.map((_, idx) => (
+            <button
+              key={idx}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${activeSlide === idx
+                ? 'bg-brand-orange w-6'
+                : 'bg-stone-300 hover:bg-stone-400'
+                }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* CSS Keyframes for infinite scroll animation */}
+        <style>{`
+          @keyframes scroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
+          }
+        `}</style>
       </Section>
 
       {/* ABOUT SECTION */}
