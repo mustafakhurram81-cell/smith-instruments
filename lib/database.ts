@@ -38,6 +38,76 @@ export async function getCatalogueById(id: string): Promise<CatalogueRef | null>
     return data;
 }
 
+// Get catalogue by title (case-insensitive)
+export async function getCatalogueByTitle(title: string): Promise<CatalogueRef | null> {
+    const { data, error } = await supabase
+        .from('catalogues')
+        .select('id, title, pdf_url')
+        .ilike('title', title)
+        .eq('is_active', true)
+        .single();
+
+    if (error) return null;
+    return data;
+}
+
+// Mapping from product subcategory → catalogue title
+// Used to auto-match products to their catalogue without needing catalogue_id on every row
+const SUBCATEGORY_TO_CATALOGUE: Record<string, string> = {
+    // General Surgery
+    'Scissors': 'Scissors',
+    'Scalpels & Handles': 'Scalpels',
+    'Tissue Forceps': 'Dissecting & Tissue Forceps',
+    'Hemostatic Forceps': 'Artery Forceps',
+    'Sponge Forceps': 'Cotton Swab Forceps',
+    'Sponge & Swab Forceps': 'Cotton Swab Forceps',
+    'General Retractors': 'Retractors',
+    'Needle Holders': 'Suture',
+    'Needle Holders & Suturing': 'Suture',
+    'Probes & Sounds': 'Probes',
+    'Trocars & Cannulas': 'Trocars, Suction Tubes & Cannulas',
+    'Dressing': 'Dressing',
+    'Dressing Instruments': 'Dressing',
+
+    // Specialty
+    'Cardiovascular': 'Cardiovascular Surgery',
+    'Neurosurgery': 'Neurosurgery & Laminectomy',
+    'GI & Abdominal': 'Stomach, Intestines & Rectum',
+    'Gynecology': 'Gynecology',
+    'Obstetrics': 'Obstetrics',
+    'Hepatobiliary & Urology': 'Liver, Gall Bladder, Kidney & Urology',
+    'Dermatology': 'Dermatology',
+    'Rhinology (Nose)': 'Rhinology',
+    'Otology (Ear)': 'Otology',
+    'Oral & Maxillofacial': 'Oral Maxillo-Facial Surgery',
+    'Craniofacial': 'Cranio-Maxillo-Facial Surgery',
+    'Laryngoscopy & Tonsillectomy': 'Tonsillectomy & Laryngo-Bronchoscopy',
+    'Tracheotomy': 'Tracheotomy',
+    'Anaesthesia': 'Anaesthesia',
+
+    // Orthopedics
+    'Bone Cutting': 'Bone Surgery',
+    'Bone Cutting Instruments': 'Bone Surgery',
+
+    // Accessories
+    'Holloware & Basins': 'Holloware',
+    'Diagnostic Instruments': 'Diagnostics',
+    'Calipers & Measuring': 'Calipers',
+    'Dissecting Kits': 'Dissecting Kits',
+};
+
+// Find the matching catalogue for a product based on its subcategory/category
+export async function getCatalogueForProduct(product: Product): Promise<CatalogueRef | null> {
+    // First, try matching by subcategory
+    const catalogueTitle = SUBCATEGORY_TO_CATALOGUE[product.subcategory];
+    if (catalogueTitle) {
+        return getCatalogueByTitle(catalogueTitle);
+    }
+
+    // Fallback: try matching the category name directly as a catalogue title
+    return getCatalogueByTitle(product.category);
+}
+
 // Get subcategories for a category with counts and images - with pagination
 export async function getSubcategoryDetails(category: string): Promise<{ name: string; count: number; image: string }[]> {
     // Paginate to get ALL products for this category

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Section, Button, FadeIn } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
-import { getProductBySku, getProductsBySubcategory, getProductVariants, getCatalogueById, Product, CatalogueRef } from '../../lib/database';
+import { getProductBySku, getProductsBySubcategory, getProductVariants, getCatalogueForProduct, Product, CatalogueRef } from '../../lib/database';
 import { ChevronRight, Package, Loader2, Mail, ArrowRight, X, ChevronDown, Minus, Plus, Clock, BookOpen, FileText, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../components/CartProvider';
@@ -52,13 +52,9 @@ export const ProductDetail: React.FC = () => {
                 const variantSkus = new Set(variantProducts.map(v => v.sku));
                 setRelatedProducts(related.filter(p => !variantSkus.has(p.sku)).slice(0, 4));
 
-                // Fetch catalogue if product has catalogue_id
-                if (prod.catalogue_id) {
-                    const cat = await getCatalogueById(prod.catalogue_id);
-                    setCatalogue(cat);
-                } else {
-                    setCatalogue(null);
-                }
+                // Match product to its catalogue via subcategory/category mapping
+                const cat = await getCatalogueForProduct(prod);
+                setCatalogue(cat);
             }
 
             setLoading(false);
