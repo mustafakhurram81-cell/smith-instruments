@@ -51,61 +51,51 @@ export async function getCatalogueByTitle(title: string): Promise<CatalogueRef |
     return data;
 }
 
-// Mapping from product subcategory → catalogue title
-// Used to auto-match products to their catalogue without needing catalogue_id on every row
-const SUBCATEGORY_TO_CATALOGUE: Record<string, string> = {
-    // General Surgery
-    'Scissors': 'Scissors',
-    'Scalpels & Handles': 'Scalpels',
-    'Tissue Forceps': 'Dissecting & Tissue Forceps',
-    'Hemostatic Forceps': 'Artery Forceps',
-    'Sponge Forceps': 'Cotton Swab Forceps',
-    'Sponge & Swab Forceps': 'Cotton Swab Forceps',
-    'General Retractors': 'Retractors',
-    'Needle Holders': 'Suture',
-    'Needle Holders & Suturing': 'Suture',
-    'Probes & Sounds': 'Probes',
-    'Trocars & Cannulas': 'Trocars, Suction Tubes & Cannulas',
-    'Dressing': 'Dressing',
-    'Dressing Instruments': 'Dressing',
-
-    // Specialty
-    'Cardiovascular': 'Cardiovascular Surgery',
-    'Neurosurgery': 'Neurosurgery & Laminectomy',
-    'GI & Abdominal': 'Stomach, Intestines & Rectum',
-    'Gynecology': 'Gynecology',
-    'Obstetrics': 'Obstetrics',
-    'Hepatobiliary & Urology': 'Liver, Gall Bladder, Kidney & Urology',
-    'Dermatology': 'Dermatology',
-    'Rhinology (Nose)': 'Rhinology',
-    'Otology (Ear)': 'Otology',
-    'Oral & Maxillofacial': 'Oral Maxillo-Facial Surgery',
-    'Craniofacial': 'Cranio-Maxillo-Facial Surgery',
-    'Laryngoscopy & Tonsillectomy': 'Tonsillectomy & Laryngo-Bronchoscopy',
-    'Tracheotomy': 'Tracheotomy',
-    'Anaesthesia': 'Anaesthesia',
-
-    // Orthopedics
-    'Bone Cutting': 'Bone Surgery',
-    'Bone Cutting Instruments': 'Bone Surgery',
-
-    // Accessories
-    'Holloware & Basins': 'Holloware',
-    'Diagnostic Instruments': 'Diagnostics',
-    'Calipers & Measuring': 'Calipers',
-    'Dissecting Kits': 'Dissecting Kits',
+// Mapping from SKU prefix (first 2 digits) → catalogue title
+// Each product's SKU follows the pattern XX-YYY-ZZ where XX determines which catalogue it belongs to
+const SKU_PREFIX_TO_CATALOGUE: Record<string, string> = {
+    '01': 'Scalpels',                                 // 01-100-01 to 01-208-00
+    '02': 'Scissors',                                 // 02-100-12 to 02-606-16
+    '03': 'Dissecting & Tissue Forceps',              // 03-100-10 to 03-562-03
+    '04': 'Artery Forceps',                           // 04-100-02 to 04-828-18
+    '05': 'Cotton Swab Forceps',                      // 05-100-22 to 05-156-26
+    '06': 'Retractors',                               // 06-100-12 to 06-700-01
+    '07': 'Probes',                                   // 07-100-13 to 07-186-90
+    '08': 'Diagnostics',                              // 08-100-18 to 08-275-40
+    '09': 'Trocars, Suction Tubes & Cannulas',        // 09-100-18 to 09-310-01
+    '10': 'Anaesthesia',                              // 10-100-01 to 10-170-25
+    '11': 'Suture',                                   // 11-100-01 to 11-646-14
+    '12': 'Bone Surgery',                             // 12-100-24 to 12-216-26
+    '13': 'Bone Surgery',                             // 13-100-24 to 13-992-04
+    '14': 'Cardiovascular Surgery',                   // 14-100-23 to 14-546-04
+    '15': 'Neurosurgery & Laminectomy',               // 15-100-30 to 15-702-16
+    '16': 'Tracheotomy',                              // 16-100-14 to 16-150-10
+    '17': 'Dermatology',                              // 17-100-01 to 17-160-23
+    '18': 'Stomach, Intestines & Rectum',             // 18-100-12 to 18-360-38
+    '19': 'Liver, Gall Bladder, Kidney & Urology',   // 19-100-01 to 19-216-12
+    '20': 'Gynecology',                               // 20-100-01 to 20-548-28
+    '21': 'Obstetrics',                               // 21-100-35 to 21-266-08
+    // '22': no catalogue for Ophthalmology
+    '23': 'Otology',                                  // 23-100-01 to 23-568-92
+    '24': 'Rhinology',                                // 24-100-14 to 24-424-03
+    '25': 'Oral Maxillo-Facial Surgery',              // 25-100-17 to 25-480-08
+    '26': 'Tonsillectomy & Laryngo-Bronchoscopy',     // 26-100-18 to 26-310-12
+    '27': 'Cranio-Maxillo-Facial Surgery',            // 27-100-16 to 27-302-17
+    '28': 'Holloware',                                // 28-100-22 to 28-422-15
+    '29': 'Dissecting Kits',                          // 29-100-09 to 29-141-15
 };
 
-// Find the matching catalogue for a product based on its subcategory/category
+// Find the matching catalogue for a product based on its SKU prefix
 export async function getCatalogueForProduct(product: Product): Promise<CatalogueRef | null> {
-    // First, try matching by subcategory
-    const catalogueTitle = SUBCATEGORY_TO_CATALOGUE[product.subcategory];
+    // Extract the SKU prefix (first 2 digits before the first dash)
+    const prefix = product.sku.split('-')[0];
+    const catalogueTitle = SKU_PREFIX_TO_CATALOGUE[prefix];
+
     if (catalogueTitle) {
         return getCatalogueByTitle(catalogueTitle);
     }
 
-    // Fallback: try matching the category name directly as a catalogue title
-    return getCatalogueByTitle(product.category);
+    return null;
 }
 
 // Get subcategories for a category with counts and images - with pagination
