@@ -164,7 +164,7 @@ export const ProductDetail: React.FC = () => {
         "manufacturer": {
             "@type": "Organization",
             "name": "Smith Instruments",
-            "url": "https://smithinstruments.com"
+            "url": "https://smithinstruments.net"
         },
         "offers": {
             "@type": "Offer",

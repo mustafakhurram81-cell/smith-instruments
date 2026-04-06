@@ -28,14 +28,14 @@ export const SEO: React.FC<SEOProps> = ({
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Smith Instruments",
-        "url": "https://smithinstruments.com",
-        "logo": "https://smithinstruments.com/smith-logo-full.webp",
+        "url": "https://smithinstruments.net",
+        "logo": "https://smithinstruments.net/smith-logo-full.webp",
         "description": "Premium manufacturer of precision surgical instruments",
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": "+92-330-2449855",
             "contactType": "sales",
-            "email": "sales@smithinstruments.com"
+            "email": "sales@smithinstruments.net"
         },
         "sameAs": [
             "https://www.facebook.com/smithinstrumentsusa",

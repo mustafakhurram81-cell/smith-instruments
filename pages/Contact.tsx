@@ -97,8 +97,7 @@ export const Contact: React.FC = () => {
       setFormStatus('sending');
 
       emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
-        .then((result) => {
-          console.log(result.text);
+        .then((_result) => {
           setFormStatus('success');
           // Reset Form
           setFormData({ user_name: '', phone: '', user_email: '', country: '', interest: '', message: '' });
@@ -179,7 +178,7 @@ export const Contact: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-brand-charcoal mb-1">Email</h4>
-                      <p className="text-stone-600 font-light break-all">sales@smithinstruments.com</p>
+                      <p className="text-stone-600 font-light break-all">sales@smithinstruments.net</p>
                       <p className="text-xs text-stone-400 mt-1">We reply within 24 hours</p>
                     </div>
                   </div>
@@ -191,7 +190,7 @@ export const Contact: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-brand-charcoal mb-1">Location</h4>
-                      <p className="text-stone-600 font-light">123 Medical Park Blvd<br />New York, NY 10012</p>
+                      <p className="text-stone-600 font-light">Sialkot, Punjab<br />Pakistan</p>
                       <p className="text-xs text-stone-400 mt-1">Serving clients globally</p>
                     </div>
                   </div>

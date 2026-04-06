@@ -705,12 +705,21 @@ export async function getProductBySku(sku: string): Promise<Product | null> {
     return data;
 }
 
+// Sanitize input for PostgREST filter queries
+function sanitizeFilterInput(input: string): string {
+    // Escape characters that have special meaning in PostgREST filters
+    return input.replace(/[%_().,\\"]/g, '\\$&');
+}
+
 // Search products
 export async function searchProducts(query: string): Promise<Product[]> {
+    const sanitized = sanitizeFilterInput(query.trim());
+    if (!sanitized) return [];
+
     const { data, error } = await supabase
         .from('products')
         .select('*')
-        .or(`name.ilike.%${query}%,sku.ilike.%${query}%,description.ilike.%${query}%`)
+        .or(`name.ilike.%${sanitized}%,sku.ilike.%${sanitized}%,description.ilike.%${sanitized}%`)
         .limit(50);
 
     if (error) {
@@ -760,7 +769,7 @@ export async function getProductVariants(sku: string): Promise<Product[]> {
 
 // Get detailed category info (count + image) - with pagination to get ALL products
 export async function getCategoryDetails(): Promise<{ name: string; count: number; image: string }[]> {
-    console.log('Fetching category details...');
+
 
     // Paginate to get ALL products (Supabase defaults to 1000 max)
     const PAGE_SIZE = 1000;
@@ -796,7 +805,7 @@ export async function getCategoryDetails(): Promise<{ name: string; count: numbe
         if (allCategories.length === 0) return [];
     }
 
-    console.log(`Total products fetched for counts: ${allCategories.length}`);
+
 
     // Calculate counts locally
     const counts: Record<string, number> = {};

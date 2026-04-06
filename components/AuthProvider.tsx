@@ -29,8 +29,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [loading, setLoading] = useState(true);
     const [userRole, setUserRole] = useState<UserRole>(null);
 
-    // ADMIN EMAILS - These users are always admins (temporary override)
-    const ADMIN_EMAILS = ['mustafakhurram81@gmail.com'];
+    // ADMIN EMAILS - loaded from environment variable (comma-separated)
+    const adminEmailsEnv = import.meta.env.VITE_ADMIN_EMAILS || '';
+    const ADMIN_EMAILS = adminEmailsEnv.split(',').map((e: string) => e.trim().toLowerCase()).filter(Boolean);
 
     // Fetch user role from database
     const fetchUserRole = async (userId: string, userEmail?: string) => {

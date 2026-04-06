@@ -134,7 +134,7 @@ export const TermsOfService: React.FC = () => {
                                         If you have questions about these Terms of Service, please contact us at:
                                     </p>
                                     <div className="mt-4 text-brand-charcoal font-medium">
-                                        <p>Email: legal@smithinstruments.com</p>
+                                        <p>Email: legal@smithinstruments.net</p>
                                         <p>Phone: +92 330 2449855</p>
                                     </div>
                                 </div>

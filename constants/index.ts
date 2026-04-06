@@ -49,9 +49,9 @@ export const SOCIAL_LINKS = {
 } as const;
 
 export const CONTACT_INFO = {
-    email: 'sales@smithinstruments.com',
+    email: 'sales@smithinstruments.net',
     phone: '+92 330 2449855',
-    address: '123 Medical Park Blvd, New York, NY 10012, USA',
+    address: 'Sialkot, Punjab, Pakistan',
 } as const;
 
 // ============================================

@@ -123,7 +123,7 @@ export const PrivacyPolicy: React.FC = () => {
                                         If you have questions about this Privacy Policy, please contact us at:
                                     </p>
                                     <div className="mt-4 text-brand-charcoal font-medium">
-                                        <p>Email: privacy@smithinstruments.com</p>
+                                        <p>Email: privacy@smithinstruments.net</p>
                                         <p>Phone: +92 330 2449855</p>
                                     </div>
                                 </div>

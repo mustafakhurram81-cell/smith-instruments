@@ -123,12 +123,6 @@ export const Header: React.FC = () => {
                             }`}>
                             About Us
                         </PrefetchNavLink>
-                        <PrefetchNavLink to="/blog" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
-                            ? (isActive ? 'text-white border-b border-brand-orange' : 'text-white/80 hover:text-white')
-                            : (isActive ? 'text-brand-charcoal border-b border-brand-orange' : 'text-stone-500 hover:text-brand-charcoal')
-                            }`}>
-                            Blog
-                        </PrefetchNavLink>
                         <PrefetchNavLink to="/contact" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
                             ? (isActive ? 'text-white border-b border-brand-orange' : 'text-white/80 hover:text-white')
                             : (isActive ? 'text-brand-charcoal border-b border-brand-orange' : 'text-stone-500 hover:text-brand-charcoal')
@@ -233,7 +227,6 @@ export const Header: React.FC = () => {
 
                                 <NavLink to="/catalogues" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Catalogues</NavLink>
                                 <NavLink to="/about" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>About Us</NavLink>
-                                <NavLink to="/blog" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Blog</NavLink>
                                 <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Contact</NavLink>
 
                                 {/* Bottom section with Cart and Language */}

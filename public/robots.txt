@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
 
-Sitemap: https://smith-instruments.vercel.app/sitemap.xml
+Sitemap: https://smithinstruments.net/sitemap.xml
