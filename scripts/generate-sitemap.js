@@ -74,10 +74,31 @@ async function generateSitemap() {
     });
 
     try {
-        // Fetch all products with category/subcategory info
-        const { data: products } = await supabase
-            .from('products')
-            .select('sku, category, subcategory, updated_at');
+        let allProducts = [];
+        let hasMore = true;
+        let page = 0;
+        const limit = 1000;
+
+        while (hasMore) {
+            const { data, error } = await supabase
+                .from('products')
+                .select('sku, category, subcategory, updated_at')
+                .range(page * limit, (page + 1) * limit - 1);
+
+            if (error) {
+                console.error('Error fetching products:', error);
+                break;
+            }
+
+            if (data && data.length > 0) {
+                allProducts = allProducts.concat(data);
+                page++;
+            } else {
+                hasMore = false;
+            }
+        }
+
+        const products = allProducts;
 
         if (products && products.length > 0) {
             // Build category -> subcategory -> products map
