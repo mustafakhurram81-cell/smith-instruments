@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { SOCIAL_LINKS } from '../constants';
 
 interface SEOProps {
     title: string;
@@ -37,10 +38,7 @@ export const SEO: React.FC<SEOProps> = ({
             "contactType": "sales",
             "email": "sales@smithinstruments.net"
         },
-        "sameAs": [
-            "https://www.facebook.com/smithinstrumentsusa",
-            "https://www.instagram.com/smithinstruments/"
-        ]
+        "sameAs": Object.values(SOCIAL_LINKS)
     };
 
     return (

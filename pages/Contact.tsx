@@ -4,6 +4,7 @@ import { SEO } from '../components/SEO';
 import { Plus, Minus, Phone, Mail, MapPin, MessageCircle, Clock, Loader2, Award, ShieldCheck } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { CONTACT_INFO } from '../constants';
 
 const FAQS = [
   { q: "What materials are used in your instruments?", a: "We strictly use high-grade German Stainless Steel (AISI 410, 420, 304) depending on the instrument type, ensuring corrosion resistance and longevity." },
@@ -166,7 +167,7 @@ export const Contact: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-brand-charcoal mb-1">Phone</h4>
-                      <p className="text-stone-600 font-light">+92 330 2449855</p>
+                      <p className="text-stone-600 font-light">{CONTACT_INFO.phone}</p>
                       <p className="text-xs text-stone-400 mt-1">Mon-Fri, 9am-6pm EST</p>
                     </div>
                   </div>
@@ -178,22 +179,23 @@ export const Contact: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-brand-charcoal mb-1">Email</h4>
-                      <p className="text-stone-600 font-light break-all">sales@smithinstruments.net</p>
+                      <p className="text-stone-600 font-light break-all">{CONTACT_INFO.email}</p>
                       <p className="text-xs text-stone-400 mt-1">We reply within 24 hours</p>
                     </div>
                   </div>
 
-                  {/* Location */}
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-stone-100 text-brand-charcoal flex items-center justify-center shrink-0 shadow-sm border border-stone-200">
-                      <MapPin size={20} />
+                  {/* Locations */}
+                  {CONTACT_INFO.locations.map((loc, idx) => (
+                    <div key={idx} className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-stone-100 text-brand-charcoal flex items-center justify-center shrink-0 shadow-sm border border-stone-200">
+                        <MapPin size={20} />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-brand-charcoal mb-1">{loc.type}</h4>
+                        <p className="text-stone-600 font-light pr-4">{loc.address}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-brand-charcoal mb-1">Location</h4>
-                      <p className="text-stone-600 font-light">Sialkot, Punjab<br />Pakistan</p>
-                      <p className="text-xs text-stone-400 mt-1">Serving clients globally</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
                 {/* WhatsApp CTA */}

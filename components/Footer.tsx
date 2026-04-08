@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Facebook, Instagram, Mail, Phone, MapPin, ArrowRight, CreditCard, Lock } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight, CreditCard, Lock } from 'lucide-react';
 import logoTransparent from '../assets/smith instruments logo.png';
 import { SOCIAL_LINKS, CONTACT_INFO } from '../constants';
 
@@ -59,6 +59,9 @@ export const Footer: React.FC = () => {
                                 <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-white transition-colors">
                                     <Instagram size={18} />
                                 </a>
+                                <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-white transition-colors">
+                                    <Linkedin size={18} />
+                                </a>
                             </div>
                         </div>
 
@@ -87,10 +90,15 @@ export const Footer: React.FC = () => {
                                     <Phone size={14} className="text-brand-orange flex-shrink-0" />
                                     <span className="text-sm text-stone-400">{CONTACT_INFO.phone}</span>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <MapPin size={14} className="text-brand-orange flex-shrink-0 mt-0.5" />
-                                    <span className="text-sm text-stone-400">{CONTACT_INFO.address.replace(', ', ',<br />')}</span>
-                                </div>
+                                {CONTACT_INFO.locations.map((loc, idx) => (
+                                    <div key={idx} className="flex items-start gap-3">
+                                        <MapPin size={14} className="text-brand-orange flex-shrink-0 mt-0.5" />
+                                        <span className="text-sm text-stone-400">
+                                            <strong>{loc.type}:</strong><br />
+                                            {loc.address}
+                                        </span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>

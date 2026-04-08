@@ -46,12 +46,22 @@ export const DEFAULT_PRODUCT = {
 export const SOCIAL_LINKS = {
     facebook: 'https://www.facebook.com/smithinstrumentsusa',
     instagram: 'https://www.instagram.com/smithinstruments/',
+    linkedin: 'https://www.linkedin.com/company/smith-instruments',
 } as const;
 
 export const CONTACT_INFO = {
     email: 'sales@smithinstruments.net',
     phone: '+92 330 2449855',
-    address: 'Sialkot, Punjab, Pakistan',
+    locations: [
+        {
+            type: 'Manufacturing Plant',
+            address: 'Sialkot Punjab 51310 Capital Road pakistan'
+        },
+        {
+            type: 'Head Office',
+            address: 'Alexandria Virginia 22310 USA'
+        }
+    ]
 } as const;
 
 // ============================================
