@@ -5,7 +5,7 @@ import { SEO } from '../components/SEO';
 import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope } from 'lucide-react';
 import { ProductCard } from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
-import heroMethods from '../assets/hero-minimal.png';
+import heroMethods from '../assets/hero-premium.png';
 import manufacturingImg from '../assets/manufacturing-workshop.png';
 
 const PRODUCTS = [
