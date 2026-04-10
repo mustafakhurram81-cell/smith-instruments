@@ -64,21 +64,21 @@ export function useSubcategoryDetails(category: string) {
 }
 
 // Hook to get products by category
-export function useProductsByCategory(category: string) {
+export function useProductsByCategory(category: string, page: number = 1, limit: number = 24, enabled: boolean = true) {
     return useQuery({
-        queryKey: queryKeys.productsByCategory(category),
-        queryFn: () => getProductsByCategory(category),
-        enabled: !!category,
+        queryKey: [...queryKeys.productsByCategory(category), page, limit],
+        queryFn: () => getProductsByCategory(category, page, limit),
+        enabled: !!category && enabled,
         staleTime: 1000 * 60 * 5,
     });
 }
 
 // Hook to get products by subcategory
-export function useProductsBySubcategory(category: string, subcategory: string) {
+export function useProductsBySubcategory(category: string, subcategory: string, page: number = 1, limit: number = 24, enabled: boolean = true) {
     return useQuery({
-        queryKey: queryKeys.productsBySubcategory(category, subcategory),
-        queryFn: () => getProductsBySubcategory(category, subcategory),
-        enabled: !!category && !!subcategory,
+        queryKey: [...queryKeys.productsBySubcategory(category, subcategory), page, limit],
+        queryFn: () => getProductsBySubcategory(category, subcategory, page, limit),
+        enabled: !!category && !!subcategory && enabled,
         staleTime: 1000 * 60 * 5,
     });
 }
@@ -164,11 +164,11 @@ export function useSpecialtySubcategories(category: string) {
 }
 
 // Hook for products by specialty
-export function useProductsBySpecialty(category: string, subcategory?: string) {
+export function useProductsBySpecialty(category: string, subcategory?: string, page: number = 1, limit: number = 24, enabled: boolean = true) {
     return useQuery({
-        queryKey: ['productsBySpecialty', category, subcategory] as const,
-        queryFn: () => getProductsBySpecialty(category, subcategory),
-        enabled: !!category,
+        queryKey: ['productsBySpecialty', category, subcategory, page, limit] as const,
+        queryFn: () => getProductsBySpecialty(category, subcategory, page, limit),
+        enabled: !!category && enabled,
         staleTime: 1000 * 60 * 5,
     });
 }
@@ -193,11 +193,11 @@ export function useInstrumentSubcategoriesNew(category: string) {
 }
 
 // Hook for products by instrument
-export function useProductsByInstrument(category: string, subcategory?: string) {
+export function useProductsByInstrument(category: string, subcategory?: string, page: number = 1, limit: number = 24, enabled: boolean = true) {
     return useQuery({
-        queryKey: ['productsByInstrument', category, subcategory] as const,
-        queryFn: () => getProductsByInstrument(category, subcategory),
-        enabled: !!category,
+        queryKey: ['productsByInstrument', category, subcategory, page, limit] as const,
+        queryFn: () => getProductsByInstrument(category, subcategory, page, limit),
+        enabled: !!category && enabled,
         staleTime: 1000 * 60 * 5,
     });
 }
