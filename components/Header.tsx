@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { PrefetchNavLink } from './PrefetchLink';
-import { Menu, X, ShoppingCart, Search as SearchIcon, ChevronDown, ChevronRight, ArrowRight, Calendar } from 'lucide-react';
+import { Menu, X, ShoppingCart, Search as SearchIcon, ChevronDown, ChevronRight, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useCart } from './CartProvider';
@@ -232,13 +232,7 @@ export const Header: React.FC = () => {
                                 {/* Bottom section with Cart and Language */}
                                 <div className="pt-4 mt-4 border-t border-stone-200">
                                     <div className="grid grid-cols-2 gap-4">
-                                        <NavLink
-                                            to="/quote-cart"
-                                            onClick={() => setIsMobileOpen(false)}
-                                            className="col-span-2 flex items-center justify-center gap-2 p-3 bg-brand-orange text-white rounded-md font-semibold"
-                                        >
-                                            <Calendar size={18} /> Book Consultation
-                                        </NavLink>
+
 
                                         <NavLink
                                             to="/quote-cart"

@@ -79,18 +79,15 @@ export const Home: React.FC = () => {
       {/* HERO */}
       <section className="relative h-screen flex items-center bg-brand-charcoal">
         <div className="absolute inset-0 z-0">
-          <picture>
-            <source media="(max-width: 767px)" srcSet="/hero-mobile.jpg" />
-            <img
-              src={heroMethods}
-              alt="Surgical Instruments Background"
-              className="w-full h-full object-cover object-center"
-              loading="eager"
-              fetchPriority="high"
-              width="1920"
-              height="1080"
-            />
-          </picture>
+          <img
+            src={heroMethods}
+            alt="Surgical Instruments Background"
+            className="w-full h-full object-cover object-center"
+            loading="eager"
+            fetchPriority="high"
+            width="1920"
+            height="1080"
+          />
           {/* Subtle overlay for extra contrast */}
           <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal/60 via-transparent to-transparent" />
         </div>
