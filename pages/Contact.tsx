@@ -1,4 +1,7 @@
 import React, { useState, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { contactSchema, type ContactFormValues } from '../lib/validations';
 import { Section, Button, FadeIn, ParallaxHeader } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { Plus, Minus, Phone, Mail, MapPin, MessageCircle, Clock, Loader2, Award, ShieldCheck } from 'lucide-react';
@@ -54,20 +57,25 @@ const AccordionItem: React.FC<{ item: { q: string, a: string } }> = ({ item }) =
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 export const Contact: React.FC = () => {
-  const form = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  // Unified Form State
-  const [formData, setFormData] = useState({
-    user_name: '',
-    phone: '',
-    user_email: '',
-    country: '',
-    interest: '',
-    message: ''
+  // React Hook Form
+  const { register, handleSubmit, reset, trigger, watch, formState: { errors } } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      user_name: '',
+      phone: '',
+      user_email: '',
+      country: '',
+      interest: '',
+      message: ''
+    }
   });
+
+  const messageVal = watch('message', '');
 
   // EmailJS credentials from environment variables
   const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -93,15 +101,15 @@ export const Contact: React.FC = () => {
 
   // Called when invisible reCAPTCHA is verified
   const handleCaptchaChange = (token: string | null) => {
-    if (token && form.current) {
+    if (token && formRef.current) {
       // CAPTCHA verified, now send the email
       setFormStatus('sending');
 
-      emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form.current, PUBLIC_KEY)
+      emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY)
         .then((_result) => {
           setFormStatus('success');
           // Reset Form
-          setFormData({ user_name: '', phone: '', user_email: '', country: '', interest: '', message: '' });
+          reset();
           recaptchaRef.current?.reset();
           setTimeout(() => setFormStatus('idle'), 5000);
         }, (error) => {
@@ -113,8 +121,7 @@ export const Contact: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmitValid = async (data: ContactFormValues) => {
     if (formStatus === 'sending') return;
 
     // Check if reCAPTCHA is configured
@@ -256,29 +263,25 @@ export const Contact: React.FC = () => {
                     <Button className="mt-4" onClick={() => setFormStatus('idle')}>Try Again</Button>
                   </div>
                 ) : (
-                  <form ref={form} onSubmit={handleSubmit} className="space-y-5">
+                  <form ref={formRef} onSubmit={handleSubmit(onSubmitValid)} className="space-y-5">
 
                     {/* Row 1: Full Name + Phone */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-stone-700 mb-2">Full Name <span className="text-brand-orange">*</span></label>
                         <input
-                          required
                           type="text"
-                          name="user_name"
-                          value={formData.user_name}
-                          onChange={(e) => setFormData({ ...formData, user_name: e.target.value })}
+                          {...register('user_name')}
                           placeholder="Dr. John Smith"
-                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                          className={`w-full bg-white border p-4 rounded-sm transition-all outline-none text-brand-charcoal placeholder-stone-300 ${errors.user_name ? 'border-red-400 focus:!border-red-500' : 'border-stone-200 focus:!border-stone-400'}`}
                         />
+                        {errors.user_name && <p className="text-red-500 text-xs mt-1">{errors.user_name.message}</p>}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-stone-700 mb-2">Phone (Optional)</label>
                         <input
                           type="text"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          {...register('phone')}
                           placeholder="+1 (555) 000-0000"
                           className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
@@ -290,22 +293,18 @@ export const Contact: React.FC = () => {
                       <div>
                         <label className="block text-sm font-medium text-stone-700 mb-2">Email Address <span className="text-brand-orange">*</span></label>
                         <input
-                          required
                           type="email"
-                          name="user_email"
-                          value={formData.user_email}
-                          onChange={(e) => setFormData({ ...formData, user_email: e.target.value })}
+                          {...register('user_email')}
                           placeholder="john.smith@hospital.com"
-                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300"
+                          className={`w-full bg-white border p-4 rounded-sm transition-all outline-none text-brand-charcoal placeholder-stone-300 ${errors.user_email ? 'border-red-400 focus:!border-red-500' : 'border-stone-200 focus:!border-stone-400'}`}
                         />
+                        {errors.user_email && <p className="text-red-500 text-xs mt-1">{errors.user_email.message}</p>}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-stone-700 mb-2">Country</label>
                         <input
                           type="text"
-                          name="country"
-                          value={formData.country}
-                          onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                          {...register('country')}
                           placeholder="United States"
                           className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300"
                         />
@@ -314,13 +313,11 @@ export const Contact: React.FC = () => {
 
                     {/* Row 3: Subject Dropdown */}
                     <div>
-                      <label className="block text-sm font-medium text-stone-700 mb-2">Subject / Interest</label>
+                      <label className="block text-sm font-medium text-stone-700 mb-2">Subject / Interest <span className="text-brand-orange">*</span></label>
                       <div className="relative">
                         <select
-                          name="interest"
-                          value={formData.interest}
-                          onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                          className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal appearance-none cursor-pointer"
+                          {...register('interest')}
+                          className={`w-full bg-white border p-4 rounded-sm transition-all outline-none text-brand-charcoal appearance-none cursor-pointer ${errors.interest ? 'border-red-400 focus:!border-red-500' : 'border-stone-200 focus:!border-stone-400'}`}
                         >
                           <option value="" disabled>Select a topic...</option>
                           <option value="General Inquiry">General Inquiry</option>
@@ -333,21 +330,26 @@ export const Contact: React.FC = () => {
                           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                         </div>
                       </div>
+                      {errors.interest && <p className="text-red-500 text-xs mt-1">{errors.interest.message}</p>}
                     </div>
 
                     {/* Row 4: Message */}
                     <div>
                       <label className="block text-sm font-medium text-stone-700 mb-2">Message <span className="text-brand-orange">*</span></label>
                       <textarea
-                        required
                         rows={6}
-                        name="message"
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        {...register('message')}
                         placeholder="Tell us about your requirements or questions..."
-                        className="w-full bg-white border border-stone-200 p-4 rounded-sm focus:!border-stone-400 focus:ring-0 transition-all outline-none text-brand-charcoal placeholder-stone-300 resize-none"
+                        className={`w-full bg-white border p-4 rounded-sm transition-all outline-none text-brand-charcoal placeholder-stone-300 resize-none ${errors.message ? 'border-red-400 focus:!border-red-500' : 'border-stone-200 focus:!border-stone-400'}`}
                       ></textarea>
-                      <p className="text-xs text-stone-400 mt-1 text-right">0/1000 characters</p>
+                      <div className="flex justify-between items-start mt-1">
+                        {errors.message ? (
+                          <p className="text-red-500 text-xs">{errors.message.message}</p>
+                        ) : (
+                          <span></span>
+                        )}
+                        <p className="text-xs text-stone-400 text-right">{messageVal.length}/2000 characters</p>
+                      </div>
                     </div>
 
                     {/* Invisible reCAPTCHA - validates on form submit */}

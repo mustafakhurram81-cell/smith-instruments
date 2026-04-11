@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { quoteSchema, type QuoteFormValues } from '../lib/validations';
 import { useCart } from '../components/CartProvider';
 import { Section, Button, FadeIn } from '../components/Shared';
 import { Trash2, Plus, Minus, Send, ArrowRight, ArrowLeft } from 'lucide-react';
@@ -12,13 +15,16 @@ export const QuoteCart: React.FC = () => {
     const [sending, setSending] = useState(false);
     const [success, setSuccess] = useState(false);
 
-    // Form State
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        country: '',
-        message: ''
+    // React Hook Form
+    const { register, handleSubmit: handleHookSubmit, formState: { errors }, getValues } = useForm<QuoteFormValues>({
+        resolver: zodResolver(quoteSchema),
+        defaultValues: {
+            name: '',
+            email: '',
+            phone: '',
+            country: '',
+            message: ''
+        }
     });
 
     // EmailJS credentials from environment variables
@@ -26,15 +32,13 @@ export const QuoteCart: React.FC = () => {
     const QUOTE_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_QUOTE_TEMPLATE_ID;
     const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = async (data: QuoteFormValues) => {
         setSending(true);
 
         // Prepare the product list string for email
         const productList = items.map(i => `• ${i.sku} - ${i.name} (Qty: ${i.quantity})`).join('\n');
 
-        // Combine message with product list for safety
-        const fullMessage = `${formData.message}\n\n--- Requested Items ---\n${productList}`;
+        const fullMessage = `${data.message || ''}\n\n--- Requested Items ---\n${productList}`;
 
         // Prepare products array for database
         const productsData = items.map(item => ({
@@ -49,12 +53,12 @@ export const QuoteCart: React.FC = () => {
             const { error: dbError } = await supabase
                 .from('quote_requests')
                 .insert({
-                    customer_name: formData.name,
-                    customer_email: formData.email,
-                    customer_phone: formData.phone || null,
-                    customer_country: formData.country || null,
+                    customer_name: data.name,
+                    customer_email: data.email,
+                    customer_phone: data.phone || null,
+                    customer_country: data.country || null,
                     products: productsData,
-                    message: formData.message || null,
+                    message: data.message || null,
                     status: 'new'
                 });
 
@@ -67,13 +71,13 @@ export const QuoteCart: React.FC = () => {
             const templateParams = {
                 to_name: "Smith Instruments Sales",
                 items_count: items.length,
-                user_name: formData.name,
-                user_email: formData.email,
+                user_name: data.name,
+                user_email: data.email,
                 interest: "Quote Request",
-                phone: formData.phone,
-                country: formData.country,
+                phone: data.phone,
+                country: data.country,
                 message: fullMessage,
-                reply_to: formData.email
+                reply_to: data.email
             };
 
             await emailjs.send(
@@ -116,7 +120,7 @@ export const QuoteCart: React.FC = () => {
                 </div>
                 <h1 className="text-3xl font-serif text-brand-charcoal mb-4">Quote Request Sent!</h1>
                 <p className="text-stone-500 max-w-md mx-auto mb-8">
-                    Thank you, {formData.name}. We have received your request for {items.length > 0 ? items.length : 'your'} items.
+                    Thank you, {getValues('name')}. We have received your request for {items.length > 0 ? items.length : 'your'} items.
                     Our sales team will email you a formal quotation within 24 hours.
                 </p>
                 <Link to="/">
@@ -196,15 +200,14 @@ export const QuoteCart: React.FC = () => {
                     <div className="lg:col-span-1">
                         <div className="bg-white p-6 rounded-xl shadow-xl border-t-4 border-brand-orange sticky top-24">
                             <h2 className="text-xl font-medium mb-6">Contact Details</h2>
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form onSubmit={handleHookSubmit(onSubmit)} className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium text-stone-600 mb-1">Full Name *</label>
                                     <input
-                                        required
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all"
-                                        value={formData.name}
-                                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                                        {...register('name')}
+                                        className={`w-full p-3 border rounded-lg !outline-none !shadow-none focus:border-stone-400 transition-all ${errors.name ? 'border-red-400 bg-red-50/20' : 'bg-stone-50 border-stone-200'}`}
                                     />
+                                    {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
@@ -212,18 +215,16 @@ export const QuoteCart: React.FC = () => {
                                         <label className="block text-sm font-medium text-stone-600 mb-1">Email *</label>
                                         <input
                                             type="email"
-                                            required
-                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all"
-                                            value={formData.email}
-                                            onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                            {...register('email')}
+                                            className={`w-full p-3 border rounded-lg !outline-none !shadow-none focus:border-stone-400 transition-all ${errors.email ? 'border-red-400 bg-red-50/20' : 'bg-stone-50 border-stone-200'}`}
                                         />
+                                        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-stone-600 mb-1">Country</label>
                                         <input
-                                            className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all"
-                                            value={formData.country}
-                                            onChange={e => setFormData({ ...formData, country: e.target.value })}
+                                            {...register('country')}
+                                            className="w-full p-3 border bg-stone-50 border-stone-200 rounded-lg !outline-none !shadow-none focus:border-stone-400 transition-all"
                                             placeholder="e.g. USA"
                                         />
                                     </div>
@@ -232,18 +233,16 @@ export const QuoteCart: React.FC = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-stone-600 mb-1">Phone (Optional)</label>
                                     <input
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all"
-                                        value={formData.phone}
-                                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                                        {...register('phone')}
+                                        className="w-full p-3 border bg-stone-50 border-stone-200 rounded-lg !outline-none !shadow-none focus:border-stone-400 transition-all"
                                     />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-stone-600 mb-1">Additional Notes</label>
                                     <textarea
                                         rows={3}
-                                        className="w-full p-3 bg-stone-50 border border-stone-200 rounded-lg !outline-none !ring-0 !shadow-none focus:border-stone-400 transition-all resize-none"
-                                        value={formData.message}
-                                        onChange={e => setFormData({ ...formData, message: e.target.value })}
+                                        {...register('message')}
+                                        className="w-full p-3 border bg-stone-50 border-stone-200 rounded-lg !outline-none !shadow-none focus:border-stone-400 transition-all resize-none"
                                         placeholder="Any specific requirements?"
                                     />
                                 </div>
