@@ -314,16 +314,23 @@ export async function getProductsByCategory(category: string, page: number = 1, 
     return { data: data || [], count: count || 0 };
 }
 
-// Get products by category and subcategory
-export async function getProductsBySubcategory(category: string, subcategory: string, page: number = 1, limit: number = 24): Promise<{ data: Product[]; count: number }> {
+// Get products by category and subcategory (with optional search)
+export async function getProductsBySubcategory(category: string, subcategory: string, page: number = 1, limit: number = 24, search: string = ''): Promise<{ data: Product[]; count: number }> {
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
-    const { data, error, count } = await supabase
+    let query = supabase
         .from('products')
         .select('*', { count: 'exact' })
         .eq('category', category)
-        .eq('subcategory', subcategory)
+        .eq('subcategory', subcategory);
+
+    if (search && search.trim() !== '') {
+        const safeSearch = search.trim().replace(/'/g, "''"); // escape single quotes for postgrest
+        query = query.or(`name.ilike.%${safeSearch}%,sku.ilike.%${safeSearch}%`);
+    }
+
+    const { data, error, count } = await query
         .order('sku', { ascending: true })
         .range(from, to);
 

@@ -142,6 +142,8 @@ export const ProductsIndex: React.FC = () => {
                                                         src={item.image}
                                                         alt={item.name}
                                                         className="relative z-10 w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
+                                                        loading="lazy"
+                                                        decoding="async"
                                                     />
                                                 ) : (
                                                     <div className="relative z-10 w-16 h-16 text-stone-300">

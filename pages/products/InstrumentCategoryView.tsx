@@ -154,6 +154,8 @@ export const InstrumentCategoryView: React.FC = () => {
                                                         src={sub.image}
                                                         alt={sub.name}
                                                         className="w-full h-full object-cover opacity-90"
+                                                        loading="lazy"
+                                                        decoding="async"
                                                     />
                                                 ) : (
                                                     <div className="w-full h-full bg-gradient-to-br from-stone-200 to-stone-300 flex items-center justify-center">

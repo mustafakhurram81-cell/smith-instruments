@@ -19,31 +19,33 @@ export const SubcategoryView: React.FC = () => {
     const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid');
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Returns { data: Product[], count: number }
-    const { data: productsResult, isLoading: loading } = useProductsBySubcategory(category, subcategory, currentPage, ITEMS_PER_PAGE);
+    const [debouncedSearch, setDebouncedSearch] = useState('');
 
-    const products = productsResult?.data ?? [];
-    const totalCount = productsResult?.count ?? 0;
-
-    // Client-side filter on the current page of results
-    const filteredProducts = products.filter(p =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.sku.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    // Reset page when filtering
+    // Debounce search term to prevent hammering the database on every keystroke
     useEffect(() => {
-        setCurrentPage(1);
+        const timer = setTimeout(() => {
+            setDebouncedSearch(searchTerm);
+        }, 300);
+        return () => clearTimeout(timer);
     }, [searchTerm]);
 
-    // When searching locally, paginate filtered; otherwise use server count
-    const isFiltering = searchTerm.trim().length > 0;
-    const totalPages = isFiltering
-        ? Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)
-        : Math.ceil(totalCount / ITEMS_PER_PAGE);
-    const visibleProducts = isFiltering
-        ? filteredProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
-        : filteredProducts; // already server-paginated
+    // Reset pagination when searching
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [debouncedSearch]);
+
+    // Perform the server-side paginated request (with search)
+    const { data: productsResult, isLoading: loading } = useProductsBySubcategory(
+        category, 
+        subcategory, 
+        currentPage, 
+        ITEMS_PER_PAGE, 
+        debouncedSearch
+    );
+
+    const visibleProducts = productsResult?.data ?? [];
+    const totalCount = productsResult?.count ?? 0;
+    const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
@@ -76,7 +78,7 @@ export const SubcategoryView: React.FC = () => {
                 <div className="container mx-auto px-6">
                     {loading ? (
                         <ProductGridSkeleton count={12} />
-                    ) : products.length > 0 ? (
+                    ) : visibleProducts.length > 0 ? (
                         <>
                             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 sticky top-20 z-30 bg-stone-50/95 backdrop-blur-sm p-4 rounded-xl border border-stone-100 shadow-sm">
                                 <div className="relative w-full md:w-96">
@@ -100,7 +102,7 @@ export const SubcategoryView: React.FC = () => {
 
                                 <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                                     <p className="text-stone-500 text-sm">
-                                        Showing {visibleProducts.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length}
+                                        Showing {visibleProducts.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} of {totalCount}
                                     </p>
                                     <div className="flex items-center gap-2">
                                         <button

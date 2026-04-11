@@ -74,11 +74,11 @@ export function useProductsByCategory(category: string, page: number = 1, limit:
 }
 
 // Hook to get products by subcategory
-export function useProductsBySubcategory(category: string, subcategory: string, page: number = 1, limit: number = 24, enabled: boolean = true) {
+export function useProductsBySubcategory(category: string, subcategory: string, page: number = 1, limit: number = 24, search: string = '', enabled: boolean = true) {
     return useQuery({
-        queryKey: [...queryKeys.productsBySubcategory(category, subcategory), page, limit],
-        queryFn: () => getProductsBySubcategory(category, subcategory, page, limit),
-        enabled: !!category && !!subcategory && enabled,
+        queryKey: [...queryKeys.productsBySubcategory(category, subcategory), page, limit, search],
+        queryFn: () => getProductsBySubcategory(category, subcategory, page, limit, search),
+        enabled: enabled && !!(category && subcategory),
         staleTime: 1000 * 60 * 5,
     });
 }
