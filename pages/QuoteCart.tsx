@@ -4,16 +4,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { quoteSchema, type QuoteFormValues } from '../lib/validations';
 import { useCart } from '../components/CartProvider';
 import { Section, Button, FadeIn } from '../components/Shared';
-import { Trash2, Plus, Minus, Send, ArrowRight, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Trash2, Plus, Minus, Send, ArrowLeft } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import { SEO } from '../components/SEO';
 import { supabase } from '../lib/supabase';
+import { EmptyState } from '../components/ui/EmptyState';
 
 export const QuoteCart: React.FC = () => {
     const { items, removeFromCart, updateQuantity, clearCart } = useCart();
     const [sending, setSending] = useState(false);
     const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     // React Hook Form
     const { register, handleSubmit: handleHookSubmit, formState: { errors }, getValues } = useForm<QuoteFormValues>({
@@ -98,15 +100,16 @@ export const QuoteCart: React.FC = () => {
 
     if (items.length === 0 && !success) {
         return (
-            <div className="min-h-[60vh] flex flex-col items-center justify-center pt-20">
+            <div className="min-h-[60vh] flex flex-col items-center justify-center pt-20 px-4">
                 <SEO title="Quote Cart" description="Review your selected surgical instruments." />
-                <h1 className="text-3xl font-serif text-brand-charcoal mb-4">Your Quote Cart is Empty</h1>
-                <p className="text-stone-500 mb-8">Browse our catalogue to add instruments.</p>
-                <Link to="/products">
-                    <Button variant="primary">
-                        Browse Products <ArrowRight size={18} className="ml-2" />
-                    </Button>
-                </Link>
+                <EmptyState
+                    title="Your Quote Cart is Empty"
+                    description="Browse our catalogue to add instruments to your quotation request."
+                    action={{
+                        label: "Browse Products",
+                        onClick: () => navigate('/products')
+                    }}
+                />
             </div>
         );
     }

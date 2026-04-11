@@ -6,6 +6,7 @@ import { CategoryGridSkeleton, ProductGridSkeleton } from '../../components/ui/S
 import { useInstrumentSubcategoriesNew, useProductsByInstrument } from '../../lib/queries';
 import { ChevronRight, Package, ArrowRight, Scissors } from 'lucide-react';
 import { ProductCard } from '../../components/ProductCard';
+import { EmptyState } from '../../components/ui/EmptyState';
 
 export const InstrumentCategoryView: React.FC = () => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string; subcategoryName?: string }>();
@@ -69,9 +70,11 @@ export const InstrumentCategoryView: React.FC = () => {
                         {productsLoading ? (
                             <ProductGridSkeleton count={12} />
                         ) : products.length === 0 ? (
-                            <div className="text-center py-20">
-                                <Package className="mx-auto text-stone-300 mb-4" size={48} />
-                                <p className="text-stone-500">No products found in this subcategory.</p>
+                            <div className="py-20">
+                                <EmptyState
+                                    title="No products found"
+                                    description="We are actively adding new instruments to this subcategory. Please check back later."
+                                />
                             </div>
                         ) : (
                             <>

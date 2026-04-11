@@ -4,8 +4,9 @@ import { Section, FadeIn, Pagination } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { ProductCard } from '../../components/ProductCard';
 import { ProductGridSkeleton } from '../../components/ui/Skeleton';
-import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../lib/supabase';
+import { useQuery } from '@tanstack/react-query';
+import { EmptyState } from '../../components/ui/EmptyState';
 import { Product } from '../../lib/database';
 import { ChevronRight, Package } from 'lucide-react';
 
@@ -88,9 +89,11 @@ export const InstrumentTypeView: React.FC = () => {
                             Failed to load products. Please try again later.
                         </div>
                     ) : products.length === 0 ? (
-                        <div className="text-center py-20">
-                            <Package className="mx-auto text-stone-300 mb-4" size={48} />
-                            <p className="text-stone-500">No products found in this category.</p>
+                        <div className="py-20">
+                            <EmptyState
+                                title="No products found"
+                                description="We are actively adding new instruments to this category. Please check back later."
+                            />
                         </div>
                     ) : (
                         <>

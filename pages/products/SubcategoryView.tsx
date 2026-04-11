@@ -6,6 +6,7 @@ import { ProductGridSkeleton } from '../../components/ui/Skeleton';
 import { useProductsBySubcategory } from '../../lib/queries';
 import { ChevronRight, Package, Grid, LayoutGrid, Search, X } from 'lucide-react';
 import { ProductCard } from '../../components/ProductCard';
+import { EmptyState } from '../../components/ui/EmptyState';
 
 export const SubcategoryView: React.FC = () => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string; subcategoryName: string }>();
@@ -139,13 +140,15 @@ export const SubcategoryView: React.FC = () => {
                             />
                         </>
                     ) : (
-                        <div className="text-center py-20">
-                            <Package className="mx-auto text-stone-300 mb-4" size={64} />
-                            <h3 className="text-xl font-serif text-brand-charcoal mb-2">No products found</h3>
-                            <p className="text-stone-500 mb-6">We are adding products to this category soon.</p>
-                            <Button variant="primary" onClick={() => navigate(`/products/${encodeURIComponent(category)}`)}>
-                                Back to {category}
-                            </Button>
+                        <div className="py-20">
+                            <EmptyState
+                                title="No products found"
+                                description="We are actively adding new instruments to this category. Please check back later or contact us for custom orders."
+                                action={{
+                                    label: `Back to ${category}`,
+                                    onClick: () => navigate(`/products/${encodeURIComponent(category)}`)
+                                }}
+                            />
                         </div>
                     )}
                 </div>
