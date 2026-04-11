@@ -9,7 +9,8 @@ interface SEOProps {
     image?: string;
     url?: string;
     type?: string;
-    structuredData?: object; // JSON-LD schema.org data
+    structuredData?: object | object[]; // JSON-LD schemas
+    breadcrumbs?: { name: string; item: string }[];
 }
 
 export const SEO: React.FC<SEOProps> = ({
@@ -17,9 +18,10 @@ export const SEO: React.FC<SEOProps> = ({
     description,
     keywords,
     image = 'https://images.unsplash.com/photo-1626315869436-d6781ba69d6e?q=80&w=1200', /* Default image */
-    url = typeof window !== 'undefined' ? window.location.href : '',
+    url = typeof window !== 'undefined' ? window.location.href : 'https://smithinstruments.net',
     type = 'website',
-    structuredData
+    structuredData,
+    breadcrumbs
 }) => {
     const siteTitle = 'Smith Instruments';
     const fullTitle = `${title} | ${siteTitle}`;
@@ -40,6 +42,33 @@ export const SEO: React.FC<SEOProps> = ({
         },
         "sameAs": Object.values(SOCIAL_LINKS)
     };
+
+    // Ensure absolute URL
+    const absoluteUrl = url.startsWith('http') ? url : `https://smithinstruments.net${url.startsWith('/') ? url : `/${url}`}`;
+
+    // Combine schemas
+    const schemas: object[] = [organizationSchema];
+
+    if (breadcrumbs && breadcrumbs.length > 0) {
+        schemas.push({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": breadcrumbs.map((crumb, index) => ({
+                "@type": "ListItem",
+                "position": index + 1,
+                "name": crumb.name,
+                "item": crumb.item.startsWith('http') ? crumb.item : `https://smithinstruments.net${crumb.item}`
+            }))
+        });
+    }
+
+    if (structuredData) {
+        if (Array.isArray(structuredData)) {
+            schemas.push(...structuredData);
+        } else {
+            schemas.push(structuredData);
+        }
+    }
 
     return (
         <Helmet>
@@ -63,12 +92,14 @@ export const SEO: React.FC<SEOProps> = ({
             <meta property="twitter:description" content={description} />
             <meta property="twitter:image" content={image} />
 
-            {/* Canonical URL */}
-            <link rel="canonical" href={url} />
+            {/* Canonical URL and hreflang */}
+            <link rel="canonical" href={absoluteUrl} />
+            <link rel="alternate" hrefLang="en" href={absoluteUrl} />
+            <link rel="alternate" hrefLang="x-default" href={absoluteUrl} />
 
             {/* JSON-LD Structured Data */}
             <script type="application/ld+json">
-                {JSON.stringify(structuredData || organizationSchema)}
+                {JSON.stringify(schemas)}
             </script>
         </Helmet>
     );

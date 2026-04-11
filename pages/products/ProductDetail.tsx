@@ -188,6 +188,12 @@ export const ProductDetail: React.FC = () => {
                 image={product.image_url}
                 type="product"
                 structuredData={productSchema}
+                breadcrumbs={[
+                    { name: 'Products', item: '/products' },
+                    { name: product.category, item: `/products/${encodeURIComponent(product.category)}` },
+                    ...(product.subcategory ? [{ name: product.subcategory, item: `/products/${encodeURIComponent(product.category)}/${encodeURIComponent(product.subcategory)}` }] : []),
+                    { name: product.sku, item: `/product/${encodeURIComponent(product.sku)}` }
+                ]}
             />
 
             {/* Breadcrumbs */}

@@ -34,6 +34,17 @@ export const CategoryView: React.FC = () => {
             <SEO
                 title={`${category} Instruments`}
                 description={`Browse ${category} subcategories and instruments.`}
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "CollectionPage",
+                    "name": `${category} Instruments`,
+                    "description": `Browse ${category} subcategories and instruments.`,
+                    "url": `https://smithinstruments.net/products/${encodeURIComponent(category)}`
+                }}
+                breadcrumbs={[
+                    { name: 'Products', item: '/products' },
+                    { name: category, item: `/products/${encodeURIComponent(category)}` }
+                ]}
             />
 
             {/* Header */}

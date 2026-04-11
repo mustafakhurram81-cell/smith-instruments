@@ -51,8 +51,20 @@ export const SubcategoryView: React.FC = () => {
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
             <SEO
-                title={`${subcategory} - ${category}`}
-                description={`Browse our range of ${subcategory} for ${category}.`}
+                title={`${subcategory} | ${category} Instruments`}
+                description={`Browse ${subcategory} surgical instruments.`}
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "CollectionPage",
+                    "name": `${subcategory} | ${category} Instruments`,
+                    "description": `Browse ${subcategory} surgical instruments.`,
+                    "url": `https://smithinstruments.net/products/${encodeURIComponent(category)}/${encodeURIComponent(subcategory)}`
+                }}
+                breadcrumbs={[
+                    { name: 'Products', item: '/products' },
+                    { name: category, item: `/products/${encodeURIComponent(category)}` },
+                    { name: subcategory, item: `/products/${encodeURIComponent(category)}/${encodeURIComponent(subcategory)}` }
+                ]}
             />
 
             <div className="bg-brand-charcoal text-white py-12 md:py-20 relative overflow-hidden">
