@@ -5,10 +5,29 @@ import { SEO } from '../../components/SEO';
 import { ProductCard } from '../../components/ProductCard';
 import { ProductGridSkeleton } from '../../components/ui/Skeleton';
 import { useQuery } from '@tanstack/react-query';
-import { getProductsByInstrumentNew } from '../../lib/database';
+import { supabase } from '../../lib/supabase';
+import { Product } from '../../lib/database';
 import { ChevronRight, Package } from 'lucide-react';
 
 const PAGE_SIZE = 24;
+
+async function getProductsByLegacyType(subcategory: string, page = 1, limit = 24): Promise<{ data: Product[]; count: number }> {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data, error, count } = await supabase
+        .from('products')
+        .select('*', { count: 'exact' })
+        .eq('subcategory', subcategory)
+        .order('sku', { ascending: true })
+        .range(from, to);
+
+    if (error) {
+        if (import.meta.env.DEV) console.error('Error fetching by legacy subcategory:', error);
+        return { data: [], count: 0 };
+    }
+    return { data: data || [], count: count || 0 };
+}
 
 export const InstrumentTypeView: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -18,7 +37,7 @@ export const InstrumentTypeView: React.FC = () => {
     // Use the proper server-side RPC instead of full-table scan
     const { data: result, isLoading, error } = useQuery({
         queryKey: ['productsByInstrumentType', instrumentType, currentPage],
-        queryFn: () => getProductsByInstrumentNew(instrumentType, undefined, currentPage, PAGE_SIZE),
+        queryFn: () => getProductsByLegacyType(instrumentType, currentPage, PAGE_SIZE),
         enabled: !!instrumentType,
         staleTime: 1000 * 60 * 5,
     });
@@ -77,7 +96,7 @@ export const InstrumentTypeView: React.FC = () => {
                         <>
                             <p className="text-sm text-stone-500 mb-6">{totalCount} instruments</p>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                                {products.map((product, idx) => (
+                                {products.map((product: Product, idx: number) => (
                                     <FadeIn key={product.id} delay={Math.min(idx * 0.02, 0.2)}>
                                         <ProductCard product={product} viewMode="grid" />
                                     </FadeIn>
