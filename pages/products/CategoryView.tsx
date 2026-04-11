@@ -17,15 +17,17 @@ export const CategoryView: React.FC = () => {
 
     // Use the new hook that includes counts and images
     const { data: subcategoryDetails = [], isLoading: subsLoading } = useSubcategoryDetails(category);
-    const { data: products = [], isLoading: productsLoading } = useProductsByCategory(category);
+    // Returns { data: Product[], count: number }
+    const { data: productsResult, isLoading: productsLoading } = useProductsByCategory(category, currentPage, ITEMS_PER_PAGE);
 
+    const products = productsResult?.data ?? [];
+    const totalCount = productsResult?.count ?? 0;
     const loading = subsLoading || productsLoading;
 
     // Calculate total from subcategory details for accurate count
     const totalProducts = subcategoryDetails.reduce((acc, sub) => acc + sub.count, 0);
 
-    const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
-    const visibleProducts = products.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
@@ -109,12 +111,12 @@ export const CategoryView: React.FC = () => {
                         <>
                             <div className="flex justify-between items-center mb-8">
                                 <h2 className="text-2xl font-serif text-brand-charcoal">
-                                    All Products ({products.length})
+                                    All Products ({totalCount})
                                 </h2>
                             </div>
 
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                                {visibleProducts.map((product, idx) => (
+                                {products.map((product, idx) => (
                                     <ProductCard
                                         key={product.sku}
                                         product={product}

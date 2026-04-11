@@ -19,14 +19,20 @@ export const SpecialtyCategoryView: React.FC = () => {
     // Fetch subcategories for this specialty category (from new column)
     const { data: subcategories = [], isLoading: subsLoading } = useSpecialtySubcategories(category);
 
-    // Fetch products (from new column)
-    const { data: products = [], isLoading: productsLoading } = useProductsBySpecialty(category, subcategory || undefined);
+    // Fetch products (from new column) — returns { data: Product[], count: number }
+    const { data: productsResult, isLoading: productsLoading } = useProductsBySpecialty(
+        category,
+        subcategory || undefined,
+        currentPage,
+        ITEMS_PER_PAGE
+    );
+
+    const products = productsResult?.data ?? [];
+    const totalCount = productsResult?.count ?? 0;
 
     const loading = subsLoading || productsLoading;
     const totalProducts = subcategories.reduce((acc, sub) => acc + sub.count, 0);
-
-    const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
-    const visibleProducts = products.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
     // If viewing a specific subcategory, show products directly
     if (subcategory) {
@@ -50,7 +56,7 @@ export const SpecialtyCategoryView: React.FC = () => {
 
                         <h1 className="font-serif text-4xl md:text-6xl mb-4">{subcategory}</h1>
                         <p className="text-stone-400 font-light max-w-2xl text-lg">
-                            {!productsLoading && <>{products.length} instruments</>}
+                            {!productsLoading && <>{totalCount} instruments</>}
                         </p>
                     </div>
                     <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
@@ -71,12 +77,12 @@ export const SpecialtyCategoryView: React.FC = () => {
                             <>
                                 <div className="flex justify-between items-center mb-8">
                                     <h2 className="text-2xl font-serif text-brand-charcoal">
-                                        All Products ({products.length})
+                                        All Products ({totalCount})
                                     </h2>
                                 </div>
 
                                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                                    {visibleProducts.map((product, idx) => (
+                                    {products.map((product, idx) => (
                                         <FadeIn key={product.id} delay={Math.min(idx * 0.02, 0.2)}>
                                             <ProductCard product={product} viewMode="grid" />
                                         </FadeIn>

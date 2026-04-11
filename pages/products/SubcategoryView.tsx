@@ -19,9 +19,13 @@ export const SubcategoryView: React.FC = () => {
     const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid');
     const [searchTerm, setSearchTerm] = useState('');
 
-    const { data: products = [], isLoading: loading } = useProductsBySubcategory(category, subcategory);
+    // Returns { data: Product[], count: number }
+    const { data: productsResult, isLoading: loading } = useProductsBySubcategory(category, subcategory, currentPage, ITEMS_PER_PAGE);
 
-    // Filter products
+    const products = productsResult?.data ?? [];
+    const totalCount = productsResult?.count ?? 0;
+
+    // Client-side filter on the current page of results
     const filteredProducts = products.filter(p =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.sku.toLowerCase().includes(searchTerm.toLowerCase())
@@ -32,8 +36,14 @@ export const SubcategoryView: React.FC = () => {
         setCurrentPage(1);
     }, [searchTerm]);
 
-    const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
-    const visibleProducts = filteredProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+    // When searching locally, paginate filtered; otherwise use server count
+    const isFiltering = searchTerm.trim().length > 0;
+    const totalPages = isFiltering
+        ? Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)
+        : Math.ceil(totalCount / ITEMS_PER_PAGE);
+    const visibleProducts = isFiltering
+        ? filteredProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+        : filteredProducts; // already server-paginated
 
     return (
         <div className="pt-20 min-h-screen bg-stone-50">
@@ -54,7 +64,7 @@ export const SubcategoryView: React.FC = () => {
 
                     <h1 className="font-serif text-4xl md:text-6xl mb-4">{subcategory}</h1>
                     <p className="text-stone-400 font-light max-w-2xl text-lg">
-                        {!loading && <>{products.length} precision instruments available</>}
+                        {!loading && <>{totalCount} precision instruments available</>}
                     </p>
                 </div>
                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">

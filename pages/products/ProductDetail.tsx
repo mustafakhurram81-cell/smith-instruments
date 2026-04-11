@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../components/CartProvider';
 import { useToast } from '../../components/ToastProvider';
 import { useRecentlyViewed } from '../../hooks/useRecentlyViewed';
+import { CONTACT_INFO } from '../../constants';
 
 export const ProductDetail: React.FC = () => {
     // Handle both /product/:productId and /products/:category/:subcategory/:productSKU
@@ -47,10 +48,11 @@ export const ProductDetail: React.FC = () => {
                 setParentProduct(parent);
 
                 // Fetch related products from same subcategory
-                const related = await getProductsBySubcategory(prod.category, prod.subcategory);
+                const relatedResult = await getProductsBySubcategory(prod.category, prod.subcategory);
+                const relatedData = relatedResult?.data ?? [];
                 // Filter out current product and its variants, limit to 4
                 const variantSkus = new Set(variantProducts.map(v => v.sku));
-                setRelatedProducts(related.filter(p => !variantSkus.has(p.sku)).slice(0, 4));
+                setRelatedProducts(relatedData.filter((p: Product) => !variantSkus.has(p.sku)).slice(0, 4));
 
                 // Match product to its catalogue via subcategory/category mapping
                 const cat = await getCatalogueForProduct(prod);
@@ -142,11 +144,12 @@ export const ProductDetail: React.FC = () => {
     const whatsappMessage = encodeURIComponent(
         `Hi, I'm interested in the product:\n\nSKU: ${product.sku}\nName: ${product.name}\nQuantity: ${quantity}\n\nPlease provide more information.`
     );
-    const whatsappUrl = `https://wa.me/447778880462?text=${whatsappMessage}`;
+    // Use the Pakistan number from constants (primary contact)
+    const whatsappUrl = `https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}?text=${whatsappMessage}`;
 
     const emailSubject = encodeURIComponent(`Inquiry: ${product.name} (${product.sku})`);
     const emailBody = encodeURIComponent(`Hello,\n\nI'm interested in the following product:\n\nSKU: ${product.sku}\nName: ${product.name}\n\nPlease provide pricing and availability.\n\nThank you.`);
-    const emailUrl = `mailto:info@smithinstruments.co.uk?subject=${emailSubject}&body=${emailBody}`;
+    const emailUrl = `mailto:${CONTACT_INFO.email}?subject=${emailSubject}&body=${emailBody}`;
 
     // Generate Product schema for structured data
     const productSchema = {

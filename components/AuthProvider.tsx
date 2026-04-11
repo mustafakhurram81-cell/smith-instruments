@@ -33,14 +33,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const adminEmailsEnv = import.meta.env.VITE_ADMIN_EMAILS || '';
     const ADMIN_EMAILS = adminEmailsEnv.split(',').map((e: string) => e.trim().toLowerCase()).filter(Boolean);
 
-    // Fetch user role from database
+    // Fetch user role from database (source of truth)
     const fetchUserRole = async (userId: string, userEmail?: string) => {
-        // Temporary override: Check if email is in admin list
-        if (userEmail && ADMIN_EMAILS.includes(userEmail.toLowerCase())) {
-            setUserRole('admin');
-            return;
-        }
-
         try {
             const { data, error } = await supabase
                 .from('user_roles')
@@ -48,14 +42,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 .eq('user_id', userId)
                 .single();
 
-            if (error) {
-                console.warn('Could not fetch user role:', error.message);
-                // Default to manager if no role found (safe default)
-                setUserRole('manager');
+            if (!error && data?.role) {
+                setUserRole(data.role as UserRole);
                 return;
             }
 
-            setUserRole(data?.role as UserRole || 'manager');
+            // Fallback: if DB lookup fails, check the env-defined admin emails
+            // (e.g. during initial setup before user_roles table is populated)
+            if (userEmail && ADMIN_EMAILS.includes(userEmail.toLowerCase())) {
+                setUserRole('admin');
+                return;
+            }
+
+            // Default safe role
+            setUserRole('manager');
         } catch (err) {
             console.warn('Error fetching user role:', err);
             setUserRole('manager');
