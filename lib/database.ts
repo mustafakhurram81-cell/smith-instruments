@@ -102,7 +102,7 @@ export async function getCatalogueForProduct(product: Product): Promise<Catalogu
 export async function getSubcategoryDetails(category: string): Promise<{ name: string; count: number; image: string }[]> {
     const { data, error } = await supabase.rpc('get_subcategory_details', { p_category: category });
     if (error) {
-        console.error('Error fetching subcategory details:', error);
+        if (import.meta.env.DEV) console.error('Error fetching subcategory details:', error);
         return [];
     }
     return data || [];
@@ -172,7 +172,7 @@ export function getInstrumentCategoryFor(subcategory: string): string {
 export async function getInstrumentCategories(): Promise<{ name: string; count: number; image: string; subcategories: string[] }[]> {
     const { data, error } = await supabase.rpc('get_instrument_categories_with_subs');
     if (error) {
-        console.error('Error fetching products for instrument categories:', error);
+        if (import.meta.env.DEV) console.error('Error fetching products for instrument categories:', error);
         return [];
     }
     return data || [];
@@ -182,7 +182,7 @@ export async function getInstrumentCategories(): Promise<{ name: string; count: 
 export async function getInstrumentSubcategories(instrumentCategory: string): Promise<{ name: string; count: number; image: string }[]> {
     const { data, error } = await supabase.rpc('get_instrument_subcategory_details', { p_category: instrumentCategory });
     if (error) {
-        console.error('Error fetching products:', error);
+        if (import.meta.env.DEV) console.error('Error fetching products:', error);
         return [];
     }
     return data || [];
@@ -192,7 +192,7 @@ export async function getInstrumentSubcategories(instrumentCategory: string): Pr
 export async function getInstrumentTypes(): Promise<{ name: string; count: number; image: string }[]> {
     const { data, error } = await supabase.rpc('get_all_instrument_types');
     if (error) {
-        console.error('Error fetching instrument types:', error);
+        if (import.meta.env.DEV) console.error('Error fetching instrument types:', error);
         return [];
     }
     return data || [];
@@ -206,7 +206,7 @@ export async function getInstrumentTypes(): Promise<{ name: string; count: numbe
 export async function getSpecialtyCategories(): Promise<{ name: string; count: number; image: string }[]> {
     const { data, error } = await supabase.rpc('get_specialty_categories_details');
     if (error) {
-        console.error('Error fetching specialty categories:', error);
+        if (import.meta.env.DEV) console.error('Error fetching specialty categories:', error);
         return [];
     }
     return data || [];
@@ -216,7 +216,7 @@ export async function getSpecialtyCategories(): Promise<{ name: string; count: n
 export async function getSpecialtySubcategories(category: string): Promise<{ name: string; count: number; image: string }[]> {
     const { data, error } = await supabase.rpc('get_specialty_subcategory_details', { p_category: category });
     if (error) {
-        console.error('Error fetching specialty subcategories:', error);
+        if (import.meta.env.DEV) console.error('Error fetching specialty subcategories:', error);
         return [];
     }
     return data || [];
@@ -241,7 +241,7 @@ export async function getProductsBySpecialty(category: string, subcategory?: str
         .range(from, to);
 
     if (error) {
-        console.error('Error fetching products by specialty:', error);
+        if (import.meta.env.DEV) console.error('Error fetching products by specialty:', error);
         return { data: [], count: 0 };
     }
 
@@ -252,7 +252,7 @@ export async function getProductsBySpecialty(category: string, subcategory?: str
 export async function getInstrumentCategoriesNew(): Promise<{ name: string; count: number; image: string }[]> {
     const { data, error } = await supabase.rpc('get_instrument_category_details');
     if (error) {
-        console.error('Error fetching instrument categories:', error);
+        if (import.meta.env.DEV) console.error('Error fetching instrument categories:', error);
         return [];
     }
     return data || [];
@@ -262,7 +262,7 @@ export async function getInstrumentCategoriesNew(): Promise<{ name: string; coun
 export async function getInstrumentSubcategoriesNew(category: string): Promise<{ name: string; count: number; image: string }[]> {
     const { data, error } = await supabase.rpc('get_instrument_subcategory_details', { p_category: category });
     if (error) {
-        console.error('Error fetching instrument subcategories:', error);
+        if (import.meta.env.DEV) console.error('Error fetching instrument subcategories:', error);
         return [];
     }
     return data || [];
@@ -287,7 +287,7 @@ export async function getProductsByInstrument(category: string, subcategory?: st
         .range(from, to);
 
     if (error) {
-        console.error('Error fetching products by instrument:', error);
+        if (import.meta.env.DEV) console.error('Error fetching products by instrument:', error);
         return { data: [], count: 0 };
     }
 
@@ -307,7 +307,7 @@ export async function getProductsByCategory(category: string, page: number = 1, 
         .range(from, to);
 
     if (error) {
-        console.error('Error fetching products by category:', error);
+        if (import.meta.env.DEV) console.error('Error fetching products by category:', error);
         return { data: [], count: 0 };
     }
 
@@ -328,7 +328,7 @@ export async function getProductsBySubcategory(category: string, subcategory: st
         .range(from, to);
 
     if (error) {
-        console.error('Error fetching products by subcategory:', error);
+        if (import.meta.env.DEV) console.error('Error fetching products by subcategory:', error);
         return { data: [], count: 0 };
     }
 
@@ -344,7 +344,7 @@ export async function getProductBySku(sku: string): Promise<Product | null> {
         .single();
 
     if (error) {
-        console.error('Error fetching product:', error);
+        if (import.meta.env.DEV) console.error('Error fetching product:', error);
         return null;
     }
 
@@ -369,7 +369,7 @@ export async function searchProducts(query: string): Promise<Product[]> {
         .limit(50);
 
     if (error) {
-        console.error('Error searching products:', error);
+        if (import.meta.env.DEV) console.error('Error searching products:', error);
         return [];
     }
 
@@ -398,7 +398,7 @@ export async function getProductVariants(sku: string): Promise<Product[]> {
         .order('sku', { ascending: true });
 
     if (error) {
-        console.error('Error fetching product variants:', error);
+        if (import.meta.env.DEV) console.error('Error fetching product variants:', error);
         return [];
     }
 
@@ -417,7 +417,7 @@ export async function getProductVariants(sku: string): Promise<Product[]> {
 export async function getCategoryDetails(): Promise<{ name: string; count: number; image: string }[]> {
     const { data, error } = await supabase.rpc('get_category_details');
     if (error) {
-        console.error('Error fetching category details:', error);
+        if (import.meta.env.DEV) console.error('Error fetching category details:', error);
         return [];
     }
     return data || [];
@@ -449,7 +449,7 @@ export async function getCategoryNames(): Promise<string[]> {
             .limit(1000); // Limit for performance
 
         if (error) {
-            console.error('Error fetching category names:', error);
+            if (import.meta.env.DEV) console.error('Error fetching category names:', error);
             return [];
         }
 
@@ -460,7 +460,7 @@ export async function getCategoryNames(): Promise<string[]> {
 
         return Array.from(uniqueCategories).sort();
     } catch (err) {
-        console.error('Error in getCategoryNames:', err);
+        if (import.meta.env.DEV) console.error('Error in getCategoryNames:', err);
         return [];
     }
 }
@@ -492,7 +492,7 @@ export async function getCatalogues(): Promise<Catalogue[]> {
         .order('display_order', { ascending: true });
 
     if (error) {
-        console.error('Error fetching catalogues:', error);
+        if (import.meta.env.DEV) console.error('Error fetching catalogues:', error);
         return [];
     }
 
@@ -507,7 +507,7 @@ export async function getAllCatalogues(): Promise<Catalogue[]> {
         .order('display_order', { ascending: true });
 
     if (error) {
-        console.error('Error fetching all catalogues:', error);
+        if (import.meta.env.DEV) console.error('Error fetching all catalogues:', error);
         return [];
     }
 
@@ -522,7 +522,7 @@ export async function getCatalogueCategories(): Promise<string[]> {
         .eq('is_active', true);
 
     if (error) {
-        console.error('Error fetching catalogue categories:', error);
+        if (import.meta.env.DEV) console.error('Error fetching catalogue categories:', error);
         return [];
     }
 
@@ -543,7 +543,7 @@ export async function createCatalogue(catalogue: Omit<Catalogue, 'id' | 'created
         .single();
 
     if (error) {
-        console.error('Error creating catalogue:', error);
+        if (import.meta.env.DEV) console.error('Error creating catalogue:', error);
         return null;
     }
 
@@ -560,7 +560,7 @@ export async function updateCatalogue(id: string, updates: Partial<Catalogue>): 
         .single();
 
     if (error) {
-        console.error('Error updating catalogue:', error);
+        if (import.meta.env.DEV) console.error('Error updating catalogue:', error);
         return null;
     }
 
@@ -575,7 +575,7 @@ export async function deleteCatalogue(id: string): Promise<boolean> {
         .eq('id', id);
 
     if (error) {
-        console.error('Error deleting catalogue:', error);
+        if (import.meta.env.DEV) console.error('Error deleting catalogue:', error);
         return false;
     }
 

@@ -1,55 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Section, FadeIn, ParallaxHeader } from '../../components/Shared';
+import { Section, FadeIn, Pagination } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { ProductCard } from '../../components/ProductCard';
 import { ProductGridSkeleton } from '../../components/ui/Skeleton';
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../../lib/supabase';
-import { Product } from '../../lib/database';
+import { getProductsByInstrumentNew } from '../../lib/database';
 import { ChevronRight, Package } from 'lucide-react';
 
-// Fetch products by subcategory (instrument type) across all categories
-async function getProductsByInstrumentType(subcategory: string): Promise<Product[]> {
-    const PAGE_SIZE = 1000;
-    let allProducts: Product[] = [];
-    let from = 0;
-    let hasMore = true;
-
-    while (hasMore) {
-        const { data, error } = await supabase
-            .from('products')
-            .select('*')
-            .eq('subcategory', subcategory)
-            .range(from, from + PAGE_SIZE - 1);
-
-        if (error) {
-            console.error('Error fetching products by instrument type:', error);
-            break;
-        }
-
-        if (data && data.length > 0) {
-            allProducts = [...allProducts, ...data];
-            from += PAGE_SIZE;
-            hasMore = data.length === PAGE_SIZE;
-        } else {
-            hasMore = false;
-        }
-    }
-
-    return allProducts;
-}
+const PAGE_SIZE = 24;
 
 export const InstrumentTypeView: React.FC = () => {
     const [searchParams] = useSearchParams();
     const instrumentType = searchParams.get('type') || '';
+    const [currentPage, setCurrentPage] = useState(1);
 
-    const { data: products = [], isLoading, error } = useQuery({
-        queryKey: ['productsByInstrumentType', instrumentType],
-        queryFn: () => getProductsByInstrumentType(instrumentType),
+    // Use the proper server-side RPC instead of full-table scan
+    const { data: result, isLoading, error } = useQuery({
+        queryKey: ['productsByInstrumentType', instrumentType, currentPage],
+        queryFn: () => getProductsByInstrumentNew(instrumentType, undefined, currentPage, PAGE_SIZE),
         enabled: !!instrumentType,
         staleTime: 1000 * 60 * 5,
     });
+
+    const products = result?.data ?? [];
+    const totalCount = result?.count ?? 0;
+    const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
     if (!instrumentType) {
         return (
@@ -67,18 +43,22 @@ export const InstrumentTypeView: React.FC = () => {
             />
 
             {/* Header */}
-            <ParallaxHeader
-                title={instrumentType}
-                description={!isLoading ? `${products.length} instruments` : undefined}
-                image="/images/headers/products-header.png"
-                breadcrumbs={
-                    <div className="flex items-center gap-2 text-brand-orange uppercase tracking-widest text-xs font-bold">
-                        <Link to="/products" className="hover:underline">Products</Link>
+            <div className="bg-brand-charcoal text-white py-12 md:py-20 relative overflow-hidden">
+                <div className="container mx-auto px-6 relative z-10">
+                    <div className="flex items-center gap-2 text-xs text-stone-400 mb-4 uppercase tracking-widest">
+                        <Link to="/products" className="hover:text-white">Products</Link>
                         <ChevronRight size={12} />
-                        <span>{instrumentType}</span>
+                        <span className="text-brand-orange">{instrumentType}</span>
                     </div>
-                }
-            />
+                    <h1 className="font-serif text-4xl md:text-6xl mb-4">{instrumentType}</h1>
+                    <p className="text-stone-400 font-light max-w-2xl text-lg">
+                        {!isLoading && <>{totalCount} instruments</>}
+                    </p>
+                </div>
+                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                    <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-brand-orange blur-[150px] rounded-full"></div>
+                </div>
+            </div>
 
             <Section className="bg-stone-50 !py-12">
                 <div className="container mx-auto px-6">
@@ -95,7 +75,7 @@ export const InstrumentTypeView: React.FC = () => {
                         </div>
                     ) : (
                         <>
-                            <p className="text-sm text-stone-500 mb-6">{products.length} instruments</p>
+                            <p className="text-sm text-stone-500 mb-6">{totalCount} instruments</p>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                                 {products.map((product, idx) => (
                                     <FadeIn key={product.id} delay={Math.min(idx * 0.02, 0.2)}>
@@ -103,6 +83,11 @@ export const InstrumentTypeView: React.FC = () => {
                                     </FadeIn>
                                 ))}
                             </div>
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={setCurrentPage}
+                            />
                         </>
                     )}
                 </div>

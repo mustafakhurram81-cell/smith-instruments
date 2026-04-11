@@ -5,6 +5,7 @@ import { AuthProvider } from './components/AuthProvider';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { CartProvider } from './components/CartProvider';
 import { ToastProvider } from './components/ToastProvider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Loader2 } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
@@ -108,17 +109,19 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <ToastProvider>
-          <Router>
-            <ScrollToTop />
-            <AppContent />
-            <SpeedInsights />
-          </Router>
-        </ToastProvider>
-      </CartProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <CartProvider>
+          <ToastProvider>
+            <Router>
+              <ScrollToTop />
+              <AppContent />
+              <SpeedInsights />
+            </Router>
+          </ToastProvider>
+        </CartProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
