@@ -47,7 +47,7 @@ const ScrollToTop = () => {
 };
 
 const PageLoader = () => (
-  <div className="min-h-[60vh] flex items-center justify-center">
+  <div className="min-h-[calc(100vh-100px)] flex items-center justify-center">
     <Loader2 className="w-10 h-10 text-brand-orange animate-spin" />
   </div>
 );
@@ -59,49 +59,50 @@ const AppContent: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-brand-orange/30">
       {!isAdminRoute && <Header />}
-      <main className="flex-grow">
+      <main className="flex-grow flex flex-col">
         <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/catalogues" element={<Catalogues />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/quote-cart" element={<QuoteCart />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
+          <div className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/catalogues" element={<Catalogues />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/quote-cart" element={<QuoteCart />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
 
-            {/* Product Routes */}
-            <Route path="/products" element={<ProductsIndex />} />
-            {/* Instrument Type Navigation */}
-            <Route path="/products/instruments/:categoryName" element={<InstrumentCategoryView />} />
-            <Route path="/products/instruments/:categoryName/:subcategoryName" element={<InstrumentCategoryView />} />
-            {/* Specialty Navigation */}
-            <Route path="/products/specialty/:categoryName" element={<SpecialtyCategoryView />} />
-            <Route path="/products/specialty/:categoryName/:subcategoryName" element={<SpecialtyCategoryView />} />
-            {/* Legacy routes for backwards compatibility */}
-            <Route path="/products/browse" element={<InstrumentTypeView />} />
-            <Route path="/products/:categoryName" element={<CategoryView />} />
-            <Route path="/products/:categoryName/:subcategoryName" element={<SubcategoryView />} />
-            <Route path="/products/:categoryName/:subcategoryName/:productSKU" element={<ProductDetail />} />
-            <Route path="/product/:productId" element={<ProductDetail />} />
+              {/* Product Routes */}
+              <Route path="/products" element={<ProductsIndex />} />
+              {/* Instrument Type Navigation */}
+              <Route path="/products/instruments/:categoryName" element={<InstrumentCategoryView />} />
+              <Route path="/products/instruments/:categoryName/:subcategoryName" element={<InstrumentCategoryView />} />
+              {/* Specialty Navigation */}
+              <Route path="/products/specialty/:categoryName" element={<SpecialtyCategoryView />} />
+              <Route path="/products/specialty/:categoryName/:subcategoryName" element={<SpecialtyCategoryView />} />
+              {/* Legacy routes for backwards compatibility */}
+              <Route path="/products/browse" element={<InstrumentTypeView />} />
+              <Route path="/products/:categoryName" element={<CategoryView />} />
+              <Route path="/products/:categoryName/:subcategoryName" element={<SubcategoryView />} />
+              <Route path="/products/:categoryName/:subcategoryName/:productSKU" element={<ProductDetail />} />
+              <Route path="/product/:productId" element={<ProductDetail />} />
 
-            {/* Admin Routes */}
-            <Route path="/admin/login" element={<Login />} />
+              {/* Admin Routes */}
+              <Route path="/admin/login" element={<Login />} />
 
-            <Route element={<ProtectedRoute />}>
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<Dashboard />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<Dashboard />} />
+                </Route>
               </Route>
-            </Route>
 
-            {/* 404 Catch-all Route - must be last */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-
+              {/* 404 Catch-all Route - must be last */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+          {!isAdminRoute && <Footer />}
         </Suspense>
       </main>
-      {!isAdminRoute && <Footer />}
       <WhatsAppFloat />
     </div>
   );
