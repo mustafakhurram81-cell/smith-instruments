@@ -167,8 +167,7 @@ export const Home: React.FC = () => {
                 </div>
                 <span className="text-xs uppercase tracking-[0.2em] text-stone-500 font-bold">Global Clients</span>
               </div>
-              </div>
-            </div>
+            </FadeIn>
           </div>
         </div>
       </section>
