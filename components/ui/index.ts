@@ -11,3 +11,4 @@ export {
     ProductGridSkeleton,
     CategoryGridSkeleton
 } from './Skeleton';
+export { PageTransition } from './PageTransition';

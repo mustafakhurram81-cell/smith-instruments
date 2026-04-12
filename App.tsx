@@ -9,6 +9,9 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { Loader2 } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
+import { AnimatePresence } from 'framer-motion';
+import { PageTransition } from './components/ui';
+
 // Lazy load pages
 const Home = lazy(() => import('./pages/Home').then(module => ({ default: module.Home })));
 const Catalogues = lazy(() => import('./pages/Catalogues').then(module => ({ default: module.Catalogues })));
@@ -62,43 +65,45 @@ const AppContent: React.FC = () => {
       <main className="flex-grow flex flex-col">
         <Suspense fallback={<PageLoader />}>
           <div className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/catalogues" element={<Catalogues />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/quote-cart" element={<QuoteCart />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/terms-of-service" element={<TermsOfService />} />
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
+                <Route path="/" element={<PageTransition><Home /></PageTransition>} />
+                <Route path="/catalogues" element={<PageTransition><Catalogues /></PageTransition>} />
+                <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+                <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+                <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
+                <Route path="/quote-cart" element={<PageTransition><QuoteCart /></PageTransition>} />
+                <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+                <Route path="/terms-of-service" element={<PageTransition><TermsOfService /></PageTransition>} />
 
-              {/* Product Routes */}
-              <Route path="/products" element={<ProductsIndex />} />
-              {/* Instrument Type Navigation */}
-              <Route path="/products/instruments/:categoryName" element={<InstrumentCategoryView />} />
-              <Route path="/products/instruments/:categoryName/:subcategoryName" element={<InstrumentCategoryView />} />
-              {/* Specialty Navigation */}
-              <Route path="/products/specialty/:categoryName" element={<SpecialtyCategoryView />} />
-              <Route path="/products/specialty/:categoryName/:subcategoryName" element={<SpecialtyCategoryView />} />
-              {/* Legacy routes for backwards compatibility */}
-              <Route path="/products/browse" element={<InstrumentTypeView />} />
-              <Route path="/products/:categoryName" element={<CategoryView />} />
-              <Route path="/products/:categoryName/:subcategoryName" element={<SubcategoryView />} />
-              <Route path="/products/:categoryName/:subcategoryName/:productSKU" element={<ProductDetail />} />
-              <Route path="/product/:productId" element={<ProductDetail />} />
+                {/* Product Routes */}
+                <Route path="/products" element={<PageTransition><ProductsIndex /></PageTransition>} />
+                {/* Instrument Type Navigation */}
+                <Route path="/products/instruments/:categoryName" element={<PageTransition><InstrumentCategoryView /></PageTransition>} />
+                <Route path="/products/instruments/:categoryName/:subcategoryName" element={<PageTransition><InstrumentCategoryView /></PageTransition>} />
+                {/* Specialty Navigation */}
+                <Route path="/products/specialty/:categoryName" element={<PageTransition><SpecialtyCategoryView /></PageTransition>} />
+                <Route path="/products/specialty/:categoryName/:subcategoryName" element={<PageTransition><SpecialtyCategoryView /></PageTransition>} />
+                {/* Legacy routes for backwards compatibility */}
+                <Route path="/products/browse" element={<PageTransition><InstrumentTypeView /></PageTransition>} />
+                <Route path="/products/:categoryName" element={<PageTransition><CategoryView /></PageTransition>} />
+                <Route path="/products/:categoryName/:subcategoryName" element={<PageTransition><SubcategoryView /></PageTransition>} />
+                <Route path="/products/:categoryName/:subcategoryName/:productSKU" element={<PageTransition><ProductDetail /></PageTransition>} />
+                <Route path="/product/:productId" element={<PageTransition><ProductDetail /></PageTransition>} />
 
-              {/* Admin Routes */}
-              <Route path="/admin/login" element={<Login />} />
+                {/* Admin Routes */}
+                <Route path="/admin/login" element={<PageTransition><Login /></PageTransition>} />
 
-              <Route element={<ProtectedRoute />}>
-                <Route path="/admin" element={<AdminLayout />}>
-                  <Route index element={<Dashboard />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<Dashboard />} />
+                  </Route>
                 </Route>
-              </Route>
 
-              {/* 404 Catch-all Route - must be last */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+                {/* 404 Catch-all Route - must be last */}
+                <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+              </Routes>
+            </AnimatePresence>
           </div>
           {!isAdminRoute && <Footer />}
         </Suspense>

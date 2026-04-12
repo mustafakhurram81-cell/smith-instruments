@@ -39,7 +39,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     return (
         <div
             onClick={handleClick}
-            className="group cursor-pointer h-full bg-white border border-stone-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col"
+            className="group cursor-pointer h-full bg-white border border-stone-200 rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col"
         >
             <div className={`bg-stone-50 relative overflow-hidden flex items-center justify-center p-6 ${isCompact ? 'aspect-video' : 'aspect-square'}`}>
 
@@ -47,7 +47,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                     <LazyImage
                         src={product.image_url}
                         alt={product.name}
-                        className="relative z-10 w-full h-full object-contain mix-blend-multiply transition-transform duration-300"
+                        className="relative z-10 w-full h-full object-contain mix-blend-multiply transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
                         containerClassName="w-full h-full"
                         placeholder={
                             <div className="w-full h-full flex items-center justify-center">
