@@ -38,8 +38,8 @@ export const Header: React.FC = () => {
             <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
             <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 py-2 ${isTransparent
-                ? 'bg-transparent'
-                : 'bg-white/95 backdrop-blur-md shadow-sm'
+                ? 'bg-transparent border-b border-transparent'
+                : 'bg-white/80 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-b border-stone-200/50'
                 }`}>
                 <div className="container mx-auto px-6 flex items-center justify-between">
 
@@ -86,7 +86,7 @@ export const Header: React.FC = () => {
                                     : 'opacity-0 -translate-y-2 pointer-events-none'
                                     }`}
                             >
-                                <div className="w-56 bg-white border border-stone-200 rounded-md shadow-lg py-2 text-brand-charcoal">
+                                <div className="w-56 bg-white/95 backdrop-blur-xl border border-stone-200/60 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] py-2 text-brand-charcoal">
                                     {categories.map((cat, idx) => (
                                         <NavLink
                                             key={cat.name}
@@ -187,7 +187,7 @@ export const Header: React.FC = () => {
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            className="md:hidden overflow-visible bg-stone-50 border-b border-stone-200 absolute top-full left-0 right-0 shadow-lg"
+                            className="md:hidden overflow-visible bg-white/95 backdrop-blur-xl border-b border-stone-200/50 absolute top-full left-0 right-0 shadow-[0_8px_30px_rgb(0,0,0,0.06)]"
                         >
                             <nav className="flex flex-col p-6 gap-4">
                                 <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-heading ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Home</NavLink>

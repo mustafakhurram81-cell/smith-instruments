@@ -12,6 +12,13 @@ const LANGUAGES = [
     { code: 'ar', name: 'العربية', flag: '🇸🇦' },
 ];
 
+declare global {
+    interface Window {
+        google: any;
+        googleTranslateElementInit: any;
+    }
+}
+
 // Trigger Google Translate programmatically (hidden widget)
 const translatePage = (langCode: string) => {
     const googleFrame = document.querySelector('.goog-te-menu-frame') as HTMLIFrameElement;
@@ -47,6 +54,26 @@ const translatePage = (langCode: string) => {
     window.location.reload();
 };
 
+const loadGoogleTranslate = () => {
+    if (document.getElementById('google-translate-script')) return;
+
+    window.googleTranslateElementInit = function () {
+        if (!window.google || !window.google.translate) return;
+        new window.google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,de,es,zh-CN,fr,pt,ar,ru,ja,ko',
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
+    };
+
+    const script = document.createElement('script');
+    script.id = 'google-translate-script';
+    script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    script.async = true;
+    document.body.appendChild(script);
+};
+
 interface LanguageSwitcherProps {
     isTransparent?: boolean;
 }
@@ -62,6 +89,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ isTransparen
         if (match) {
             setCurrentLang(match[1]);
         }
+        
+        // Idle load the script if the user hasn't interacted with it within 3 seconds
+        const timer = setTimeout(() => {
+            loadGoogleTranslate();
+        }, 3000);
+        return () => clearTimeout(timer);
     }, []);
 
     // Close on click outside

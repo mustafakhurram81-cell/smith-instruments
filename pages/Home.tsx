@@ -137,9 +137,10 @@ export const Home: React.FC = () => {
 
 
       {/* IMPACT COUNTERS - GRID STYLE */}
-      <section className="bg-white border-y border-stone-200">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-stone-200">
+      <section className="py-12 md:py-16 bg-stone-50">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="bg-white rounded-[2rem] md:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-200/60 overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-stone-100">
             <FadeIn delay={0.1}>
               <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
                 <div className="flex items-center justify-center font-heading text-6xl md:text-7xl text-brand-charcoal mb-4">
@@ -166,13 +167,14 @@ export const Home: React.FC = () => {
                 </div>
                 <span className="text-xs uppercase tracking-[0.2em] text-stone-500 font-bold">Global Clients</span>
               </div>
-            </FadeIn>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* WHY CHOOSE US - GRID CARD STYLE */}
-      <Section className="bg-stone-50 relative border-b border-stone-200">
+      <section className="py-16 md:py-24 bg-stone-50 relative">
         <div className="container mx-auto px-6 relative z-10">
           <div className="mb-20 max-w-2xl">
             <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Why Choose Us</span>
@@ -201,10 +203,10 @@ export const Home: React.FC = () => {
             ))}
           </div>
         </div>
-      </Section>
+      </section>
 
       {/* PRODUCTS CAROUSEL - Professional Infinite Loop */}
-      <Section className="bg-white overflow-hidden relative border-b border-stone-200">
+      <section className="bg-white py-16 md:py-24 overflow-hidden relative border-y border-stone-200/50">
         <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-2xl">
             <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Our Specialties</span>
@@ -282,40 +284,42 @@ export const Home: React.FC = () => {
             }
           }
         `}</style>
-      </Section>
+      </section>
 
       {/* ABOUT SECTION */}
-      <Section className="bg-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-stone-100/50 to-transparent pointer-events-none"></div>
+      <section className="py-16 md:py-24 bg-stone-50 relative">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="bg-white p-8 md:p-16 rounded-[2rem] md:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-200/60 relative overflow-hidden flex flex-col md:flex-row items-center gap-16 z-10">
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-stone-50/50 to-transparent pointer-events-none"></div>
 
-        <div className="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16 relative z-10">
-          <div className="w-full md:w-1/2">
-            <img
-              src={manufacturingImg}
-              alt="Precision Instrument Manufacturing"
-              className="rounded-md shadow-lg"
-              loading="lazy"
-              width="600"
-              height="400"
-            />
-          </div>
-          <div className="w-full md:w-1/2 text-stone-600">
-            <h2 className="font-heading text-4xl text-brand-charcoal mb-6">Our Legacy, <br /><span className="text-brand-orange">Your Trust.</span></h2>
-            <p className="font-light leading-relaxed mb-6 text-lg text-stone-500">
-              Headquartered in the United States and powered by world-class manufacturing facilities in Pakistan, Smith Instruments combines the best of both worlds: American quality standards with skilled craftsmanship honed over generations in one of the world's premier surgical instrument manufacturing hubs.
-            </p>
-            <p className="font-light leading-relaxed mb-10 text-lg text-stone-500">
-              For over two decades, we've partnered with healthcare professionals across 20+ countries, delivering precision instruments that surgeons trust in the most critical moments. Our commitment: uncompromising quality, competitive pricing, and a satisfaction-first approach.
-            </p>
-            <Button variant="primary" onClick={() => navigate('/about')}>
-              Learn More <ArrowRight size={16} className="ml-1" />
-            </Button>
+            <div className="w-full md:w-1/2">
+              <img
+                src={manufacturingImg}
+                alt="Precision Instrument Manufacturing"
+                className="rounded-md shadow-lg"
+                loading="lazy"
+                width="600"
+                height="400"
+              />
+            </div>
+            <div className="w-full md:w-1/2 text-stone-600">
+              <h2 className="font-heading text-4xl text-brand-charcoal mb-6">Our Legacy, <br /><span className="text-brand-orange">Your Trust.</span></h2>
+              <p className="font-light leading-relaxed mb-6 text-lg text-stone-500">
+                Headquartered in the United States and powered by world-class manufacturing facilities in Pakistan, Smith Instruments combines the best of both worlds: American quality standards with skilled craftsmanship honed over generations in one of the world's premier surgical instrument manufacturing hubs.
+              </p>
+              <p className="font-light leading-relaxed mb-10 text-lg text-stone-500">
+                For over two decades, we've partnered with healthcare professionals across 20+ countries, delivering precision instruments that surgeons trust in the most critical moments. Our commitment: uncompromising quality, competitive pricing, and a satisfaction-first approach.
+              </p>
+              <Button variant="primary" onClick={() => navigate('/about')}>
+                Learn More <ArrowRight size={16} className="ml-1" />
+              </Button>
+            </div>
           </div>
         </div>
-      </Section >
+      </section>
 
       {/* TESTIMONIALS */}
-      < Section className="bg-stone-50" >
+      <section className="py-16 md:py-24 bg-stone-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="font-heading text-4xl text-brand-charcoal mb-4">Trusted by Professionals</h2>
@@ -346,7 +350,7 @@ export const Home: React.FC = () => {
             ))}
           </div>
         </div>
-      </Section >
-    </div >
+      </section>
+    </div>
   );
 };
