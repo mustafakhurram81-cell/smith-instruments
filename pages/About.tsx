@@ -21,7 +21,7 @@ export const About: React.FC = () => {
       <ParallaxHeader
         title="Defining Precision"
         description="In-house manufacturing. 50+ Artisans. One standard of excellence."
-        image="/images/headers/about-header.png"
+        image="/images/headers/about-header.webp"
         breadcrumbs={<span className="text-brand-orange uppercase tracking-[0.3em] text-sm font-bold block">Est. 2002 • USA Based</span>}
       />
 
@@ -48,7 +48,7 @@ export const About: React.FC = () => {
             <div className="lg:w-7/12">
               <FadeIn delay={0.2}>
                 <span className="text-brand-orange uppercase tracking-[0.2em] text-sm font-bold mb-4 block">Our Heritage</span>
-                <h2 className="font-serif text-4xl md:text-5xl text-brand-charcoal mb-8 leading-tight">Molding the Metal<br />to Serve Life.</h2>
+                <h2 className="font-heading text-4xl md:text-5xl text-brand-charcoal mb-8 leading-tight">Molding the Metal<br />to Serve Life.</h2>
 
                 <div className="space-y-6 text-stone-600 text-lg font-light leading-relaxed">
                   <p>
@@ -58,7 +58,7 @@ export const About: React.FC = () => {
                     Unlike many suppliers who act as middlemen, we are <strong className="text-brand-charcoal">manufacturers at heart</strong>. With a facility equipped with state-of-the-art machinery and a dedicated team of over 50 skilled employees, we maintain complete control over our production line.
                   </p>
                   <div className="p-6 bg-white border-l-4 border-brand-orange shadow-sm my-8">
-                    <p className="text-brand-charcoal font-serif text-xl italic">
+                    <p className="text-brand-charcoal font-heading text-xl italic">
                       "We focus especially on serving the growing needs of the South American market, delivering reliable instruments to professionals in Brazil, Argentina, and Chile who value precision."
                     </p>
                   </div>
@@ -78,7 +78,7 @@ export const About: React.FC = () => {
         <div className="container mx-auto px-6 relative z-10 text-center">
           <FadeIn>
             <Handshake className="w-16 h-16 text-brand-orange mx-auto mb-6" strokeWidth={1.5} />
-            <h2 className="font-serif text-4xl md:text-5xl text-brand-charcoal mb-6">Our Philosophy:<br />Trust Before Payment.</h2>
+            <h2 className="font-heading text-4xl md:text-5xl text-brand-charcoal mb-6">Our Philosophy:<br />Trust Before Payment.</h2>
             <p className="text-xl font-light text-stone-500 max-w-3xl mx-auto leading-relaxed mb-12">
               What truly sets us apart is our belief in earning your trust.<br />
               <span className="text-brand-charcoal font-medium">You only pay after receiving your instruments and being completely satisfied.</span>
@@ -89,21 +89,21 @@ export const About: React.FC = () => {
                 <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center mb-4">
                   <CheckCircle2 className="text-brand-orange" size={24} />
                 </div>
-                <h4 className="font-serif text-xl text-brand-charcoal mb-2">Inspect First</h4>
+                <h4 className="font-heading text-xl text-brand-charcoal mb-2">Inspect First</h4>
                 <p className="text-sm text-stone-500">Receive your order and inspect the quality firsthand in your own facility.</p>
               </div>
               <div className="bg-stone-50 p-8 rounded-lg border border-stone-200 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
                 <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center mb-4">
                   <ShieldCheck className="text-brand-orange" size={24} />
                 </div>
-                <h4 className="font-serif text-xl text-brand-charcoal mb-2">Zero Risk</h4>
+                <h4 className="font-heading text-xl text-brand-charcoal mb-2">Zero Risk</h4>
                 <p className="text-sm text-stone-500">If it doesn't meet your standards, simply return it. No questions asked.</p>
               </div>
               <div className="bg-stone-50 p-8 rounded-lg border border-stone-200 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
                 <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center mb-4">
                   <Heart className="text-brand-orange" size={24} />
                 </div>
-                <h4 className="font-serif text-xl text-brand-charcoal mb-2">Long-term Partners</h4>
+                <h4 className="font-heading text-xl text-brand-charcoal mb-2">Long-term Partners</h4>
                 <p className="text-sm text-stone-500">This model reflects our confidence in our quality and our commitment to you.</p>
               </div>
             </div>
@@ -119,7 +119,7 @@ export const About: React.FC = () => {
             <div className="w-full md:w-1/2">
               <FadeIn>
                 <span className="text-brand-orange uppercase tracking-widest text-xs font-bold">Bespoke Manufacturing</span>
-                <h2 className="font-serif text-4xl text-brand-charcoal mt-3 mb-6">Customization & OEM</h2>
+                <h2 className="font-heading text-4xl text-brand-charcoal mt-3 mb-6">Customization & OEM</h2>
                 <p className="text-stone-600 font-light text-lg mb-6">
                   At Smith Instruments, we understand that no two clients are the same. Whether you require modifications to an existing pattern or the development of an entirely new instrument from a napkin sketch, we are your partners in innovation.
                 </p>
@@ -159,7 +159,7 @@ export const About: React.FC = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <span className="text-brand-orange uppercase tracking-[0.2em] text-sm font-bold block mb-3">Our People</span>
-            <h2 className="font-serif text-4xl text-brand-charcoal">The Hands Behind the Steel</h2>
+            <h2 className="font-heading text-4xl text-brand-charcoal">The Hands Behind the Steel</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
@@ -173,7 +173,7 @@ export const About: React.FC = () => {
                   <div className="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-stone-50 shadow-lg group-hover:border-brand-orange/20 transition-colors">
                     <img src={member.img} alt={member.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                   </div>
-                  <h4 className="font-serif text-2xl text-brand-charcoal mb-1">{member.name}</h4>
+                  <h4 className="font-heading text-2xl text-brand-charcoal mb-1">{member.name}</h4>
                   <p className="text-brand-orange font-medium text-xs uppercase tracking-widest mb-4">{member.role}</p>
                   <p className="text-stone-500 italic font-light">"{member.quote}"</p>
                 </div>
@@ -187,7 +187,7 @@ export const About: React.FC = () => {
       <section className="bg-stone-50 py-20">
         <div className="container mx-auto px-6 text-center">
           <FadeIn>
-            <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-6">Human Connection, Not Portals.</h2>
+            <h2 className="font-heading text-3xl md:text-4xl text-brand-charcoal mb-6">Human Connection, Not Portals.</h2>
             <p className="text-stone-600 font-light max-w-2xl mx-auto mb-10 text-lg">
               We don't use complicated portals or automated tickets. You can place orders or start a product inquiry simply by talking to us. Our team is quick to respond and ready to guide you.
             </p>

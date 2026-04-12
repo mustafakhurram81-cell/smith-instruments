@@ -75,6 +75,21 @@ export const Home: React.FC = () => {
         title="Home"
         description="Smith Instruments: Premium manufacturer of precision surgical instruments. ISO certified, global shipping, and custom OEM solutions for healthcare professionals."
         keywords="surgical instruments manufacturer, precision medical tools, German stainless steel instruments, plastic surgery instruments, cardiovascular surgical tools, custom OEM surgical instruments, buy surgical instruments"
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Smith Instruments",
+            "url": "https://smithinstruments.net"
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Smith Instruments - Premium Surgical Instruments Manufacturer",
+            "description": "Crafting precision surgical instruments with unwavering commitment to quality and innovation for healthcare professionals worldwide.",
+            "url": "https://smithinstruments.net"
+          }
+        ]}
       />
       {/* HERO */}
       <section className="relative h-screen flex items-center bg-brand-charcoal">
@@ -95,7 +110,7 @@ export const Home: React.FC = () => {
         <div className="container mx-auto px-6 relative z-10 pt-20">
           <div className="max-w-2xl">
             <FadeIn>
-              <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.1] mb-6 md:mb-8">
+              <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.1] mb-6 md:mb-8">
                 We Mold the Metal <span className="block md:inline italic font-light text-brand-orange">to Serve Life.</span>
               </h1>
               <p className="max-w-xl text-stone-300 text-base sm:text-lg md:text-xl font-light leading-relaxed mb-8 md:mb-12">
@@ -127,7 +142,7 @@ export const Home: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-stone-200">
             <FadeIn delay={0.1}>
               <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
-                <div className="flex items-center justify-center font-serif text-6xl md:text-7xl text-brand-charcoal mb-4">
+                <div className="flex items-center justify-center font-heading text-6xl md:text-7xl text-brand-charcoal mb-4">
                   <AnimatedCounter to={20} />
                   <span className="text-brand-orange">+</span>
                 </div>
@@ -136,7 +151,7 @@ export const Home: React.FC = () => {
             </FadeIn>
             <FadeIn delay={0.2}>
               <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
-                <div className="flex items-center justify-center font-serif text-6xl md:text-7xl text-brand-charcoal mb-4">
+                <div className="flex items-center justify-center font-heading text-6xl md:text-7xl text-brand-charcoal mb-4">
                   <AnimatedCounter to={20} />
                   <span className="text-brand-orange">+</span>
                 </div>
@@ -145,7 +160,7 @@ export const Home: React.FC = () => {
             </FadeIn>
             <FadeIn delay={0.3}>
               <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
-                <div className="flex items-center justify-center font-serif text-6xl md:text-7xl text-brand-charcoal mb-4">
+                <div className="flex items-center justify-center font-heading text-6xl md:text-7xl text-brand-charcoal mb-4">
                   <AnimatedCounter to={50} />
                   <span className="text-brand-orange">+</span>
                 </div>
@@ -161,7 +176,7 @@ export const Home: React.FC = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="mb-20 max-w-2xl">
             <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Why Choose Us</span>
-            <h2 className="font-serif text-4xl md:text-5xl text-brand-charcoal mb-6 text-balance">Precision Engineering, <br />Human Connection.</h2>
+            <h2 className="font-heading text-4xl md:text-5xl text-brand-charcoal mb-6 text-balance">Precision Engineering, <br />Human Connection.</h2>
             <p className="text-stone-500 text-lg font-light leading-relaxed">
               We combine the scalability of a global manufacturer with the personalized attention of a boutique partner.
             </p>
@@ -179,7 +194,7 @@ export const Home: React.FC = () => {
                   <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center mb-6">
                     <item.icon className="w-6 h-6 text-brand-orange" strokeWidth={1.5} />
                   </div>
-                  <h3 className="font-serif text-xl font-semibold mb-3 text-brand-charcoal">{item.title}</h3>
+                  <h3 className="font-heading text-xl font-semibold mb-3 text-brand-charcoal">{item.title}</h3>
                   <p className="text-stone-500 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </FadeIn>
@@ -193,7 +208,7 @@ export const Home: React.FC = () => {
         <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
           <div className="max-w-2xl">
             <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Our Specialties</span>
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Explore Our Products</h2>
+            <h2 className="font-heading text-4xl text-brand-charcoal mb-4">Explore Our Products</h2>
             <p className="text-stone-500 font-light text-lg">A comprehensive range of instruments for every surgical specialty.</p>
           </div>
         </div>
@@ -228,7 +243,7 @@ export const Home: React.FC = () => {
                     <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-brand-orange/10 to-brand-orange/5 flex items-center justify-center mb-6 group-hover:from-brand-orange/20 group-hover:to-brand-orange/10 transition-all duration-300">
                       <product.icon size={28} className="text-brand-orange" strokeWidth={1.5} />
                     </div>
-                    <h3 className="font-serif text-2xl text-brand-charcoal mb-2 group-hover:text-brand-orange transition-colors duration-300">{product.name}</h3>
+                    <h3 className="font-heading text-2xl text-brand-charcoal mb-2 group-hover:text-brand-orange transition-colors duration-300">{product.name}</h3>
                     <p className="text-stone-500 text-sm leading-relaxed">{product.desc}</p>
                   </div>
 
@@ -285,7 +300,7 @@ export const Home: React.FC = () => {
             />
           </div>
           <div className="w-full md:w-1/2 text-stone-600">
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-6">Our Legacy, <br /><span className="text-brand-orange">Your Trust.</span></h2>
+            <h2 className="font-heading text-4xl text-brand-charcoal mb-6">Our Legacy, <br /><span className="text-brand-orange">Your Trust.</span></h2>
             <p className="font-light leading-relaxed mb-6 text-lg text-stone-500">
               Headquartered in the United States and powered by world-class manufacturing facilities in Pakistan, Smith Instruments combines the best of both worlds: American quality standards with skilled craftsmanship honed over generations in one of the world's premier surgical instrument manufacturing hubs.
             </p>
@@ -303,7 +318,7 @@ export const Home: React.FC = () => {
       < Section className="bg-stone-50" >
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl text-brand-charcoal mb-4">Trusted by Professionals</h2>
+            <h2 className="font-heading text-4xl text-brand-charcoal mb-4">Trusted by Professionals</h2>
             <p className="text-stone-500 font-light">Hear from our partners in South America who rely on our quality and service.</p>
           </div>
 
@@ -318,7 +333,7 @@ export const Home: React.FC = () => {
                   </div>
                   <p className="text-stone-600 italic mb-6 leading-relaxed relative z-10">"{t.text}"</p>
                   <div className="mt-auto">
-                    <h4 className="font-serif text-brand-charcoal text-lg">{t.author}</h4>
+                    <h4 className="font-heading text-brand-charcoal text-lg">{t.author}</h4>
                     <div className="flex items-center gap-2">
                       <p className="text-xs text-brand-orange font-bold uppercase tracking-wider">{t.role}</p>
                       <div className="flex items-center gap-1 bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-medium">

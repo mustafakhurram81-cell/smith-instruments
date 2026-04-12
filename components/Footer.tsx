@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
             <div className="bg-stone-900 py-16 relative border-b border-stone-800">
                 <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
                     <div>
-                        <h2 className="font-serif text-3xl md:text-4xl text-white">Ready to elevate your practice?</h2>
+                        <h2 className="font-heading text-3xl md:text-4xl text-white">Ready to elevate your practice?</h2>
                         <div className="flex flex-col gap-4 mt-6 max-w-md">
                             <p className="text-stone-400 text-sm">Join our newsletter for exclusive offers and industry insights.</p>
                             <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); alert("Thanks for subscribing!"); }}>

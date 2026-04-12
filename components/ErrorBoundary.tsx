@@ -55,7 +55,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, onReset }) => {
           </svg>
         </div>
 
-        <h1 className="font-serif text-4xl text-brand-charcoal mb-3">Something went wrong</h1>
+        <h1 className="font-heading text-4xl text-brand-charcoal mb-3">Something went wrong</h1>
         <p className="text-stone-500 text-lg font-light mb-8">
           We encountered an unexpected error. Please try refreshing the page or go back to the homepage.
         </p>

@@ -1,6 +1,7 @@
 /**
  * Shared TypeScript interfaces for the Smith Instruments codebase.
- * Consolidated from various files to ensure type consistency.
+ * This is the SINGLE SOURCE OF TRUTH for all types.
+ * Do NOT define Product, Catalogue, or CatalogueRef elsewhere.
  */
 
 // ============================================
@@ -17,6 +18,12 @@ export interface Product {
     image_url: string;
     specifications: ProductSpecifications | null;
     variant_group?: string;
+    catalogue_id?: string;
+    // Dual navigation fields
+    instrument_category?: string;
+    instrument_subcategory?: string;
+    specialty_category?: string;
+    specialty_subcategory?: string;
 }
 
 export interface ProductSpecifications {
@@ -40,6 +47,12 @@ export interface NewProduct {
 // ============================================
 // CATALOGUE TYPES
 // ============================================
+
+export interface CatalogueRef {
+    id: string;
+    title: string;
+    pdf_url: string;
+}
 
 export interface Catalogue {
     id: string;

@@ -33,7 +33,7 @@ export const Login: React.FC = () => {
         <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
                 <div className="bg-brand-charcoal p-8 text-center border-b border-brand-orange/20">
-                    <h1 className="font-serif text-2xl text-white mb-2">Smith Instruments</h1>
+                    <h1 className="font-heading text-2xl text-white mb-2">Smith Instruments</h1>
                     <p className="text-stone-400 text-sm">Secure Admin Access</p>
                 </div>
 

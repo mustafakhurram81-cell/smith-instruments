@@ -20,6 +20,5 @@ export { FadeIn } from './ui/FadeIn';
 export { Section } from './ui/Section';
 export { AnimatedCounter } from './ui/AnimatedCounter';
 export { WhatsAppFloat } from './ui/WhatsAppFloat';
-export { ScrollToTop } from './ui/ScrollToTop';
 export { Pagination } from './ui/Pagination';
 export { ParallaxHeader } from './ui/ParallaxHeader';

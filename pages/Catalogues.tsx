@@ -36,7 +36,7 @@ export const Catalogues: React.FC = () => {
       <ParallaxHeader
         title="Our Catalogues"
         description="Digital libraries of our comprehensive instrument ranges."
-        image="/images/headers/catalogues-header.png"
+        image="/images/headers/catalogues-header.webp"
       />
 
       {/* Search Bar */}
@@ -131,7 +131,7 @@ export const Catalogues: React.FC = () => {
 
                     {/* Title Below */}
                     <div className="text-center mt-6">
-                      <h3 className="font-serif text-lg text-brand-charcoal group-hover:text-brand-orange transition-colors">
+                      <h3 className="font-heading text-lg text-brand-charcoal group-hover:text-brand-orange transition-colors">
                         {cat.title}
                       </h3>
                       <p className="text-xs text-stone-400 mt-1">{cat.size}</p>
@@ -145,7 +145,7 @@ export const Catalogues: React.FC = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-stone-100 text-stone-400 mb-4">
                 <Search size={32} />
               </div>
-              <h3 className="text-xl font-serif text-brand-charcoal mb-2">No catalogues found</h3>
+              <h3 className="text-xl font-heading text-brand-charcoal mb-2">No catalogues found</h3>
               <p className="text-stone-500">Try adjusting your search terms.</p>
               <button
                 onClick={() => setSearchQuery('')}
@@ -161,7 +161,7 @@ export const Catalogues: React.FC = () => {
       {/* Custom Solution CTA */}
       <section className="py-24 bg-stone-50 bg-noise border-t border-stone-200">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="font-serif text-3xl md:text-4xl mb-6 text-brand-charcoal">Can't find what you need?</h2>
+          <h2 className="font-heading text-3xl md:text-4xl mb-6 text-brand-charcoal">Can't find what you need?</h2>
           <p className="mb-10 text-stone-500 font-light text-lg">We offer OEM manufacturing and custom instrument modification.</p>
           <Button variant="primary" onClick={() => navigate('/contact')}>
             Request Custom Solution

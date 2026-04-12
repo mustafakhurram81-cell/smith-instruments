@@ -49,7 +49,7 @@ export const ParallaxHeader: React.FC<ParallaxHeaderProps> = ({ title, descripti
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="font-serif text-5xl md:text-7xl mb-6 leading-tight"
+                    className="font-heading text-5xl md:text-7xl mb-6 leading-tight"
                 >
                     {title}
                 </motion.h1>

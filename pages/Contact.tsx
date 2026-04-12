@@ -39,7 +39,7 @@ const AccordionItem: React.FC<{ item: { q: string, a: string } }> = ({ item }) =
         className="w-full py-6 px-6 flex justify-between items-center text-left focus:outline-none group hover:bg-stone-50 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="font-serif text-lg text-brand-charcoal group-hover:text-stone-600 transition-colors">{item.q}</span>
+        <span className="font-heading text-lg text-brand-charcoal group-hover:text-stone-600 transition-colors">{item.q}</span>
         {isOpen ? <Minus size={20} className="text-brand-orange shrink-0 ml-4" /> : <Plus size={20} className="text-stone-400 shrink-0 ml-4" />}
       </button>
       <div
@@ -153,7 +153,7 @@ export const Contact: React.FC = () => {
       <ParallaxHeader
         title="Contact Us"
         description="Reach out for quotes, custom manufacturing inquiries, or support."
-        image="/images/headers/contact-header.png"
+        image="/images/headers/contact-header.webp"
       />
 
       <div className="container mx-auto px-6 py-16 md:py-24">
@@ -164,7 +164,7 @@ export const Contact: React.FC = () => {
             <FadeIn>
               {/* Contact Details Card */}
               <div className="bg-white p-8 rounded-sm shadow-sm border border-stone-100">
-                <h3 className="font-serif text-2xl text-brand-charcoal mb-8">Get In Touch</h3>
+                <h3 className="font-heading text-2xl text-brand-charcoal mb-8">Get In Touch</h3>
 
                 <div className="space-y-8">
                   {/* Phone */}
@@ -225,7 +225,7 @@ export const Contact: React.FC = () => {
               <div className="bg-stone-100 p-8 rounded-sm border border-stone-200">
                 <div className="flex items-center gap-3 mb-6">
                   <Clock className="text-brand-charcoal" size={20} />
-                  <h3 className="font-serif text-xl text-brand-charcoal">Business Hours</h3>
+                  <h3 className="font-heading text-xl text-brand-charcoal">Business Hours</h3>
                 </div>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between text-stone-600">
@@ -245,19 +245,19 @@ export const Contact: React.FC = () => {
           <div className="lg:col-span-2">
             <FadeIn delay={0.2}>
               <div className="bg-white p-8 md:p-12 rounded-sm shadow-sm border border-stone-100">
-                <h3 className="font-serif text-3xl text-brand-charcoal mb-8">Send Us a Message</h3>
+                <h3 className="font-heading text-3xl text-brand-charcoal mb-8">Send Us a Message</h3>
 
                 {formStatus === 'success' ? (
                   <div className="bg-stone-50 text-brand-charcoal p-8 border border-brand-orange/50 text-center rounded-sm">
                     <div className="w-16 h-16 bg-brand-orange text-brand-charcoal rounded-full flex items-center justify-center mx-auto mb-4">
                       <MessageCircle size={32} />
                     </div>
-                    <h4 className="font-serif text-2xl mb-2 text-brand-charcoal">Inquiry Sent</h4>
+                    <h4 className="font-heading text-2xl mb-2 text-brand-charcoal">Inquiry Sent</h4>
                     <p className="font-light text-stone-600">We have received your message and will respond shortly.</p>
                   </div>
                 ) : formStatus === 'error' ? (
                   <div className="bg-red-50 text-red-900 p-8 border border-red-200 text-center rounded-sm mb-6">
-                    <h4 className="font-serif text-xl mb-2">Something went wrong</h4>
+                    <h4 className="font-heading text-xl mb-2">Something went wrong</h4>
                     <p className="text-sm mb-2">{errorMessage}</p>
                     <p className="text-xs text-red-700">Please check your internet connection or contact us via WhatsApp.</p>
                     <Button className="mt-4" onClick={() => setFormStatus('idle')}>Try Again</Button>
@@ -402,7 +402,7 @@ export const Contact: React.FC = () => {
       < section className="bg-stone-50 bg-noise py-24 border-t border-stone-200" >
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4">Frequently Asked Questions</h2>
+            <h2 className="font-heading text-3xl md:text-4xl text-brand-charcoal mb-4">Frequently Asked Questions</h2>
             <p className="text-stone-500 font-light">Common questions about our manufacturing, shipping, and policies.</p>
           </div>
 

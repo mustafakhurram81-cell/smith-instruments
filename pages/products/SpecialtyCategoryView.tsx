@@ -55,7 +55,7 @@ export const SpecialtyCategoryView: React.FC = () => {
                             <span className="text-brand-orange">{subcategory}</span>
                         </div>
 
-                        <h1 className="font-serif text-4xl md:text-6xl mb-4">{subcategory}</h1>
+                        <h1 className="font-heading text-4xl md:text-6xl mb-4">{subcategory}</h1>
                         <p className="text-stone-400 font-light max-w-2xl text-lg">
                             {!productsLoading && <>{totalCount} instruments</>}
                         </p>
@@ -79,7 +79,7 @@ export const SpecialtyCategoryView: React.FC = () => {
                         ) : (
                             <>
                                 <div className="flex justify-between items-center mb-8">
-                                    <h2 className="text-2xl font-serif text-brand-charcoal">
+                                    <h2 className="text-2xl font-heading text-brand-charcoal">
                                         All Products ({totalCount})
                                     </h2>
                                 </div>
@@ -124,7 +124,7 @@ export const SpecialtyCategoryView: React.FC = () => {
 
                     <div className="flex items-center gap-3 mb-4">
                         <Stethoscope className="text-brand-orange" size={32} />
-                        <h1 className="font-serif text-4xl md:text-6xl">{category}</h1>
+                        <h1 className="font-heading text-4xl md:text-6xl">{category}</h1>
                     </div>
                     <p className="text-stone-400 font-light max-w-2xl text-lg">
                         {!loading && (
@@ -143,7 +143,7 @@ export const SpecialtyCategoryView: React.FC = () => {
                         <CategoryGridSkeleton count={6} />
                     ) : subcategories.length > 0 ? (
                         <>
-                            <h2 className="text-2xl font-serif text-brand-charcoal mb-8">Procedures & Applications</h2>
+                            <h2 className="text-2xl font-heading text-brand-charcoal mb-8">Procedures & Applications</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {subcategories.map((sub, idx) => (
                                     <FadeIn key={sub.name} delay={idx * 0.05}>
@@ -172,7 +172,7 @@ export const SpecialtyCategoryView: React.FC = () => {
                                             <div className="absolute bottom-0 left-0 w-full p-6">
                                                 <div className="flex justify-between items-end">
                                                     <div>
-                                                        <h3 className="font-serif text-2xl text-white mb-1 group-hover:text-brand-orange transition-colors">
+                                                        <h3 className="font-heading text-2xl text-white mb-1 group-hover:text-brand-orange transition-colors">
                                                             {sub.name}
                                                         </h3>
                                                         <p className="text-stone-300 text-sm">

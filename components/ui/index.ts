@@ -4,7 +4,6 @@ export { FadeIn } from './FadeIn';
 export { Section } from './Section';
 export { AnimatedCounter } from './AnimatedCounter';
 export { WhatsAppFloat } from './WhatsAppFloat';
-export { ScrollToTop } from './ScrollToTop';
 export {
     Skeleton,
     ProductCardSkeleton,

@@ -121,7 +121,7 @@ export const QuoteCart: React.FC = () => {
                 <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
                     <Send size={32} />
                 </div>
-                <h1 className="text-3xl font-serif text-brand-charcoal mb-4">Quote Request Sent!</h1>
+                <h1 className="text-3xl font-heading text-brand-charcoal mb-4">Quote Request Sent!</h1>
                 <p className="text-stone-500 max-w-md mx-auto mb-8">
                     Thank you, {getValues('name')}. We have received your request for {items.length > 0 ? items.length : 'your'} items.
                     Our sales team will email you a formal quotation within 24 hours.
@@ -137,7 +137,7 @@ export const QuoteCart: React.FC = () => {
         <div className="pt-24 pb-20 bg-stone-50 min-h-screen">
             <SEO title="Request a Quote" description="Submit your list of surgical instruments for a custom price quote." />
             <div className="container mx-auto px-6">
-                <h1 className="text-3xl md:text-4xl font-serif text-brand-charcoal mb-2">Request a Quote</h1>
+                <h1 className="text-3xl md:text-4xl font-heading text-brand-charcoal mb-2">Request a Quote</h1>
                 <Link to="/products" className="text-brand-orange hover:underline text-sm mb-8 inline-block flex items-center">
                     <ArrowLeft size={14} className="mr-1" /> Continue Browsing
                 </Link>

@@ -16,7 +16,7 @@ export const PrivacyPolicy: React.FC = () => {
                 <div className="container mx-auto px-6 text-center">
                     <FadeIn>
                         <Shield className="w-16 h-16 text-brand-orange mx-auto mb-6" />
-                        <h1 className="font-serif text-4xl md:text-6xl mb-4">Privacy Policy</h1>
+                        <h1 className="font-heading text-4xl md:text-6xl mb-4">Privacy Policy</h1>
                         <p className="text-stone-400 font-light">Last updated: December 2024</p>
                     </FadeIn>
                 </div>
@@ -29,7 +29,7 @@ export const PrivacyPolicy: React.FC = () => {
                             <div className="space-y-12">
                                 {/* Introduction */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
                                         <Eye className="text-brand-orange" size={24} />
                                         Introduction
                                     </h2>
@@ -40,7 +40,7 @@ export const PrivacyPolicy: React.FC = () => {
 
                                 {/* Information We Collect */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
                                         <Database className="text-brand-orange" size={24} />
                                         Information We Collect
                                     </h2>
@@ -64,7 +64,7 @@ export const PrivacyPolicy: React.FC = () => {
 
                                 {/* How We Use Your Information */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
                                         <Lock className="text-brand-orange" size={24} />
                                         How We Use Your Information
                                     </h2>
@@ -79,7 +79,7 @@ export const PrivacyPolicy: React.FC = () => {
 
                                 {/* Data Sharing */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4">Data Sharing</h2>
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4">Data Sharing</h2>
                                     <p className="text-stone-600 leading-relaxed">
                                         We do not sell, trade, or rent your personal information to third parties. We may share your information only with:
                                     </p>
@@ -93,7 +93,7 @@ export const PrivacyPolicy: React.FC = () => {
 
                                 {/* Data Security */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4">Data Security</h2>
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4">Data Security</h2>
                                     <p className="text-stone-600 leading-relaxed">
                                         We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet is 100% secure.
                                     </p>
@@ -101,7 +101,7 @@ export const PrivacyPolicy: React.FC = () => {
 
                                 {/* Your Rights */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4">Your Rights</h2>
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4">Your Rights</h2>
                                     <p className="text-stone-600 leading-relaxed">
                                         You have the right to:
                                     </p>
@@ -115,7 +115,7 @@ export const PrivacyPolicy: React.FC = () => {
 
                                 {/* Contact */}
                                 <div className="bg-stone-50 p-8 rounded-lg border border-stone-200">
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
                                         <Mail className="text-brand-orange" size={24} />
                                         Contact Us
                                     </h2>

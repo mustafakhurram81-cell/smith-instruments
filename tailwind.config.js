@@ -10,7 +10,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
-                serif: ['Manrope', 'sans-serif'], // Geometric sans for headings (Belkins style)
+                heading: ['Manrope', 'sans-serif'], // Geometric sans for headings
             },
             borderRadius: {
                 'none': '0',
@@ -38,7 +38,7 @@ export default {
                     900: '#1F1F1F',
                     950: '#0A0A0A',
                 },
-                // Keep stone for backwards compatibility during migration
+                // stone maps to gray for backwards compatibility
                 stone: {
                     50: '#FAFAFA',
                     100: '#F5F5F5',

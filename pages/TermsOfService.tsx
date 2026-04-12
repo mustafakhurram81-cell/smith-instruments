@@ -16,7 +16,7 @@ export const TermsOfService: React.FC = () => {
                 <div className="container mx-auto px-6 text-center">
                     <FadeIn>
                         <FileText className="w-16 h-16 text-brand-orange mx-auto mb-6" />
-                        <h1 className="font-serif text-4xl md:text-6xl mb-4">Terms of Service</h1>
+                        <h1 className="font-heading text-4xl md:text-6xl mb-4">Terms of Service</h1>
                         <p className="text-stone-400 font-light">Last updated: December 2024</p>
                     </FadeIn>
                 </div>
@@ -29,7 +29,7 @@ export const TermsOfService: React.FC = () => {
                             <div className="space-y-12">
                                 {/* Acceptance */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
                                         <Scale className="text-brand-orange" size={24} />
                                         Acceptance of Terms
                                     </h2>
@@ -40,7 +40,7 @@ export const TermsOfService: React.FC = () => {
 
                                 {/* Products & Services */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
                                         <Package className="text-brand-orange" size={24} />
                                         Products & Services
                                     </h2>
@@ -59,7 +59,7 @@ export const TermsOfService: React.FC = () => {
 
                                 {/* Payment Terms */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4">Payment Terms</h2>
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4">Payment Terms</h2>
                                     <div className="bg-brand-orange/10 p-6 rounded-lg border border-brand-orange/30">
                                         <p className="text-brand-charcoal font-medium mb-2">Our Unique Trust Model:</p>
                                         <p className="text-stone-600">
@@ -70,7 +70,7 @@ export const TermsOfService: React.FC = () => {
 
                                 {/* Returns & Refunds */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
                                         <RefreshCw className="text-brand-orange" size={24} />
                                         Returns & Refunds
                                     </h2>
@@ -85,7 +85,7 @@ export const TermsOfService: React.FC = () => {
 
                                 {/* Warranty */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4">Warranty</h2>
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4">Warranty</h2>
                                     <p className="text-stone-600 leading-relaxed">
                                         All Smith Instruments products come with a 1-year warranty against manufacturing defects. This warranty does not cover:
                                     </p>
@@ -99,7 +99,7 @@ export const TermsOfService: React.FC = () => {
 
                                 {/* Limitation of Liability */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
                                         <AlertTriangle className="text-brand-orange" size={24} />
                                         Limitation of Liability
                                     </h2>
@@ -110,7 +110,7 @@ export const TermsOfService: React.FC = () => {
 
                                 {/* Governing Law */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4 flex items-center gap-3">
                                         <Gavel className="text-brand-orange" size={24} />
                                         Governing Law
                                     </h2>
@@ -121,7 +121,7 @@ export const TermsOfService: React.FC = () => {
 
                                 {/* Changes */}
                                 <div>
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4">Changes to Terms</h2>
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4">Changes to Terms</h2>
                                     <p className="text-stone-600 leading-relaxed">
                                         We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting to our website. Your continued use of our services constitutes acceptance of the updated terms.
                                     </p>
@@ -129,7 +129,7 @@ export const TermsOfService: React.FC = () => {
 
                                 {/* Contact */}
                                 <div className="bg-stone-50 p-8 rounded-lg border border-stone-200">
-                                    <h2 className="font-serif text-2xl text-brand-charcoal mb-4">Questions?</h2>
+                                    <h2 className="font-heading text-2xl text-brand-charcoal mb-4">Questions?</h2>
                                     <p className="text-stone-600">
                                         If you have questions about these Terms of Service, please contact us at:
                                     </p>

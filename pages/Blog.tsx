@@ -14,7 +14,7 @@ export const Blog: React.FC = () => {
             <div className="w-20 h-20 bg-brand-charcoal text-brand-orange rounded-full flex items-center justify-center mx-auto mb-8">
               <Clock size={40} />
             </div>
-            <h1 className="font-serif text-5xl md:text-7xl text-brand-charcoal mb-6">Coming Soon</h1>
+            <h1 className="font-heading text-5xl md:text-7xl text-brand-charcoal mb-6">Coming Soon</h1>
             <p className="text-xl text-stone-500 font-light max-w-2xl mx-auto mb-10">
               We are curating insights on surgical innovations and industry trends. Our editorial blog will launch shortly.
             </p>

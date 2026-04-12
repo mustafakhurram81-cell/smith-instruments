@@ -6,8 +6,10 @@ import {
     getProductsByCategory,
     getProductsBySubcategory,
     getProductBySku,
+    getProductVariants,
     searchProducts,
     getCatalogues,
+    getCatalogueForProduct,
     getInstrumentTypes,
     getInstrumentCategories,
     getInstrumentSubcategories,
@@ -199,5 +201,25 @@ export function useProductsByInstrument(category: string, subcategory?: string, 
         queryFn: () => getProductsByInstrument(category, subcategory, page, limit),
         enabled: !!category && enabled,
         staleTime: 1000 * 60 * 5,
+    });
+}
+
+// Hook for product variants
+export function useProductVariants(sku: string) {
+    return useQuery({
+        queryKey: ['productVariants', sku],
+        queryFn: () => getProductVariants(sku),
+        enabled: !!sku,
+        staleTime: 1000 * 60 * 10
+    });
+}
+
+// Hook for catalogue associated with a product
+export function useCatalogueForProduct(product: Product | null) {
+    return useQuery({
+        queryKey: ['catalogueForProduct', product?.id],
+        queryFn: () => product ? getCatalogueForProduct(product) : null as any,
+        enabled: !!product,
+        staleTime: 1000 * 60 * 60
     });
 }

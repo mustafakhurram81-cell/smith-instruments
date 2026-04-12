@@ -70,7 +70,7 @@ export const InstrumentTypeView: React.FC = () => {
                         <ChevronRight size={12} />
                         <span className="text-brand-orange">{instrumentType}</span>
                     </div>
-                    <h1 className="font-serif text-4xl md:text-6xl mb-4">{instrumentType}</h1>
+                    <h1 className="font-heading text-4xl md:text-6xl mb-4">{instrumentType}</h1>
                     <p className="text-stone-400 font-light max-w-2xl text-lg">
                         {!isLoading && <>{totalCount} instruments</>}
                     </p>

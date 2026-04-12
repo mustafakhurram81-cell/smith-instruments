@@ -70,7 +70,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                         </span>
                     </div>
 
-                    <h3 className={`font-serif text-brand-charcoal group-hover:text-brand-orange transition-colors ${isCompact ? 'text-sm line-clamp-1' : 'text-lg leading-tight line-clamp-2'}`}>
+                    <h3 className={`font-heading text-brand-charcoal group-hover:text-brand-orange transition-colors ${isCompact ? 'text-sm line-clamp-1' : 'text-lg leading-tight line-clamp-2'}`}>
                         {product.name}
                     </h3>
                 </div>

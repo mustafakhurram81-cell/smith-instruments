@@ -14,12 +14,12 @@ export const NotFound: React.FC = () => {
 
             <div className="text-center max-w-md">
                 {/* 404 Number */}
-                <h1 className="font-serif text-[120px] md:text-[180px] leading-none text-brand-orange/20 font-bold select-none">
+                <h1 className="font-heading text-[120px] md:text-[180px] leading-none text-brand-orange/20 font-bold select-none">
                     404
                 </h1>
 
                 {/* Message */}
-                <h2 className="font-serif text-2xl md:text-3xl text-brand-charcoal -mt-8 mb-4">
+                <h2 className="font-heading text-2xl md:text-3xl text-brand-charcoal -mt-8 mb-4">
                     Page Not Found
                 </h2>
                 <p className="text-stone-500 mb-8">

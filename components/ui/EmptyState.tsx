@@ -28,7 +28,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
                 <Icon size={32} strokeWidth={1.5} />
             </div>
             
-            <h3 className="text-2xl font-serif text-brand-charcoal mb-3">{title}</h3>
+            <h3 className="text-2xl font-heading text-brand-charcoal mb-3">{title}</h3>
             
             <div className="text-stone-500 font-light mb-8 max-w-md mx-auto leading-relaxed">
                 {description}

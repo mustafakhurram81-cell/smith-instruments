@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search as SearchIcon, Loader2, ArrowRight, X, TrendingUp, Scissors, Stethoscope } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { searchProducts } from '../lib/database';
+import { useSearchProducts } from '../lib/queries';
 import type { Product } from '../types';
 import { DEBOUNCE_MS, PAGE_SIZE } from '../constants';
 
@@ -13,8 +13,7 @@ interface SearchOverlayProps {
 
 export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
     const [query, setQuery] = useState('');
-    const [results, setResults] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [debouncedQuery, setDebouncedQuery] = useState('');
     const navigate = useNavigate();
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,24 +28,14 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
     }, [isOpen]);
 
     useEffect(() => {
-        const doSearch = async () => {
-            if (query.trim().length < 2) {
-                setResults([]);
-                return;
-            }
-            setLoading(true);
-            try {
-                const found = await searchProducts(query);
-                setResults(found);
-            } catch (e) {
-                console.error(e);
-            }
-            setLoading(false);
-        };
-
-        const timeout = setTimeout(doSearch, DEBOUNCE_MS.SEARCH);
+        const timeout = setTimeout(() => {
+            setDebouncedQuery(query.trim());
+        }, DEBOUNCE_MS.SEARCH);
         return () => clearTimeout(timeout);
     }, [query]);
+
+    // React Query hook replaces old state
+    const { data: results = [], isLoading: loading } = useSearchProducts(debouncedQuery);
 
     const handleSelect = (sku: string) => {
         navigate(`/product/${encodeURIComponent(sku)}`);
@@ -76,7 +65,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                                 ref={inputRef}
                                 type="text"
                                 placeholder="Search for instruments (e.g., 'Iris Scissors', '10-105-02')..."
-                                className="flex-1 text-lg outline-none text-brand-charcoal placeholder-stone-300 font-serif"
+                                className="flex-1 text-lg outline-none text-brand-charcoal placeholder-stone-300 font-heading"
                                 value={query}
                                 onChange={e => setQuery(e.target.value)}
                             />

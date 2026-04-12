@@ -35,7 +35,7 @@ const supabase = (SUPABASE_URL && SUPABASE_KEY)
     ? createClient(SUPABASE_URL, SUPABASE_KEY)
     : { from: () => ({ select: () => ({ data: [] }) }) };
 
-const BASE_URL = 'https://smithinstruments.net/#';
+const BASE_URL = 'https://smithinstruments.net';
 const TODAY = new Date().toISOString().split('T')[0];
 
 async function generateSitemap() {

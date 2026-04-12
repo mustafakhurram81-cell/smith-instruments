@@ -27,6 +27,16 @@ export const ProductsIndex: React.FC = () => {
                 title="Precision Instruments"
                 description="A comprehensive range of instruments for every surgical specialty."
                 keywords="surgical instruments catalog, medical tools by specialty, plastic surgery instruments, orthopedic surgical tools, cardiovascular instruments, neurosurgery tools, dental instruments, ophthalmology instruments"
+                structuredData={{
+                    "@context": "https://schema.org",
+                    "@type": "CollectionPage",
+                    "name": "Precision Surgical Instruments Catalog",
+                    "description": "A comprehensive range of instruments for every surgical specialty.",
+                    "url": "https://smithinstruments.net/products"
+                }}
+                breadcrumbs={[
+                    { name: 'Products', item: '/products' }
+                ]}
             />
 
             {/* Header */}
@@ -37,7 +47,7 @@ export const ProductsIndex: React.FC = () => {
                         ? `${totalProducts} instruments across ${specialtyCategories.length} specialties`
                         : `${totalProducts} instruments across ${instrumentCategories.length} instrument types`
                 ) : undefined}
-                image="/images/headers/products-header.png"
+                image="/images/headers/products-header.webp"
                 breadcrumbs={
                     <span className="text-brand-orange uppercase tracking-widest text-xs font-bold block">
                         Our Catalog
@@ -88,7 +98,7 @@ export const ProductsIndex: React.FC = () => {
                         <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal via-brand-charcoal/80 to-transparent"></div>
                         <div className="relative z-10 p-10 md:p-16 max-w-2xl">
                             <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Featured Collection</span>
-                            <h2 className="font-serif text-3xl md:text-5xl mb-6">Excellence in <br />Plastic Surgery</h2>
+                            <h2 className="font-heading text-3xl md:text-5xl mb-6">Excellence in <br />Plastic Surgery</h2>
                             <p className="text-stone-300 text-lg mb-8 max-w-lg">Discover our premium range of scissors, retractors, and forceps designed specifically for aesthetic and reconstructive procedures.</p>
                             <button
                                 onClick={() => navigate('/products/specialty/Plastic%20Surgery')}
@@ -155,7 +165,7 @@ export const ProductsIndex: React.FC = () => {
                                             {/* Content Section */}
                                             <div className="p-6 flex-grow flex flex-col justify-between border-t border-stone-100">
                                                 <div>
-                                                    <h3 className="font-serif text-xl text-brand-charcoal mb-2 group-hover:text-brand-orange transition-colors">
+                                                    <h3 className="font-heading text-xl text-brand-charcoal mb-2 group-hover:text-brand-orange transition-colors">
                                                         {item.name}
                                                     </h3>
                                                     <p className="text-stone-500 text-sm font-light">

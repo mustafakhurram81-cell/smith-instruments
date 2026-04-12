@@ -190,13 +190,13 @@ export const Header: React.FC = () => {
                             className="md:hidden overflow-visible bg-stone-50 border-b border-stone-200 absolute top-full left-0 right-0 shadow-lg"
                         >
                             <nav className="flex flex-col p-6 gap-4">
-                                <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Home</NavLink>
+                                <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-heading ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Home</NavLink>
 
                                 {/* Collapsible Products with Animation */}
                                 <div className="space-y-2">
                                     <button
                                         onClick={() => setIsProductsOpen(!isProductsOpen)}
-                                        className="w-full text-lg font-serif text-left text-stone-500 hover:text-brand-charcoal transition-colors flex items-center justify-between"
+                                        className="w-full text-lg font-heading text-left text-stone-500 hover:text-brand-charcoal transition-colors flex items-center justify-between"
                                     >
                                         Products
                                         <ChevronDown size={18} className={`transition-transform duration-300 ${isProductsOpen ? 'rotate-180' : ''}`} />
@@ -225,9 +225,9 @@ export const Header: React.FC = () => {
                                     </AnimatePresence>
                                 </div>
 
-                                <NavLink to="/catalogues" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Catalogues</NavLink>
-                                <NavLink to="/about" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>About Us</NavLink>
-                                <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-serif ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Contact</NavLink>
+                                <NavLink to="/catalogues" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-heading ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Catalogues</NavLink>
+                                <NavLink to="/about" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-heading ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>About Us</NavLink>
+                                <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-heading ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Contact</NavLink>
 
                                 {/* Bottom section with Cart and Language */}
                                 <div className="pt-4 mt-4 border-t border-stone-200">

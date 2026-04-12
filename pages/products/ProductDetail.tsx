@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Section, Button, FadeIn } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
-import { getProductBySku, getProductsBySubcategory, getProductVariants, getCatalogueForProduct, Product, CatalogueRef } from '../../lib/database';
+import { Product, CatalogueRef } from '../../lib/database';
+import { useProductBySku, useProductVariants, useCatalogueForProduct, useProductsBySubcategory } from '../../lib/queries';
 import { ChevronRight, Package, Loader2, Mail, ArrowRight, X, ChevronDown, Minus, Plus, Clock, BookOpen, FileText, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../components/CartProvider';
@@ -19,50 +20,39 @@ export const ProductDetail: React.FC = () => {
     const { showToast } = useToast();
     const { items: recentlyViewed, addToRecentlyViewed } = useRecentlyViewed();
 
-    const [product, setProduct] = useState<Product | null>(null);
-    const [parentProduct, setParentProduct] = useState<Product | null>(null); // Stores original for consistent name
-    const [variants, setVariants] = useState<Product[]>([]);
-    const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-    const [catalogue, setCatalogue] = useState<CatalogueRef | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [activeSku, setActiveSku] = useState(sku);
     const [isZoomed, setIsZoomed] = useState(false);
     const [isVariantDropdownOpen, setIsVariantDropdownOpen] = useState(false);
     const [hoverZoom, setHoverZoom] = useState({ active: false, x: 50, y: 50 });
     const [quantity, setQuantity] = useState(1);
 
+    // Sync state with URL if it changes externally
     useEffect(() => {
-        const fetchProduct = async () => {
-            if (!sku) return;
-            setLoading(true);
-            const prod = await getProductBySku(sku);
-            setProduct(prod);
-
-            if (prod) {
-                // Fetch variants (products with same SKU prefix)
-                const variantProducts = await getProductVariants(prod.sku);
-                setVariants(variantProducts);
-
-                // Find the parent/base product (first variant or shortest SKU) for consistent name
-                const baseSku = prod.specifications?.variant_of || prod.sku.replace(/-\d+$/, '-01');
-                const parent = variantProducts.find(v => v.sku === baseSku) || variantProducts[0] || prod;
-                setParentProduct(parent);
-
-                // Fetch related products from same subcategory
-                const relatedResult = await getProductsBySubcategory(prod.category, prod.subcategory);
-                const relatedData = relatedResult?.data ?? [];
-                // Filter out current product and its variants, limit to 4
-                const variantSkus = new Set(variantProducts.map(v => v.sku));
-                setRelatedProducts(relatedData.filter((p: Product) => !variantSkus.has(p.sku)).slice(0, 4));
-
-                // Match product to its catalogue via subcategory/category mapping
-                const cat = await getCatalogueForProduct(prod);
-                setCatalogue(cat);
-            }
-
-            setLoading(false);
-        };
-        fetchProduct();
+        setActiveSku(sku);
     }, [sku]);
+
+    // React Query Hooks
+    const { data: product, isLoading: productLoading } = useProductBySku(activeSku);
+    const { data: variants = [], isLoading: variantsLoading } = useProductVariants(product?.sku || activeSku);
+    const { data: catalogue, isLoading: catalogueLoading } = useCatalogueForProduct(product || null);
+    const { data: relatedResult, isLoading: relatedLoading } = useProductsBySubcategory(
+        product?.category || '', 
+        product?.subcategory || '', 
+        1, 
+        10, 
+        '', 
+        !!product
+    );
+
+    const loading = productLoading || (activeSku && !product && variantsLoading); // Only block if we don't have product yet
+
+    // Find the parent/base product (first variant or shortest SKU) for consistent name
+    const baseSku = product?.specifications?.variant_of || product?.sku.replace(/-\d+$/, '-01');
+    const parentProduct = variants.find(v => v.sku === baseSku) || variants[0] || product;
+
+    // Filter out current product and its variants from related products, limit to 4
+    const variantSkus = new Set(variants.map(v => v.sku));
+    const relatedProducts = (relatedResult?.data ?? []).filter((p: Product) => !variantSkus.has(p.sku)).slice(0, 4);
 
     // Track recently viewed
     useEffect(() => {
@@ -91,7 +81,7 @@ export const ProductDetail: React.FC = () => {
     if (!product) {
         return (
             <div className="pt-32 min-h-screen text-center">
-                <h1 className="text-2xl font-serif text-brand-charcoal">Product not found</h1>
+                <h1 className="text-2xl font-heading text-brand-charcoal">Product not found</h1>
                 <Link to="/products" className="text-brand-orange hover:underline mt-4 inline-block">
                     ← Back to Products
                 </Link>
@@ -281,7 +271,7 @@ export const ProductDetail: React.FC = () => {
                                 transition={{ duration: 0.2, delay: 0.1 }}
                             >
                                 <p className="text-brand-orange font-medium text-sm mb-2">SKU: {product.sku}</p>
-                                <h1 className="font-serif text-3xl md:text-4xl text-brand-charcoal mb-4">
+                                <h1 className="font-heading text-3xl md:text-4xl text-brand-charcoal mb-4">
                                     {parentProduct?.name || product.name}
                                 </h1>
 
@@ -334,8 +324,8 @@ export const ProductDetail: React.FC = () => {
                                                             key={variant.id}
                                                             onClick={() => {
                                                                 setIsVariantDropdownOpen(false);
-                                                                // Update product state directly (no page reload)
-                                                                setProduct(variant);
+                                                                // Update active sku to rely on query cache
+                                                                setActiveSku(variant.sku);
                                                                 // Update URL for sharing/bookmarking without reload
                                                                 window.history.pushState(null, '', `/product/${encodeURIComponent(variant.sku)}`);
                                                             }}
@@ -491,7 +481,7 @@ export const ProductDetail: React.FC = () => {
                     <div className="container mx-auto px-6">
                         <div className="flex justify-between items-center mb-8">
                             <div>
-                                <h2 className="font-serif text-2xl md:text-3xl text-brand-charcoal">
+                                <h2 className="font-heading text-2xl md:text-3xl text-brand-charcoal">
                                     Related Products
                                 </h2>
                                 <p className="text-stone-500 text-sm mt-1">
@@ -546,7 +536,7 @@ export const ProductDetail: React.FC = () => {
                     <div className="container mx-auto px-6">
                         <div className="flex items-center gap-3 mb-8">
                             <Clock size={20} className="text-stone-400" />
-                            <h2 className="font-serif text-2xl text-brand-charcoal">
+                            <h2 className="font-heading text-2xl text-brand-charcoal">
                                 Recently Viewed
                             </h2>
                         </div>

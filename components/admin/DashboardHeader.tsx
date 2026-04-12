@@ -40,7 +40,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             {/* Header */}
             <div className="bg-brand-charcoal text-white p-4">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <h1 className="text-xl font-serif">Smith Instruments Admin</h1>
+                    <h1 className="text-xl font-heading">Smith Instruments Admin</h1>
                     <div className="flex items-center gap-4">
                         {userEmail && <span className="text-xs text-stone-400">{userEmail}</span>}
                         {userRole && (
