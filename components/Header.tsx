@@ -11,7 +11,7 @@ import logoTransparent from '../assets/smith instruments logo.png';
 
 const COMPANY_LINKS = [
     { to: '/about', label: 'About Us' },
-    { to: '/events', label: 'Events & Gallery' },
+    // { to: '/events', label: 'Events & Gallery' }, // Hidden until content is ready
     { to: '/distributor', label: 'Become a Distributor' },
     { to: '/blog', label: 'Blog' },
 ];

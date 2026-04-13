@@ -336,11 +336,19 @@ export const About: React.FC = () => {
               We don't use complicated portals or automated tickets. You can place orders or start a product inquiry simply by talking to us. Our team is quick to respond and ready to guide you.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button variant="primary" className="flex items-center gap-2 px-8 py-4 shadow-[0_4px_14px_0_rgba(255,107,53,0.39)] hover:shadow-[0_6px_20px_rgba(255,107,53,0.23)] hover:-translate-y-1 transition-all" onClick={() => window.open(`https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}`, '_blank')}>
+              <Button 
+                variant="primary" 
+                className="flex items-center gap-2 px-8 py-4 shadow-lg hover:-translate-y-1 transition-all" 
+                onClick={() => window.open(`https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}`, '_blank')}
+              >
                 <MessageCircle size={20} /> Chat on WhatsApp
               </Button>
-              <Button variant="secondary" className="flex items-center gap-2 px-8 py-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all bg-white" onClick={() => navigate('/contact')}>
-                <Mail size={20} className="text-brand-orange" /> Contact via Email
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2 px-8 py-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all bg-white" 
+                onClick={() => navigate('/contact')}
+              >
+                <Mail size={20} className="text-brand-orange" /> Send an Email
               </Button>
             </div>
           </FadeIn>

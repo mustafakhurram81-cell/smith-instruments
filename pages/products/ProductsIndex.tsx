@@ -88,28 +88,7 @@ export const ProductsIndex: React.FC = () => {
                 </div>
             </div>
 
-            {/* Featured Collection Banner */}
-            <Section className="!py-8 !pb-0">
-                <div className="container mx-auto px-6">
-                    <div className="relative rounded-2xl overflow-hidden bg-brand-charcoal text-white shadow-xl">
-                        <div className="absolute inset-0 opacity-40">
-                            <img src="https://images.unsplash.com/photo-1551076882-68b47596d601?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover" alt="Plastic Surgery" />
-                        </div>
-                        <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal via-brand-charcoal/80 to-transparent"></div>
-                        <div className="relative z-10 p-10 md:p-16 max-w-2xl">
-                            <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Featured Collection</span>
-                            <h2 className="font-heading text-3xl md:text-5xl mb-6">Excellence in <br />Plastic Surgery</h2>
-                            <p className="text-stone-300 text-lg mb-8 max-w-lg">Discover our premium range of scissors, retractors, and forceps designed specifically for aesthetic and reconstructive procedures.</p>
-                            <button
-                                onClick={() => navigate('/products/specialty/Plastic%20Surgery')}
-                                className="bg-white text-brand-charcoal px-8 py-3 rounded-md font-bold hover:bg-brand-orange hover:text-white transition-colors flex items-center gap-2"
-                            >
-                                Browse Collection <ArrowRight size={18} />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </Section>
+
 
             <Section className="bg-stone-50 !py-12">
                 <div className="container mx-auto px-6">
