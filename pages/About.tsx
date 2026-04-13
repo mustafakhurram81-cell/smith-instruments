@@ -1,8 +1,9 @@
 import React from 'react';
 import { Section, FadeIn, Button, ParallaxHeader } from '../components/Shared';
 import { SEO } from '../components/SEO';
-import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck, Award, Globe, Factory, Package } from 'lucide-react';
+import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck, Award, Globe, Factory, Package, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { CONTACT_INFO } from '../constants';
 import aboutCraftsmanship from '../assets/about-craftsmanship.png';
 import aboutQuality from '../assets/about-quality.png';
 
@@ -326,54 +327,23 @@ export const About: React.FC = () => {
         </div>
       </section>
 
-      {/* 8. DIRECT CONNECTION (Improved) */}
-      <section className="bg-brand-charcoal py-20 relative overflow-hidden">
-        {/* Subtle background decoration */}
-        <div className="absolute inset-0 bg-noise opacity-30" />
-        <div className="absolute top-0 right-0 w-80 h-80 bg-brand-orange/5 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3" />
-
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-            {/* Left — Text */}
-            <div className="lg:w-1/2 text-center lg:text-left">
-              <FadeIn>
-                <h2 className="font-heading text-3xl md:text-4xl text-white mb-6">Human Connection, <br />Not Portals.</h2>
-                <p className="text-stone-300 font-light text-lg mb-10 leading-relaxed">
-                  We don't use complicated portals or automated tickets. You can place orders or start a product inquiry simply by talking to us. Our team is quick to respond and ready to guide you.
-                </p>
-                <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
-                  <Button variant="primary" className="flex items-center gap-2" onClick={() => window.open('https://wa.me/923302449855', '_blank')}>
-                    <MessageCircle size={20} /> Chat on WhatsApp
-                  </Button>
-                  <Button variant="outline" className="flex items-center gap-2 text-white border-white/30 hover:bg-white hover:text-brand-charcoal" onClick={() => navigate('/contact')}>
-                    Contact via Email
-                  </Button>
-                </div>
-              </FadeIn>
+      {/* 8. DIRECT CONNECTION */}
+      <section className="bg-stone-50 py-24 border-t border-stone-200/50">
+        <div className="container mx-auto px-6 text-center">
+          <FadeIn>
+            <h2 className="font-heading text-4xl md:text-5xl text-brand-charcoal mb-6">Human Connection, Not Portals.</h2>
+            <p className="text-stone-500 font-light max-w-2xl mx-auto mb-10 text-lg leading-relaxed">
+              We don't use complicated portals or automated tickets. You can place orders or start a product inquiry simply by talking to us. Our team is quick to respond and ready to guide you.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button variant="primary" className="flex items-center gap-2 px-8 py-4 shadow-[0_4px_14px_0_rgba(255,107,53,0.39)] hover:shadow-[0_6px_20px_rgba(255,107,53,0.23)] hover:-translate-y-1 transition-all" onClick={() => window.open(`https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}`, '_blank')}>
+                <MessageCircle size={20} /> Chat on WhatsApp
+              </Button>
+              <Button variant="secondary" className="flex items-center gap-2 px-8 py-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all bg-white" onClick={() => navigate('/contact')}>
+                <Mail size={20} className="text-brand-orange" /> Contact via Email
+              </Button>
             </div>
-
-            {/* Right — Communication channels grid */}
-            <div className="lg:w-1/2">
-              <FadeIn delay={0.2}>
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { icon: MessageCircle, label: 'WhatsApp', desc: 'Instant replies', color: 'bg-green-500/10 text-green-400' },
-                    { icon: Users, label: 'Video Call', desc: 'Face-to-face meetings', color: 'bg-blue-500/10 text-blue-400' },
-                    { icon: Handshake, label: 'In Person', desc: 'Visit our facility', color: 'bg-brand-orange/10 text-brand-orange' },
-                    { icon: Globe, label: 'Exhibitions', desc: 'Meet us at events', color: 'bg-purple-500/10 text-purple-400' }
-                  ].map((channel, idx) => (
-                    <div key={idx} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 hover:bg-white/10 transition-colors">
-                      <div className={`w-10 h-10 rounded-lg ${channel.color} flex items-center justify-center mb-3`}>
-                        <channel.icon size={20} />
-                      </div>
-                      <h4 className="text-white font-medium text-sm mb-1">{channel.label}</h4>
-                      <p className="text-stone-400 text-xs">{channel.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </FadeIn>
-            </div>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
