@@ -325,9 +325,7 @@ export const Home: React.FC = () => {
               <p className="font-light leading-relaxed mb-10 text-lg text-stone-500">
                 For over two decades, we've partnered with healthcare professionals across 20+ countries, delivering precision instruments that surgeons trust in the most critical moments. Our commitment: uncompromising quality, competitive pricing, and a satisfaction-first approach.
               </p>
-              <Button variant="primary" onClick={() => navigate('/about')}>
-                Learn More <ArrowRight size={16} className="ml-1" />
-              </Button>
+
             </div>
           </div>
         </div>

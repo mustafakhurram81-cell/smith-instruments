@@ -246,7 +246,7 @@ export const About: React.FC = () => {
                     <Users size={20} className="text-brand-orange" /> Client-Specific Modifications
                   </li>
                 </ul>
-                <Button variant="secondary" onClick={() => navigate('/contact')}>Start a Custom Project</Button>
+
               </FadeIn>
             </div>
 
