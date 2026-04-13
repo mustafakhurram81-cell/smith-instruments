@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Section, Button, FadeIn, AnimatedCounter } from '../components/Shared';
 
 import { SEO } from '../components/SEO';
-import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, Award, Globe, Users, Package } from 'lucide-react';
+import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, Award, Globe, Users, Package, MessageCircle, Mail } from 'lucide-react';
+import { CONTACT_INFO } from '../constants';
 import { ProductCard } from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
 import heroMethods from '../assets/hero-premium.png';
@@ -375,46 +376,25 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* FINAL CTA PUSH */}
-      <section className="py-20 md:py-24 bg-brand-orange relative overflow-hidden">
-        {/* Subtle background decoration */}
-        <div className="absolute inset-0 bg-noise opacity-20" />
-        <div className="container mx-auto px-6 relative z-10 text-center">
-          <FadeIn>
-            <h2 className="font-heading text-4xl md:text-5xl text-white mb-6">Ready to Experience Premium Quality?</h2>
-            <p className="text-white/90 text-lg mb-10 max-w-2xl mx-auto font-light">
-              Browse our catalogue and request a custom quote. Our team responds within 24 hours.
-            </p>
-            <Button
-              variant="secondary"
-              className="bg-white text-brand-orange hover:bg-stone-50 hover:text-brand-orange border-white px-10 py-4 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
-              onClick={() => navigate('/contact')}
-            >
-              Get Your Quote <ArrowRight size={18} className="ml-2" />
-            </Button>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* TRUST BAR — Certifications Strip */}
-      <section className="py-10 md:py-14 bg-stone-50 border-t border-stone-200/50">
+      {/* FINAL CONTACT PUSH */}
+      <section className="bg-stone-900 py-20 relative">
         <div className="container mx-auto px-6">
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
-            {[
-              { icon: ShieldCheck, label: 'ISO 9001' },
-              { icon: ShieldCheck, label: 'ISO 13485' },
-              { icon: Award, label: 'CE Certified' },
-              { icon: Globe, label: '20+ Countries' },
-              { icon: Users, label: '50+ Clients' },
-            ].map((item, idx) => (
-              <FadeIn key={idx} delay={idx * 0.05}>
-                <div className="flex items-center gap-2.5 text-stone-400 hover:text-brand-charcoal transition-colors group">
-                  <item.icon size={20} className="text-brand-steel group-hover:text-brand-orange transition-colors" strokeWidth={1.5} />
-                  <span className="text-sm font-medium tracking-wide">{item.label}</span>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
+          <FadeIn>
+            <div className="text-center max-w-2xl mx-auto">
+              <h2 className="font-heading text-4xl md:text-5xl text-white mb-6">Questions? Reach out to us.</h2>
+              <p className="text-stone-400 mb-10 max-w-lg mx-auto text-lg font-light">Whether you're looking for custom instrument modifications or want to inquire about a distributorship, our team is ready to help.</p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-lg mx-auto">
+                <a href={`https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 inline-flex items-center justify-center px-6 py-4 bg-white/5 hover:bg-white/10 text-white font-medium rounded-md transition-all hover:-translate-y-1 hover:shadow-lg border border-white/10">
+                  <MessageCircle size={18} className="mr-2 text-green-400" />
+                  Chat on WhatsApp
+                </a>
+                <a href={`mailto:${CONTACT_INFO.email}`} className="flex-1 inline-flex items-center justify-center px-6 py-4 bg-white/5 hover:bg-white/10 text-white font-medium rounded-md transition-all hover:-translate-y-1 hover:shadow-lg border border-white/10">
+                  <Mail size={18} className="mr-2 text-brand-orange" />
+                  Send an Email
+                </a>
+              </div>
+            </div>
+          </FadeIn>
         </div>
       </section>
     </div>
