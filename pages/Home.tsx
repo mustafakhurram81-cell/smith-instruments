@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Section, Button, FadeIn, AnimatedCounter } from '../components/Shared';
+import { Section, Button, FadeIn, AnimatedCounter, ExperienceGrid } from '../components/Shared';
 
 import { SEO } from '../components/SEO';
 import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, Award, Globe, Users, Package, MessageCircle, Mail } from 'lucide-react';
@@ -8,6 +8,8 @@ import { ProductCard } from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
 import heroMethods from '../assets/hero-premium.png';
 import legacyImg from '../assets/factory/legacy.jpeg';
+import artisan1 from '../assets/factory/artisan-1.jpeg';
+import workshopExtra from '../assets/factory/workshop-extra.jpeg';
 
 const PRODUCTS = [
   { id: 1, name: "Plastic Surgery", icon: Scissors, desc: "Precision instruments for reconstruction" },
@@ -311,13 +313,8 @@ export const Home: React.FC = () => {
             <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-stone-50/50 to-transparent pointer-events-none"></div>
 
             <div className="w-full md:w-1/2">
-              <img
-                src={legacyImg}
-                alt="Precision Instrument Manufacturing"
-                className="rounded-md shadow-lg w-full h-auto object-cover"
-                loading="lazy"
-                width="600"
-                height="400"
+              <ExperienceGrid 
+                images={[legacyImg, artisan1, workshopExtra]} 
               />
             </div>
             <div className="w-full md:w-1/2 text-stone-600">

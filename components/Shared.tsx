@@ -22,3 +22,4 @@ export { AnimatedCounter } from './ui/AnimatedCounter';
 export { WhatsAppFloat } from './ui/WhatsAppFloat';
 export { Pagination } from './ui/Pagination';
 export { ParallaxHeader } from './ui/ParallaxHeader';
+export { ExperienceGrid } from './ui/ExperienceGrid';

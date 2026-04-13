@@ -1,11 +1,15 @@
 import React from 'react';
-import { Section, FadeIn, Button, ParallaxHeader } from '../components/Shared';
+import { Section, FadeIn, Button, ParallaxHeader, ExperienceGrid } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck, Award, Globe, Factory, Package, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CONTACT_INFO } from '../constants';
 import heritageImg from '../assets/factory/heritage.jpeg';
 import manufacturingImg from '../assets/factory/manufacturing.jpeg';
+import legacyImg from '../assets/factory/legacy.jpeg';
+import artisan2 from '../assets/factory/artisan-2.jpeg';
+import artisan3 from '../assets/factory/artisan-3.jpeg';
+import workshopExtra from '../assets/factory/workshop-extra.jpeg';
 
 /**
  * PLACEHOLDER MILESTONES — Replace with your real company milestones.
@@ -104,17 +108,9 @@ export const About: React.FC = () => {
           <div className="flex flex-col lg:flex-row items-center gap-16">
             {/* Image - Now properly centered and sized */}
             <div className="lg:w-5/12">
-              <FadeIn>
-                <div className="relative">
-                  <div className="relative rounded-lg overflow-hidden shadow-lg">
-                    <img
-                      src={heritageImg}
-                      alt="Precision Manufacturing"
-                      className="w-full h-auto object-cover"
-                    />
-                  </div>
-                </div>
-              </FadeIn>
+              <ExperienceGrid 
+                images={[heritageImg, artisan2, artisan3]} 
+              />
             </div>
 
             {/* Content */}
@@ -256,15 +252,10 @@ export const About: React.FC = () => {
 
             {/* Image */}
             <div className="w-full md:w-1/2">
-              <FadeIn delay={0.2}>
-                <div className="relative">
-                  <img
-                    src={manufacturingImg}
-                    alt="Quality Inspection"
-                    className="w-full h-auto object-cover rounded-lg shadow-lg"
-                  />
-                </div>
-              </FadeIn>
+              <ExperienceGrid 
+                images={[manufacturingImg, legacyImg, workshopExtra]} 
+                accentColor="bg-brand-charcoal"
+              />
             </div>
           </div>
         </div>
