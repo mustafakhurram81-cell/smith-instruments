@@ -350,44 +350,7 @@ export const ProductDetail: React.FC = () => {
                                 </div>
                             )}
 
-                            {/* Technical Specifications - B2B/Clinical Upgrade */}
-                            <div className="bg-stone-50 rounded-lg p-5 border border-stone-200">
-                                <h3 className="text-sm font-bold text-brand-charcoal uppercase tracking-wide mb-4 flex items-center gap-2">
-                                    <FileText size={16} className="text-brand-orange" /> Technical Specifications
-                                </h3>
-                                <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
-                                    <div className="flex flex-col">
-                                        <span className="text-stone-500 text-xs">Material</span>
-                                        <span className="font-medium text-brand-charcoal">German Stainless Steel</span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-stone-500 text-xs">Finish</span>
-                                        <span className="font-medium text-brand-charcoal">Satin / Matte</span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-stone-500 text-xs">Reusable</span>
-                                        <span className="font-medium text-brand-charcoal">Yes, Autoclavable</span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-stone-500 text-xs">Sterility</span>
-                                        <span className="font-medium text-brand-charcoal">Non-Sterile</span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-stone-500 text-xs">Latex Free</span>
-                                        <span className="font-medium text-brand-charcoal">Yes</span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-stone-500 text-xs">Certification</span>
-                                        <span className="font-medium text-brand-charcoal">ISO 13485, CE</span>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => showToast("Datasheet download started...", "success")}
-                                    className="w-full mt-5 flex items-center justify-center gap-2 py-2 border border-stone-300 rounded-md text-sm font-medium text-stone-600 hover:text-brand-orange hover:border-brand-orange hover:bg-white transition-all"
-                                >
-                                    <Download size={16} /> Download PDF Datasheet
-                                </button>
-                            </div>
+
 
                             {/* CTA Buttons */}
                             <div className="pt-6 border-t border-stone-200 space-y-4">
