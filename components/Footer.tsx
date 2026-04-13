@@ -7,12 +7,13 @@ import { SOCIAL_LINKS, CONTACT_INFO } from '../constants';
 export const Footer: React.FC = () => {
     return (
         <footer className="bg-brand-charcoal text-stone-300">
-            {/* Pre-Footer CTA */}
+            {/* Pre-Footer Contact Drop */}
             <div className="bg-stone-900 py-16 relative border-b border-stone-800">
-                <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
-                    <div>
-                        <h2 className="font-heading text-3xl md:text-4xl text-white">Ready to elevate your practice?</h2>
-                        <div className="flex flex-col sm:flex-row gap-4 mt-8 max-w-lg">
+                <div className="container mx-auto px-6">
+                    <div className="text-center max-w-2xl mx-auto">
+                        <h2 className="font-heading text-3xl md:text-4xl text-white mb-4">Questions? Reach out to us.</h2>
+                        <p className="text-stone-400 mb-8 max-w-lg mx-auto">Whether you're looking for custom instrument modifications or want to inquire about a distributorship, our team is ready to help.</p>
+                        <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-lg mx-auto">
                             <a href={`https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 inline-flex items-center justify-center px-6 py-4 bg-white/5 hover:bg-white/10 text-white font-medium rounded-md transition-colors border border-white/10">
                                 <MessageCircle size={18} className="mr-2 text-green-400" />
                                 Chat on WhatsApp
@@ -22,12 +23,6 @@ export const Footer: React.FC = () => {
                                 Send an Email
                             </a>
                         </div>
-                    </div>
-                    <div>
-                        <a href="/contact" className="inline-flex items-center justify-center px-8 py-4 bg-brand-orange text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
-                            Get Your Quote
-                            <ArrowRight size={18} className="ml-2" />
-                        </a>
                     </div>
                 </div>
             </div>

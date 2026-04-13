@@ -375,6 +375,27 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* FINAL CTA PUSH */}
+      <section className="py-20 md:py-24 bg-brand-orange relative overflow-hidden">
+        {/* Subtle background decoration */}
+        <div className="absolute inset-0 bg-noise opacity-20" />
+        <div className="container mx-auto px-6 relative z-10 text-center">
+          <FadeIn>
+            <h2 className="font-heading text-4xl md:text-5xl text-white mb-6">Ready to Experience Premium Quality?</h2>
+            <p className="text-white/90 text-lg mb-10 max-w-2xl mx-auto font-light">
+              Browse our catalogue and request a custom quote. Our team responds within 24 hours.
+            </p>
+            <Button
+              variant="secondary"
+              className="bg-white text-brand-orange hover:bg-stone-50 hover:text-brand-orange border-white px-10 py-4 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
+              onClick={() => navigate('/contact')}
+            >
+              Get Your Quote <ArrowRight size={18} className="ml-2" />
+            </Button>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* TRUST BAR — Certifications Strip */}
       <section className="py-10 md:py-14 bg-stone-50 border-t border-stone-200/50">
         <div className="container mx-auto px-6">
