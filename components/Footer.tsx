@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight, CreditCard, Lock } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight, CreditCard, Lock, MessageCircle } from 'lucide-react';
 import logoTransparent from '../assets/smith instruments logo.png';
 import { SOCIAL_LINKS, CONTACT_INFO } from '../constants';
 
@@ -12,18 +12,15 @@ export const Footer: React.FC = () => {
                 <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
                     <div>
                         <h2 className="font-heading text-3xl md:text-4xl text-white">Ready to elevate your practice?</h2>
-                        <div className="flex flex-col gap-4 mt-6 max-w-md">
-                            <p className="text-stone-400 text-sm">Join our newsletter for exclusive offers and industry insights.</p>
-                            <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); alert("Thanks for subscribing!"); }}>
-                                <input
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    className="px-4 py-3 rounded-md text-white bg-stone-800 w-full !outline-none !ring-0 border border-stone-700 focus:!border-stone-500 transition-all placeholder-stone-500"
-                                />
-                                <button type="submit" className="px-6 py-3 bg-brand-orange text-white font-semibold rounded-md hover:bg-orange-600 transition-colors">
-                                    Subscribe
-                                </button>
-                            </form>
+                        <div className="flex flex-col sm:flex-row gap-4 mt-8 max-w-lg">
+                            <a href={`https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 inline-flex items-center justify-center px-6 py-4 bg-white/5 hover:bg-white/10 text-white font-medium rounded-md transition-colors border border-white/10">
+                                <MessageCircle size={18} className="mr-2 text-green-400" />
+                                Chat on WhatsApp
+                            </a>
+                            <a href={`mailto:${CONTACT_INFO.email}`} className="flex-1 inline-flex items-center justify-center px-6 py-4 bg-white/5 hover:bg-white/10 text-white font-medium rounded-md transition-colors border border-white/10">
+                                <Mail size={18} className="mr-2 text-brand-orange" />
+                                Send an Email
+                            </a>
                         </div>
                     </div>
                     <div>
