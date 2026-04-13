@@ -7,7 +7,7 @@ import { CONTACT_INFO } from '../constants';
 import { ProductCard } from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
 import heroMethods from '../assets/hero-premium.png';
-import manufacturingImg from '../assets/manufacturing-workshop.png';
+import legacyImg from '../assets/factory/legacy.jpeg';
 
 const PRODUCTS = [
   { id: 1, name: "Plastic Surgery", icon: Scissors, desc: "Precision instruments for reconstruction" },
@@ -312,9 +312,9 @@ export const Home: React.FC = () => {
 
             <div className="w-full md:w-1/2">
               <img
-                src={manufacturingImg}
+                src={legacyImg}
                 alt="Precision Instrument Manufacturing"
-                className="rounded-md shadow-lg"
+                className="rounded-md shadow-lg w-full h-auto object-cover"
                 loading="lazy"
                 width="600"
                 height="400"
