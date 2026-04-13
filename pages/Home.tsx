@@ -377,19 +377,19 @@ export const Home: React.FC = () => {
       </section>
 
       {/* FINAL CONTACT PUSH */}
-      <section className="bg-stone-900 py-20 relative">
+      <section className="bg-stone-50 py-20 relative border-t border-stone-200/50">
         <div className="container mx-auto px-6">
           <FadeIn>
             <div className="text-center max-w-2xl mx-auto">
-              <h2 className="font-heading text-4xl md:text-5xl text-white mb-6">Questions? Reach out to us.</h2>
-              <p className="text-stone-400 mb-10 max-w-lg mx-auto text-lg font-light">Whether you're looking for custom instrument modifications or want to inquire about a distributorship, our team is ready to help.</p>
+              <h2 className="font-heading text-4xl md:text-5xl text-brand-charcoal mb-6">Questions? Reach out to us.</h2>
+              <p className="text-stone-500 mb-10 max-w-lg mx-auto text-lg font-light">Whether you're looking for custom instrument modifications or want to inquire about a distributorship, our team is ready to help.</p>
               <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-lg mx-auto">
-                <a href={`https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 inline-flex items-center justify-center px-6 py-4 bg-white/5 hover:bg-white/10 text-white font-medium rounded-md transition-all hover:-translate-y-1 hover:shadow-lg border border-white/10">
-                  <MessageCircle size={18} className="mr-2 text-green-400" />
+                <a href={`https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="flex-1 inline-flex items-center justify-center px-6 py-4 bg-white hover:bg-stone-50 text-brand-charcoal font-semibold rounded-xl transition-all hover:-translate-y-1 shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-lg border border-stone-200/60">
+                  <MessageCircle size={20} className="mr-2 text-green-500" strokeWidth={2} />
                   Chat on WhatsApp
                 </a>
-                <a href={`mailto:${CONTACT_INFO.email}`} className="flex-1 inline-flex items-center justify-center px-6 py-4 bg-white/5 hover:bg-white/10 text-white font-medium rounded-md transition-all hover:-translate-y-1 hover:shadow-lg border border-white/10">
-                  <Mail size={18} className="mr-2 text-brand-orange" />
+                <a href={`mailto:${CONTACT_INFO.email}`} className="flex-1 inline-flex items-center justify-center px-6 py-4 bg-white hover:bg-stone-50 text-brand-charcoal font-semibold rounded-xl transition-all hover:-translate-y-1 shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-lg border border-stone-200/60">
+                  <Mail size={20} className="mr-2 text-brand-orange" strokeWidth={2} />
                   Send an Email
                 </a>
               </div>
