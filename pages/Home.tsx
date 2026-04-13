@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Section, Button, FadeIn, AnimatedCounter } from '../components/Shared';
 
 import { SEO } from '../components/SEO';
-import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope } from 'lucide-react';
+import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, Award, Globe, Users, Package } from 'lucide-react';
 import { ProductCard } from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
 import heroMethods from '../assets/hero-premium.png';
@@ -136,36 +136,53 @@ export const Home: React.FC = () => {
 
 
 
-      {/* IMPACT COUNTERS - GRID STYLE */}
+      {/* IMPACT COUNTERS - ENHANCED GRID */}
       <section className="py-12 md:py-16 bg-stone-50">
         <div className="container mx-auto px-4 md:px-6">
           <div className="bg-white rounded-[2rem] md:rounded-[3rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-200/60 overflow-hidden">
-            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-stone-100">
+            <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-stone-100">
             <FadeIn delay={0.1}>
-              <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
-                <div className="flex items-center justify-center font-heading text-6xl md:text-7xl text-brand-charcoal mb-4">
+              <div className="py-12 md:py-16 px-6 md:px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
+                <Award className="w-8 h-8 text-brand-orange mx-auto mb-4" strokeWidth={1.5} />
+                <div className="flex items-center justify-center font-heading text-5xl md:text-6xl text-brand-charcoal mb-2">
                   <AnimatedCounter to={20} />
                   <span className="text-brand-orange">+</span>
                 </div>
-                <span className="text-xs uppercase tracking-[0.2em] text-stone-500 font-bold">Years of Experience</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-stone-500 font-bold block">Years of Experience</span>
+                <p className="text-[11px] text-stone-400 mt-1 font-light">Est. 2002</p>
               </div>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
-                <div className="flex items-center justify-center font-heading text-6xl md:text-7xl text-brand-charcoal mb-4">
+              <div className="py-12 md:py-16 px-6 md:px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
+                <Globe className="w-8 h-8 text-brand-orange mx-auto mb-4" strokeWidth={1.5} />
+                <div className="flex items-center justify-center font-heading text-5xl md:text-6xl text-brand-charcoal mb-2">
                   <AnimatedCounter to={20} />
                   <span className="text-brand-orange">+</span>
                 </div>
-                <span className="text-xs uppercase tracking-[0.2em] text-stone-500 font-bold">Countries Served</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-stone-500 font-bold block">Countries Served</span>
+                <p className="text-[11px] text-stone-400 mt-1 font-light">Global reach</p>
               </div>
             </FadeIn>
             <FadeIn delay={0.3}>
-              <div className="py-16 px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
-                <div className="flex items-center justify-center font-heading text-6xl md:text-7xl text-brand-charcoal mb-4">
+              <div className="py-12 md:py-16 px-6 md:px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
+                <Users className="w-8 h-8 text-brand-orange mx-auto mb-4" strokeWidth={1.5} />
+                <div className="flex items-center justify-center font-heading text-5xl md:text-6xl text-brand-charcoal mb-2">
                   <AnimatedCounter to={50} />
                   <span className="text-brand-orange">+</span>
                 </div>
-                <span className="text-xs uppercase tracking-[0.2em] text-stone-500 font-bold">Global Clients</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-stone-500 font-bold block">Global Clients</span>
+                <p className="text-[11px] text-stone-400 mt-1 font-light">Trusted partners</p>
+              </div>
+            </FadeIn>
+            <FadeIn delay={0.4}>
+              <div className="py-12 md:py-16 px-6 md:px-8 text-center bg-white hover:bg-stone-50 transition-colors duration-500">
+                <Package className="w-8 h-8 text-brand-orange mx-auto mb-4" strokeWidth={1.5} />
+                <div className="flex items-center justify-center font-heading text-5xl md:text-6xl text-brand-charcoal mb-2">
+                  <AnimatedCounter to={5000} />
+                  <span className="text-brand-orange">+</span>
+                </div>
+                <span className="text-xs uppercase tracking-[0.15em] text-stone-500 font-bold block">Instruments</span>
+                <p className="text-[11px] text-stone-400 mt-1 font-light">In our catalog</p>
               </div>
             </FadeIn>
             </div>
@@ -192,8 +209,8 @@ export const Home: React.FC = () => {
               { icon: Truck, title: "Fast Delivery", desc: "Efficient logistics to ensure your instruments arrive on time, every time." }
             ].map((item, idx) => (
               <FadeIn key={idx} delay={idx * 0.1}>
-                <div className="group h-full bg-white p-8 rounded-lg border border-stone-200 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-                  <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center mb-6">
+                <div className="group h-full bg-white p-8 rounded-2xl border border-stone-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-brand-orange/10 flex items-center justify-center mb-6 group-hover:bg-brand-orange/20 transition-colors">
                     <item.icon className="w-6 h-6 text-brand-orange" strokeWidth={1.5} />
                   </div>
                   <h3 className="font-heading text-xl font-semibold mb-3 text-brand-charcoal">{item.title}</h3>
@@ -240,7 +257,7 @@ export const Home: React.FC = () => {
                 className="w-[280px] md:w-[350px] shrink-0 group cursor-pointer"
                 onClick={() => navigate('/products')}
               >
-                <div className="bg-white rounded-lg border border-stone-200 p-8 h-[320px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-brand-orange/30">
+                <div className="bg-white rounded-2xl border border-stone-200/60 shadow-[0_4px_20px_rgb(0,0,0,0.03)] p-8 h-[320px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-brand-orange/30">
                   <div>
                     <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-brand-orange/10 to-brand-orange/5 flex items-center justify-center mb-6 group-hover:from-brand-orange/20 group-hover:to-brand-orange/10 transition-all duration-300">
                       <product.icon size={28} className="text-brand-orange" strokeWidth={1.5} />
@@ -318,33 +335,61 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="py-16 md:py-24 bg-stone-50">
-        <div className="container mx-auto px-6">
+      {/* TESTIMONIALS — DARK THEME */}
+      <section className="py-16 md:py-24 bg-brand-charcoal relative overflow-hidden">
+        {/* Subtle background */}
+        <div className="absolute inset-0 bg-noise opacity-20" />
+        <div className="absolute top-0 left-1/3 w-96 h-96 bg-brand-orange/5 rounded-full blur-3xl" />
+
+        <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="font-heading text-4xl text-brand-charcoal mb-4">Trusted by Professionals</h2>
-            <p className="text-stone-500 font-light">Hear from our partners in South America who rely on our quality and service.</p>
+            <h2 className="font-heading text-4xl text-white mb-4">Trusted by Professionals</h2>
+            <p className="text-stone-400 font-light">Hear from our partners who rely on our quality and service.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((t, i) => (
               <FadeIn key={t.id} delay={i * 0.2}>
-                <div className="bg-white p-8 rounded-lg border border-stone-200 hover:border-brand-orange/30 transition-all relative">
+                <div className="bg-white/5 backdrop-blur-sm p-8 rounded-2xl border border-white/10 hover:border-brand-orange/30 transition-all relative group">
+                  {/* Decorative quote mark */}
+                  <div className="absolute top-4 right-6 text-brand-orange/20 font-heading text-7xl leading-none select-none">"</div>
+
                   <div className="flex gap-1 mb-4">
                     {[1, 2, 3, 4, 5].map(star => (
-                      <Star key={star} size={16} className="text-brand-orange fill-brand-orange" />
+                      <Star key={star} size={14} className="text-brand-orange fill-brand-orange" />
                     ))}
                   </div>
-                  <p className="text-stone-600 italic mb-6 leading-relaxed relative z-10">"{t.text}"</p>
+                  <p className="text-stone-300 italic mb-6 leading-relaxed relative z-10 font-light">"{t.text}"</p>
                   <div className="mt-auto">
-                    <h4 className="font-heading text-brand-charcoal text-lg">{t.author}</h4>
-                    <div className="flex items-center gap-2">
+                    <h4 className="font-heading text-white text-lg">{t.author}</h4>
+                    <div className="flex items-center gap-2 mt-1">
                       <p className="text-xs text-brand-orange font-bold uppercase tracking-wider">{t.role}</p>
-                      <div className="flex items-center gap-1 bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-medium">
-                        <ShieldCheck size={10} /> Verified
-                      </div>
+                      <span className="text-stone-600">•</span>
+                      <p className="text-xs text-stone-500">{t.location}</p>
                     </div>
                   </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TRUST BAR — Certifications Strip */}
+      <section className="py-10 md:py-14 bg-stone-50 border-t border-stone-200/50">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
+            {[
+              { icon: ShieldCheck, label: 'ISO 9001' },
+              { icon: ShieldCheck, label: 'ISO 13485' },
+              { icon: Award, label: 'CE Certified' },
+              { icon: Globe, label: '20+ Countries' },
+              { icon: Users, label: '50+ Clients' },
+            ].map((item, idx) => (
+              <FadeIn key={idx} delay={idx * 0.05}>
+                <div className="flex items-center gap-2.5 text-stone-400 hover:text-brand-charcoal transition-colors group">
+                  <item.icon size={20} className="text-brand-steel group-hover:text-brand-orange transition-colors" strokeWidth={1.5} />
+                  <span className="text-sm font-medium tracking-wide">{item.label}</span>
                 </div>
               </FadeIn>
             ))}

@@ -1,10 +1,82 @@
 import React from 'react';
 import { Section, FadeIn, Button, ParallaxHeader } from '../components/Shared';
 import { SEO } from '../components/SEO';
-import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck } from 'lucide-react';
+import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck, Award, Globe, Factory, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import aboutCraftsmanship from '../assets/about-craftsmanship.png';
 import aboutQuality from '../assets/about-quality.png';
+
+/**
+ * PLACEHOLDER MILESTONES — Replace with your real company milestones.
+ */
+const MILESTONES = [
+  {
+    year: '2002',
+    title: 'Company Founded',
+    description: 'Smith Instruments was established with a vision to deliver precision surgical instruments to the global market.',
+    icon: Factory,
+  },
+  {
+    year: '2005',
+    title: 'First International Export',
+    description: 'Shipped our first international order, marking the beginning of our global journey.',
+    icon: Globe,
+  },
+  {
+    year: '2008',
+    title: 'ISO 9001 Certification',
+    description: 'Achieved ISO 9001 quality management certification, formalizing our commitment to excellence.',
+    icon: Award,
+  },
+  {
+    year: '2012',
+    title: '50+ Skilled Artisans',
+    description: 'Our team grew to over 50 employees, expanding our manufacturing capacity significantly.',
+    icon: Users,
+  },
+  {
+    year: '2015',
+    title: 'South American Expansion',
+    description: 'Established strong partnerships in Brazil, Argentina, and Chile, becoming a trusted supplier across Latin America.',
+    icon: Globe,
+  },
+  {
+    year: '2018',
+    title: 'CE Marking Achieved',
+    description: 'Our instruments received CE marking, enabling access to European markets.',
+    icon: ShieldCheck,
+  },
+  {
+    year: '2020',
+    title: '5000+ Instruments',
+    description: 'Our product catalog surpassed 5,000 instruments across multiple surgical specialties.',
+    icon: Package,
+  },
+  {
+    year: '2024',
+    title: 'Digital Transformation',
+    description: 'Launched our digital platform with online catalogues, real-time quoting, and global accessibility.',
+    icon: Globe,
+  },
+];
+
+const CERTIFICATIONS = [
+  {
+    name: 'ISO 9001:2015',
+    description: 'Quality Management System — ensuring consistent quality and customer satisfaction across all processes.',
+    icon: Award,
+  },
+  {
+    name: 'ISO 13485:2016',
+    description: 'Medical Devices Quality Management — the international standard for medical device manufacturing.',
+    icon: ShieldCheck,
+  },
+  {
+    name: 'CE Certified',
+    description: 'European Conformity — our instruments meet EU health, safety, and environmental protection standards.',
+    icon: CheckCircle2,
+  },
+];
 
 export const About: React.FC = () => {
   const navigate = useNavigate();
@@ -72,8 +144,51 @@ export const About: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. THE TRUST MODEL */}
+      {/* 3. COMPANY TIMELINE */}
       <section className="bg-white py-24 relative overflow-hidden">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <span className="text-brand-orange uppercase tracking-[0.2em] text-sm font-bold block mb-3">Our Journey</span>
+            <h2 className="font-heading text-4xl md:text-5xl text-brand-charcoal mb-4">Two Decades of Excellence</h2>
+            <p className="text-stone-500 font-light text-lg max-w-2xl mx-auto">
+              Key milestones that shaped Smith Instruments into the trusted manufacturer it is today.
+            </p>
+          </div>
+
+          {/* Timeline */}
+          <div className="relative max-w-4xl mx-auto">
+            {/* Vertical center line */}
+            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-stone-200 md:-translate-x-[1px]" />
+
+            {MILESTONES.map((milestone, idx) => {
+              const isLeft = idx % 2 === 0;
+              return (
+                <FadeIn key={idx} delay={idx * 0.08}>
+                  <div className={`relative flex items-start mb-12 last:mb-0 ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                    {/* Content card */}
+                    <div className={`ml-12 md:ml-0 md:w-[calc(50%-2rem)] ${isLeft ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'}`}>
+                      <span className="text-brand-orange font-heading text-sm tracking-widest font-bold mb-1 block">{milestone.year}</span>
+                      <h3 className="font-heading text-xl text-brand-charcoal mb-2">{milestone.title}</h3>
+                      <p className="text-stone-500 text-sm leading-relaxed">{milestone.description}</p>
+                    </div>
+
+                    {/* Center dot */}
+                    <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white border-2 border-stone-200 flex items-center justify-center z-10 shadow-sm">
+                      <milestone.icon size={14} className="text-brand-orange" />
+                    </div>
+
+                    {/* Spacer for the other side */}
+                    <div className="hidden md:block md:w-[calc(50%-2rem)]" />
+                  </div>
+                </FadeIn>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. THE TRUST MODEL */}
+      <section className="bg-stone-50 py-24 relative overflow-hidden">
 
         <div className="container mx-auto px-6 relative z-10 text-center">
           <FadeIn>
@@ -85,22 +200,22 @@ export const About: React.FC = () => {
             </p>
 
             <div className="grid md:grid-cols-3 gap-8 text-left max-w-4xl mx-auto">
-              <div className="bg-stone-50 p-8 rounded-lg border border-stone-200 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center mb-4">
+              <div className="bg-white p-8 rounded-2xl border border-stone-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-brand-orange/10 flex items-center justify-center mb-4">
                   <CheckCircle2 className="text-brand-orange" size={24} />
                 </div>
                 <h4 className="font-heading text-xl text-brand-charcoal mb-2">Inspect First</h4>
                 <p className="text-sm text-stone-500">Receive your order and inspect the quality firsthand in your own facility.</p>
               </div>
-              <div className="bg-stone-50 p-8 rounded-lg border border-stone-200 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center mb-4">
+              <div className="bg-white p-8 rounded-2xl border border-stone-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-brand-orange/10 flex items-center justify-center mb-4">
                   <ShieldCheck className="text-brand-orange" size={24} />
                 </div>
                 <h4 className="font-heading text-xl text-brand-charcoal mb-2">Zero Risk</h4>
                 <p className="text-sm text-stone-500">If it doesn't meet your standards, simply return it. No questions asked.</p>
               </div>
-              <div className="bg-stone-50 p-8 rounded-lg border border-stone-200 hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
-                <div className="w-12 h-12 rounded-lg bg-stone-100 flex items-center justify-center mb-4">
+              <div className="bg-white p-8 rounded-2xl border border-stone-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                <div className="w-12 h-12 rounded-xl bg-brand-orange/10 flex items-center justify-center mb-4">
                   <Heart className="text-brand-orange" size={24} />
                 </div>
                 <h4 className="font-heading text-xl text-brand-charcoal mb-2">Long-term Partners</h4>
@@ -111,8 +226,8 @@ export const About: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. OEM & CUSTOMIZATION */}
-      <Section className="bg-stone-50">
+      {/* 5. OEM & CUSTOMIZATION */}
+      <Section className="bg-white">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center gap-16">
             {/* Content First on Desktop */}
@@ -154,8 +269,8 @@ export const About: React.FC = () => {
         </div>
       </Section>
 
-      {/* 5. MEET THE ARTISANS - HUMANIZING THE BRAND */}
-      <section className="bg-white py-24">
+      {/* 6. MEET THE ARTISANS - HUMANIZING THE BRAND */}
+      <section className="bg-stone-50 py-24">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <span className="text-brand-orange uppercase tracking-[0.2em] text-sm font-bold block mb-3">Our People</span>
@@ -163,6 +278,7 @@ export const About: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+            {/* PLACEHOLDER AVATARS — Replace with real team photos ASAP */}
             {[
               { name: "Khurram Munir", role: "Production Director", img: "https://ui-avatars.com/api/?name=Khurram+Munir&size=400&background=f97316&color=ffffff&bold=true", quote: "Quality is never an accident; it's the result of intelligent effort." },
               { name: "Usama Munir", role: "Customer Relations & Finance", img: "https://ui-avatars.com/api/?name=Usama+Munir&size=400&background=1c1917&color=ffffff&bold=true", quote: "Building lasting partnerships, one conversation at a time." },
@@ -170,7 +286,7 @@ export const About: React.FC = () => {
             ].map((member, i) => (
               <FadeIn key={i} delay={i * 0.1}>
                 <div className="text-center group">
-                  <div className="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-stone-50 shadow-lg group-hover:border-brand-orange/20 transition-colors">
+                  <div className="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 border-4 border-stone-100 shadow-lg group-hover:border-brand-orange/20 transition-colors">
                     <img src={member.img} alt={member.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
                   </div>
                   <h4 className="font-heading text-2xl text-brand-charcoal mb-1">{member.name}</h4>
@@ -183,23 +299,81 @@ export const About: React.FC = () => {
         </div>
       </section>
 
-      {/* 6. DIRECT CONNECTION */}
-      <section className="bg-stone-50 py-20">
-        <div className="container mx-auto px-6 text-center">
-          <FadeIn>
-            <h2 className="font-heading text-3xl md:text-4xl text-brand-charcoal mb-6">Human Connection, Not Portals.</h2>
-            <p className="text-stone-600 font-light max-w-2xl mx-auto mb-10 text-lg">
-              We don't use complicated portals or automated tickets. You can place orders or start a product inquiry simply by talking to us. Our team is quick to respond and ready to guide you.
+      {/* 7. CERTIFICATIONS & COMPLIANCE */}
+      <section className="bg-white py-24 border-t border-stone-200/50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <span className="text-brand-orange uppercase tracking-[0.2em] text-sm font-bold block mb-3">Quality Assurance</span>
+            <h2 className="font-heading text-4xl text-brand-charcoal mb-4">Certifications & Compliance</h2>
+            <p className="text-stone-500 font-light text-lg max-w-2xl mx-auto">
+              Our commitment to quality is verified by internationally recognized standards and certifications.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button variant="primary" className="flex items-center gap-2" onClick={() => window.open('https://wa.me/923302449855', '_blank')}>
-                <MessageCircle size={20} /> Chat on WhatsApp
-              </Button>
-              <Button variant="secondary" className="flex items-center gap-2" onClick={() => navigate('/contact')}>
-                Contact via Email
-              </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {CERTIFICATIONS.map((cert, idx) => (
+              <FadeIn key={idx} delay={idx * 0.1}>
+                <div className="text-center p-8 bg-stone-50 rounded-2xl border border-stone-200/60 hover:border-brand-orange/20 hover:shadow-lg transition-all duration-300">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-brand-orange/10 flex items-center justify-center mb-5">
+                    <cert.icon className="w-8 h-8 text-brand-orange" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="font-heading text-xl text-brand-charcoal mb-3">{cert.name}</h3>
+                  <p className="text-stone-500 text-sm leading-relaxed">{cert.description}</p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 8. DIRECT CONNECTION (Improved) */}
+      <section className="bg-brand-charcoal py-20 relative overflow-hidden">
+        {/* Subtle background decoration */}
+        <div className="absolute inset-0 bg-noise opacity-30" />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-brand-orange/5 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3" />
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+            {/* Left — Text */}
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <FadeIn>
+                <h2 className="font-heading text-3xl md:text-4xl text-white mb-6">Human Connection, <br />Not Portals.</h2>
+                <p className="text-stone-300 font-light text-lg mb-10 leading-relaxed">
+                  We don't use complicated portals or automated tickets. You can place orders or start a product inquiry simply by talking to us. Our team is quick to respond and ready to guide you.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4">
+                  <Button variant="primary" className="flex items-center gap-2" onClick={() => window.open('https://wa.me/923302449855', '_blank')}>
+                    <MessageCircle size={20} /> Chat on WhatsApp
+                  </Button>
+                  <Button variant="outline" className="flex items-center gap-2 text-white border-white/30 hover:bg-white hover:text-brand-charcoal" onClick={() => navigate('/contact')}>
+                    Contact via Email
+                  </Button>
+                </div>
+              </FadeIn>
             </div>
-          </FadeIn>
+
+            {/* Right — Communication channels grid */}
+            <div className="lg:w-1/2">
+              <FadeIn delay={0.2}>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { icon: MessageCircle, label: 'WhatsApp', desc: 'Instant replies', color: 'bg-green-500/10 text-green-400' },
+                    { icon: Users, label: 'Video Call', desc: 'Face-to-face meetings', color: 'bg-blue-500/10 text-blue-400' },
+                    { icon: Handshake, label: 'In Person', desc: 'Visit our facility', color: 'bg-brand-orange/10 text-brand-orange' },
+                    { icon: Globe, label: 'Exhibitions', desc: 'Meet us at events', color: 'bg-purple-500/10 text-purple-400' }
+                  ].map((channel, idx) => (
+                    <div key={idx} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 hover:bg-white/10 transition-colors">
+                      <div className={`w-10 h-10 rounded-lg ${channel.color} flex items-center justify-center mb-3`}>
+                        <channel.icon size={20} />
+                      </div>
+                      <h4 className="text-white font-medium text-sm mb-1">{channel.label}</h4>
+                      <p className="text-stone-400 text-xs">{channel.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </FadeIn>
+            </div>
+          </div>
         </div>
       </section>
 

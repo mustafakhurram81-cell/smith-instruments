@@ -66,9 +66,10 @@ export default {
                     900: '#7C2D12',
                 },
                 brand: {
-                    orange: '#FF5E00', // Belkins vibrant orange
+                    orange: '#FF5E00', // Primary — vibrant orange
                     gold: '#FF5E00', // Alias for backwards compatibility
-                    charcoal: '#1F1F1F', // Softer black
+                    steel: '#7A7A7A', // Secondary — from logo "INSTRUMENTS" gray
+                    charcoal: '#1F1F1F', // Dark — softer black
                     dark: '#1F1F1F',
                     light: '#FAFAFA',
                 }

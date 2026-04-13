@@ -9,11 +9,19 @@ import { useCategoryNames } from '../lib/queries';
 import { SearchOverlay } from './SearchOverlay';
 import logoTransparent from '../assets/smith instruments logo.png';
 
+const COMPANY_LINKS = [
+    { to: '/about', label: 'About Us' },
+    { to: '/events', label: 'Events & Gallery' },
+    { to: '/distributor', label: 'Become a Distributor' },
+    { to: '/blog', label: 'Blog' },
+];
+
 export const Header: React.FC = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isProductsOpen, setIsProductsOpen] = useState(false);
+    const [isCompanyOpen, setIsCompanyOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
     const { cartCount } = useCart();
@@ -32,6 +40,21 @@ export const Header: React.FC = () => {
 
     const isHome = location.pathname === '/';
     const isTransparent = isHome && !isScrolled;
+
+    const navLinkClass = (isActive: boolean) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+        ? (isActive ? 'text-white border-b border-brand-orange' : 'text-white/80 hover:text-white')
+        : (isActive ? 'text-brand-charcoal border-b border-brand-orange' : 'text-stone-500 hover:text-brand-charcoal')
+        }`;
+
+    const dropdownLinkClass = (isActive: boolean) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
+        ? (isActive ? 'text-white border-b border-brand-orange' : 'text-white/80 hover:text-white')
+        : (isActive ? 'text-brand-charcoal border-b border-brand-orange' : 'text-stone-500 hover:text-brand-charcoal')
+        }`;
+
+    // Check if any company route is active
+    const isCompanyActive = ['/about', '/events', '/distributor', '/blog'].some(
+        path => location.pathname.startsWith(path)
+    );
 
     return (
         <>
@@ -60,26 +83,21 @@ export const Header: React.FC = () => {
                     </div>
 
                     <nav className="hidden md:flex items-center gap-6">
-                        <PrefetchNavLink to="/" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
-                            ? (isActive ? 'text-white border-b border-brand-orange' : 'text-white/80 hover:text-white')
-                            : (isActive ? 'text-brand-charcoal border-b border-brand-orange' : 'text-stone-500 hover:text-brand-charcoal')
-                            }`}>
+                        <PrefetchNavLink to="/" className={({ isActive }) => navLinkClass(isActive)}>
                             Home
                         </PrefetchNavLink>
 
+                        {/* Products Dropdown */}
                         <div
                             className="relative group"
                             onMouseEnter={() => setIsProductsOpen(true)}
                             onMouseLeave={() => setIsProductsOpen(false)}
                         >
-                            <PrefetchNavLink to="/products" className={({ isActive }) => `flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
-                                ? (isActive ? 'text-white border-b border-brand-orange' : 'text-white/80 hover:text-white')
-                                : (isActive ? 'text-brand-charcoal border-b border-brand-orange' : 'text-stone-500 hover:text-brand-charcoal')
-                                }`}>
+                            <PrefetchNavLink to="/products" className={({ isActive }) => dropdownLinkClass(isActive)}>
                                 Products <ChevronDown size={14} className={`transition-transform duration-300 ${isProductsOpen ? 'rotate-180' : ''}`} />
                             </PrefetchNavLink>
 
-                            {/* Animated Dropdown - Belkins Style */}
+                            {/* Animated Dropdown */}
                             <div
                                 className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 ease-out ${isProductsOpen
                                     ? 'opacity-100 translate-y-0 pointer-events-auto'
@@ -111,22 +129,48 @@ export const Header: React.FC = () => {
                             </div>
                         </div>
 
-                        <PrefetchNavLink to="/catalogues" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
-                            ? (isActive ? 'text-white border-b border-brand-orange' : 'text-white/80 hover:text-white')
-                            : (isActive ? 'text-brand-charcoal border-b border-brand-orange' : 'text-stone-500 hover:text-brand-charcoal')
-                            }`}>
+                        <PrefetchNavLink to="/catalogues" className={({ isActive }) => navLinkClass(isActive)}>
                             Catalogues
                         </PrefetchNavLink>
-                        <PrefetchNavLink to="/about" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
-                            ? (isActive ? 'text-white border-b border-brand-orange' : 'text-white/80 hover:text-white')
-                            : (isActive ? 'text-brand-charcoal border-b border-brand-orange' : 'text-stone-500 hover:text-brand-charcoal')
-                            }`}>
-                            About Us
-                        </PrefetchNavLink>
-                        <PrefetchNavLink to="/contact" className={({ isActive }) => `text-sm font-medium tracking-wide transition-colors duration-300 ${isTransparent
-                            ? (isActive ? 'text-white border-b border-brand-orange' : 'text-white/80 hover:text-white')
-                            : (isActive ? 'text-brand-charcoal border-b border-brand-orange' : 'text-stone-500 hover:text-brand-charcoal')
-                            }`}>
+
+                        {/* Company Dropdown */}
+                        <div
+                            className="relative group"
+                            onMouseEnter={() => setIsCompanyOpen(true)}
+                            onMouseLeave={() => setIsCompanyOpen(false)}
+                        >
+                            <button className={dropdownLinkClass(isCompanyActive)}>
+                                Company <ChevronDown size={14} className={`transition-transform duration-300 ${isCompanyOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {/* Animated Dropdown */}
+                            <div
+                                className={`absolute top-full left-1/2 -translate-x-1/2 pt-4 transition-all duration-300 ease-out ${isCompanyOpen
+                                    ? 'opacity-100 translate-y-0 pointer-events-auto'
+                                    : 'opacity-0 -translate-y-2 pointer-events-none'
+                                    }`}
+                            >
+                                <div className="w-56 bg-white/95 backdrop-blur-xl border border-stone-200/60 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] py-2 text-brand-charcoal">
+                                    {COMPANY_LINKS.map((link, idx) => (
+                                        <NavLink
+                                            key={link.to}
+                                            to={link.to}
+                                            className={({ isActive }) => `block px-4 py-2.5 hover:bg-stone-50 text-sm transition-colors ${isActive ? 'text-brand-orange font-medium' : 'hover:text-brand-orange'}`}
+                                            style={{
+                                                transitionDelay: isCompanyOpen ? `${idx * 30}ms` : '0ms',
+                                                opacity: isCompanyOpen ? 1 : 0,
+                                                transform: isCompanyOpen ? 'translateX(0)' : 'translateX(-8px)',
+                                                transition: 'opacity 200ms ease-out, transform 200ms ease-out, color 150ms'
+                                            }}
+                                        >
+                                            {link.label}
+                                        </NavLink>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <PrefetchNavLink to="/contact" className={({ isActive }) => navLinkClass(isActive)}>
                             Contact
                         </PrefetchNavLink>
                     </nav>
@@ -192,7 +236,7 @@ export const Header: React.FC = () => {
                             <nav className="flex flex-col p-6 gap-4">
                                 <NavLink to="/" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-heading ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Home</NavLink>
 
-                                {/* Collapsible Products with Animation */}
+                                {/* Collapsible Products */}
                                 <div className="space-y-2">
                                     <button
                                         onClick={() => setIsProductsOpen(!isProductsOpen)}
@@ -226,7 +270,42 @@ export const Header: React.FC = () => {
                                 </div>
 
                                 <NavLink to="/catalogues" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-heading ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Catalogues</NavLink>
-                                <NavLink to="/about" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-heading ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>About Us</NavLink>
+
+                                {/* Collapsible Company */}
+                                <div className="space-y-2">
+                                    <button
+                                        onClick={() => setIsCompanyOpen(!isCompanyOpen)}
+                                        className={`w-full text-lg font-heading text-left transition-colors flex items-center justify-between ${isCompanyActive ? 'text-brand-charcoal' : 'text-stone-500 hover:text-brand-charcoal'}`}
+                                    >
+                                        Company
+                                        <ChevronDown size={18} className={`transition-transform duration-300 ${isCompanyOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    <AnimatePresence>
+                                        {isCompanyOpen && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.2, ease: 'easeInOut' }}
+                                                className="overflow-hidden"
+                                            >
+                                                <div className="pl-4 border-l border-stone-200 ml-1 flex flex-col gap-2 pt-2">
+                                                    {COMPANY_LINKS.map(link => (
+                                                        <NavLink
+                                                            key={link.to}
+                                                            to={link.to}
+                                                            onClick={() => setIsMobileOpen(false)}
+                                                            className={({ isActive }) => `text-sm transition-colors ${isActive ? 'text-brand-orange font-medium' : 'text-stone-400 hover:text-brand-orange'}`}
+                                                        >
+                                                            {link.label}
+                                                        </NavLink>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+
                                 <NavLink to="/contact" onClick={() => setIsMobileOpen(false)} className={({ isActive }) => `text-lg font-heading ${isActive ? 'text-brand-charcoal pl-2 border-l-2 border-brand-orange' : 'text-stone-500'}`}>Contact</NavLink>
 
                                 {/* Bottom section with Cart and Language */}

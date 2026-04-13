@@ -37,8 +37,8 @@ export const Footer: React.FC = () => {
 
             <div className="pt-16 pb-8">
                 <div className="container mx-auto px-6">
-                    {/* Main Footer Content - 3 Columns */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-stone-700">
+                    {/* Main Footer Content - 4 Columns */}
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-stone-700">
 
                         {/* Brand */}
                         <div className="space-y-5">
@@ -65,16 +65,25 @@ export const Footer: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Quick Links - Two Columns */}
+                        {/* Quick Links */}
                         <div>
                             <h3 className="text-white font-medium text-sm uppercase tracking-wider mb-5">Explore</h3>
-                            <div className="grid grid-cols-2 gap-x-6 gap-y-3">
+                            <div className="flex flex-col gap-3">
                                 <NavLink to="/" className="text-sm text-stone-400 hover:text-white transition-colors">Home</NavLink>
-                                <NavLink to="/about" className="text-sm text-stone-400 hover:text-white transition-colors">About Us</NavLink>
                                 <NavLink to="/products" className="text-sm text-stone-400 hover:text-white transition-colors">Products</NavLink>
-                                <NavLink to="/blog" className="text-sm text-stone-400 hover:text-white transition-colors">Blog</NavLink>
                                 <NavLink to="/catalogues" className="text-sm text-stone-400 hover:text-white transition-colors">Catalogues</NavLink>
                                 <NavLink to="/contact" className="text-sm text-stone-400 hover:text-white transition-colors">Contact</NavLink>
+                            </div>
+                        </div>
+
+                        {/* Company */}
+                        <div>
+                            <h3 className="text-white font-medium text-sm uppercase tracking-wider mb-5">Company</h3>
+                            <div className="flex flex-col gap-3">
+                                <NavLink to="/about" className="text-sm text-stone-400 hover:text-white transition-colors">About Us</NavLink>
+                                <NavLink to="/events" className="text-sm text-stone-400 hover:text-white transition-colors">Events & Gallery</NavLink>
+                                <NavLink to="/distributor" className="text-sm text-stone-400 hover:text-white transition-colors">Become a Distributor</NavLink>
+                                <NavLink to="/blog" className="text-sm text-stone-400 hover:text-white transition-colors">Blog</NavLink>
                             </div>
                         </div>
 

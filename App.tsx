@@ -18,6 +18,8 @@ const Catalogues = lazy(() => import('./pages/Catalogues').then(module => ({ def
 const About = lazy(() => import('./pages/About').then(module => ({ default: module.About })));
 const Contact = lazy(() => import('./pages/Contact').then(module => ({ default: module.Contact })));
 const Blog = lazy(() => import('./pages/Blog').then(module => ({ default: module.Blog })));
+const Distributor = lazy(() => import('./pages/Distributor').then(module => ({ default: module.Distributor })));
+const Events = lazy(() => import('./pages/Events').then(module => ({ default: module.Events })));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })));
 const TermsOfService = lazy(() => import('./pages/TermsOfService').then(module => ({ default: module.TermsOfService })));
 const ProductsIndex = lazy(() => import('./pages/products/ProductsIndex').then(module => ({ default: module.ProductsIndex })));
@@ -72,6 +74,8 @@ const AppContent: React.FC = () => {
                 <Route path="/about" element={<PageTransition><About /></PageTransition>} />
                 <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
                 <Route path="/blog" element={<PageTransition><Blog /></PageTransition>} />
+                <Route path="/distributor" element={<PageTransition><Distributor /></PageTransition>} />
+                <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
                 <Route path="/quote-cart" element={<PageTransition><QuoteCart /></PageTransition>} />
                 <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
                 <Route path="/terms-of-service" element={<PageTransition><TermsOfService /></PageTransition>} />
