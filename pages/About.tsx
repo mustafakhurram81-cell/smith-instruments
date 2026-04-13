@@ -6,9 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { CONTACT_INFO } from '../constants';
 import heritageImg from '../assets/factory/heritage.jpeg';
 import manufacturingImg from '../assets/factory/manufacturing.jpeg';
-import artisan1 from '../assets/factory/artisan-1.jpeg';
-import artisan2 from '../assets/factory/artisan-2.jpeg';
-import artisan3 from '../assets/factory/artisan-3.jpeg';
 
 /**
  * PLACEHOLDER MILESTONES — Replace with your real company milestones.
@@ -284,9 +281,9 @@ export const About: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
             {/* PLACEHOLDER AVATARS — Replace with real team photos ASAP */}
             {[
-              { name: "Khurram Munir", role: "Production Director", img: artisan1, quote: "Quality is never an accident; it's the result of intelligent effort." },
-              { name: "Usama Munir", role: "Customer Relations & Finance", img: artisan2, quote: "Building lasting partnerships, one conversation at a time." },
-              { name: "Mustafa Khurram", role: "Head of Marketing", img: artisan3, quote: "Sharing our story of precision with the world." }
+              { name: "Khurram Munir", role: "Production Director", img: "https://ui-avatars.com/api/?name=Khurram+Munir&size=400&background=f97316&color=ffffff&bold=true", quote: "Quality is never an accident; it's the result of intelligent effort." },
+              { name: "Usama Munir", role: "Customer Relations & Finance", img: "https://ui-avatars.com/api/?name=Usama+Munir&size=400&background=1c1917&color=ffffff&bold=true", quote: "Building lasting partnerships, one conversation at a time." },
+              { name: "Mustafa Khurram", role: "Head of Marketing", img: "https://ui-avatars.com/api/?name=Mustafa+Khurram&size=400&background=57534e&color=ffffff&bold=true", quote: "Sharing our story of precision with the world." }
             ].map((member, i) => (
               <FadeIn key={i} delay={i * 0.1}>
                 <div className="text-center group">
