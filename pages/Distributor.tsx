@@ -53,10 +53,9 @@ const OFFER_LIST = [
   'Payment after delivery & satisfaction guaranteed',
   'Custom OEM & private labeling available',
   'Flexible MOQ for new distributors',
-  'Complete product training & technical support',
+  'Technical support',
   'Priority access to new product launches',
-  'Co-branded catalogues & marketing materials',
-  'Annual partner conferences & networking events'
+  'Co-branded catalogues & marketing materials'
 ];
 
 export const Distributor: React.FC = () => {

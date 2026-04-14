@@ -11,59 +11,7 @@ import artisan2 from '../assets/factory/artisan-2.jpeg';
 import artisan3 from '../assets/factory/artisan-3.jpeg';
 import workshopExtra from '../assets/factory/workshop-extra.jpeg';
 
-/**
- * PLACEHOLDER MILESTONES — Replace with your real company milestones.
- */
-const MILESTONES = [
-  {
-    year: '2002',
-    title: 'Company Founded',
-    description: 'Smith Instruments was established with a vision to deliver precision surgical instruments to the global market.',
-    icon: Factory,
-  },
-  {
-    year: '2005',
-    title: 'First International Export',
-    description: 'Shipped our first international order, marking the beginning of our global journey.',
-    icon: Globe,
-  },
-  {
-    year: '2008',
-    title: 'ISO 9001 Certification',
-    description: 'Achieved ISO 9001 quality management certification, formalizing our commitment to excellence.',
-    icon: Award,
-  },
-  {
-    year: '2012',
-    title: '50+ Skilled Artisans',
-    description: 'Our team grew to over 50 employees, expanding our manufacturing capacity significantly.',
-    icon: Users,
-  },
-  {
-    year: '2015',
-    title: 'South American Expansion',
-    description: 'Established strong partnerships in Brazil, Argentina, and Chile, becoming a trusted supplier across Latin America.',
-    icon: Globe,
-  },
-  {
-    year: '2018',
-    title: 'CE Marking Achieved',
-    description: 'Our instruments received CE marking, enabling access to European markets.',
-    icon: ShieldCheck,
-  },
-  {
-    year: '2020',
-    title: '5000+ Instruments',
-    description: 'Our product catalog surpassed 5,000 instruments across multiple surgical specialties.',
-    icon: Package,
-  },
-  {
-    year: '2024',
-    title: 'Digital Transformation',
-    description: 'Launched our digital platform with online catalogues, real-time quoting, and global accessibility.',
-    icon: Globe,
-  },
-];
+
 
 const CERTIFICATIONS = [
   {
@@ -126,11 +74,7 @@ export const About: React.FC = () => {
                   <p>
                     Unlike many suppliers who act as middlemen, we are <strong className="text-brand-charcoal">manufacturers at heart</strong>. With a facility equipped with state-of-the-art machinery and a dedicated team of over 50 skilled employees, we maintain complete control over our production line.
                   </p>
-                  <div className="p-6 bg-white border-l-4 border-brand-orange shadow-sm my-8">
-                    <p className="text-brand-charcoal font-heading text-xl italic">
-                      "We focus especially on serving the growing needs of the South American market, delivering reliable instruments to professionals in Brazil, Argentina, and Chile who value precision."
-                    </p>
-                  </div>
+
                   <p>
                     Our dedication to craftsmanship is backed by two decades of industry expertise. We don't just follow standards; we set them, ensuring safety and performance in every procedure.
                   </p>
@@ -141,48 +85,7 @@ export const About: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. COMPANY TIMELINE */}
-      <section className="bg-white py-24 relative overflow-hidden">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <span className="text-brand-orange uppercase tracking-[0.2em] text-sm font-bold block mb-3">Our Journey</span>
-            <h2 className="font-heading text-4xl md:text-5xl text-brand-charcoal mb-4">Two Decades of Excellence</h2>
-            <p className="text-stone-500 font-light text-lg max-w-2xl mx-auto">
-              Key milestones that shaped Smith Instruments into the trusted manufacturer it is today.
-            </p>
-          </div>
 
-          {/* Timeline */}
-          <div className="relative max-w-4xl mx-auto">
-            {/* Vertical center line */}
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-stone-200 md:-translate-x-[1px]" />
-
-            {MILESTONES.map((milestone, idx) => {
-              const isLeft = idx % 2 === 0;
-              return (
-                <FadeIn key={idx} delay={idx * 0.08}>
-                  <div className={`relative flex items-start mb-12 last:mb-0 ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
-                    {/* Content card */}
-                    <div className={`ml-12 md:ml-0 md:w-[calc(50%-2rem)] ${isLeft ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'}`}>
-                      <span className="text-brand-orange font-heading text-sm tracking-widest font-bold mb-1 block">{milestone.year}</span>
-                      <h3 className="font-heading text-xl text-brand-charcoal mb-2">{milestone.title}</h3>
-                      <p className="text-stone-500 text-sm leading-relaxed">{milestone.description}</p>
-                    </div>
-
-                    {/* Center dot */}
-                    <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-white border-2 border-stone-200 flex items-center justify-center z-10 shadow-sm">
-                      <milestone.icon size={14} className="text-brand-orange" />
-                    </div>
-
-                    {/* Spacer for the other side */}
-                    <div className="hidden md:block md:w-[calc(50%-2rem)]" />
-                  </div>
-                </FadeIn>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       {/* 4. THE TRUST MODEL */}
       <section className="bg-stone-50 py-24 relative overflow-hidden">
