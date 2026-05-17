@@ -240,32 +240,42 @@ export const WhxMiami: React.FC = () => {
       {/* 5. OEM & B2B SOLUTIONS */}
       <section className="py-24 bg-[#0A0A0A] relative overflow-hidden border-t border-white/5">
         <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-3xl">
-            <span className="text-brand-orange text-sm font-bold tracking-[0.2em] uppercase mb-4 block">Manufacturing Partners</span>
-            <h2 className="font-heading text-4xl md:text-5xl text-white mb-6">OEM & Private Label Services</h2>
-            <p className="text-stone-400 text-lg md:text-xl font-light leading-relaxed mb-10">
-              Build your own brand with our manufacturing backbone. We offer comprehensive white-labeling solutions tailored for distributors and regional brands.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {[
-                "Custom Logo Laser Engraving",
-                "Bespoke Packaging Design",
-                "New Product R&D",
-                "Exclusive Regional Agreements"
-              ].map((service, i) => (
-                <div key={i} className="flex items-center gap-4 bg-white/5 border border-white/10 p-5 rounded-xl backdrop-blur-sm">
-                  <Settings className="w-5 h-5 text-brand-orange shrink-0" />
-                  <span className="text-stone-300 font-medium">{service}</span>
-                </div>
-              ))}
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+            <div className="w-full lg:w-1/2">
+              <span className="text-brand-orange text-sm font-bold tracking-[0.2em] uppercase mb-4 block">Manufacturing Partners</span>
+              <h2 className="font-heading text-4xl md:text-5xl text-white mb-6">OEM & Private Label Services</h2>
+              <p className="text-stone-400 text-lg md:text-xl font-light leading-relaxed mb-10">
+                Build your own brand with our manufacturing backbone. We offer comprehensive white-labeling solutions tailored for distributors and regional brands.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  "Custom Logo Laser Engraving",
+                  "Bespoke Packaging Design",
+                  "New Product R&D",
+                  "Exclusive Regional Agreements"
+                ].map((service, i) => (
+                  <div key={i} className="flex items-center gap-4 bg-white/5 border border-white/10 p-5 rounded-xl backdrop-blur-sm">
+                    <Settings className="w-5 h-5 text-brand-orange shrink-0" />
+                    <span className="text-stone-300 font-medium text-sm sm:text-base">{service}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-12">
+                <button 
+                  onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=I am interested in OEM/Private Label services. Let's discuss at WHX Miami.`, '_blank')} 
+                  className="inline-flex items-center justify-center px-8 py-4 bg-white text-[#0A0A0A] hover:bg-stone-200 border-transparent shadow-xl rounded-md font-semibold text-lg transition-colors"
+                >
+                  Discuss Private Labeling <ArrowRight size={18} className="ml-2 inline" />
+                </button>
+              </div>
             </div>
-            <div className="mt-12">
-              <Button 
-                onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=I am interested in OEM/Private Label services. Let's discuss at WHX Miami.`, '_blank')} 
-                className="px-8 py-4 bg-white text-[#0A0A0A] hover:bg-stone-200 border-transparent shadow-xl"
-              >
-                Discuss Private Labeling <ArrowRight size={18} className="ml-2 inline" />
-              </Button>
+            <div className="w-full lg:w-1/2 relative">
+              <FadeIn delay={0.2}>
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10">
+                  <img src="/images/exhibition/DSC_0165.JPG" alt="OEM Manufacturing" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#0A0A0A] via-transparent to-transparent opacity-80" />
+                </div>
+              </FadeIn>
             </div>
           </div>
         </div>
@@ -337,20 +347,20 @@ export const WhxMiami: React.FC = () => {
               Our calendar for WHX Miami 2026 is strictly limited. Book a dedicated slot to explore private labeling, discuss bulk pricing, and secure your complimentary evaluation samples.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
-              <Button 
+              <button 
                 onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I want to confirm a meeting slot for WHX Miami.`, '_blank')} 
-                className="bg-white text-brand-orange hover:bg-stone-100 px-10 py-5 text-lg font-bold"
+                className="inline-flex items-center justify-center bg-white text-brand-orange hover:bg-stone-100 px-10 py-5 text-lg font-bold rounded-md transition-colors"
               >
                 <MessageCircle size={24} className="mr-3" />
                 Connect on WhatsApp
-              </Button>
-              <Button 
+              </button>
+              <button 
                 onClick={() => window.location.href = `mailto:${WHX_EMAIL}?subject=Meeting Booking: WHX Miami 2026`} 
-                className="bg-transparent border border-white/50 text-white hover:bg-white/10 hover:border-white px-10 py-5 text-lg font-bold"
+                className="inline-flex items-center justify-center bg-transparent border border-white/50 text-white hover:bg-white/10 hover:border-white px-10 py-5 text-lg font-bold rounded-md transition-colors"
               >
                 <Calendar size={24} className="mr-3" />
                 Email Procurement Team
-              </Button>
+              </button>
             </div>
           </FadeIn>
         </div>
