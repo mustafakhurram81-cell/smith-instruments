@@ -295,10 +295,12 @@ export const WhxMiami: React.FC = () => {
               { num: "04", title: "Event Pricing", desc: "Unlock exclusive volume pricing available only during WHX Miami 2026." }
             ].map((step, i) => (
               <FadeIn key={i} delay={i * 0.1}>
-                <div className="bg-white/5 p-8 rounded-2xl border border-white/10 relative overflow-hidden h-full hover:bg-white/10 transition-colors">
-                  <div className="text-7xl font-heading text-white/5 absolute -top-4 -right-4 pointer-events-none select-none">{step.num}</div>
-                  <h3 className="font-heading text-xl text-white mb-3 relative z-10">{step.title}</h3>
-                  <p className="text-stone-400 relative z-10 font-light">{step.desc}</p>
+                <div className="bg-white/5 p-8 rounded-2xl border border-white/10 relative overflow-hidden h-full hover:bg-white/10 transition-colors flex flex-col justify-between">
+                  <div className="text-8xl font-heading text-white/[0.03] absolute top-1/2 -translate-y-1/2 right-2 pointer-events-none select-none font-bold">{step.num}</div>
+                  <div>
+                    <h3 className="font-heading text-xl text-white mb-3 relative z-10">{step.title}</h3>
+                    <p className="text-stone-400 relative z-10 font-light">{step.desc}</p>
+                  </div>
                 </div>
               </FadeIn>
             ))}
