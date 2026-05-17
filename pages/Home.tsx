@@ -113,16 +113,6 @@ export const Home: React.FC = () => {
         <div className="container mx-auto px-6 relative z-10 pt-20">
           <div className="max-w-2xl">
             <FadeIn>
-              <div 
-                onClick={() => navigate('/whx-miami')}
-                className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-medium tracking-wide mb-8 backdrop-blur-md cursor-pointer transition-all hover:-translate-y-0.5"
-              >
-                <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-orange"></span>
-                </span>
-                Meet us at WHX Miami 2026 <ArrowRight size={16} className="text-brand-orange" />
-              </div>
               <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.1] mb-6 md:mb-8">
                 We Mold the Metal <span className="block md:inline italic font-light text-brand-orange">to Serve Life.</span>
               </h1>

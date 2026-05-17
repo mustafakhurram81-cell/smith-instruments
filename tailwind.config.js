@@ -11,8 +11,6 @@ export default {
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],
                 heading: ['Manrope', 'sans-serif'], // Geometric sans for headings
-                montserrat: ['Montserrat', 'sans-serif'],
-                opensans: ['"Open Sans"', 'sans-serif'],
             },
             borderRadius: {
                 'none': '0',
