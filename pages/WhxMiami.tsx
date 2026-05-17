@@ -100,7 +100,7 @@ export const WhxMiami: React.FC = () => {
             </h1>
             
             <p className="text-stone-400 text-xl md:text-2xl font-light mb-16 max-w-2xl mx-auto leading-relaxed">
-              Experience the pinnacle of OEM surgical manufacturing with <span className="text-white">Snaa Industries</span> at WHX Miami 2026.
+              Experience top-quality surgical manufacturing with <span className="text-white">Snaa Industries</span> at WHX Miami 2026.
             </p>
 
             {/* Premium Minimalist Countdown */}
@@ -159,7 +159,7 @@ export const WhxMiami: React.FC = () => {
                     "Direct manufacturer pricing without middlemen",
                     "Customized product development capabilities",
                     "Rigorous ISO-certified quality control",
-                    "Scalable OEM production for global brands"
+                    "Scalable production for global brands"
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
                       <div className="mt-1 w-6 h-6 rounded-full bg-brand-orange/10 flex items-center justify-center shrink-0">
@@ -203,7 +203,7 @@ export const WhxMiami: React.FC = () => {
               { icon: HeartPulse, title: "Cardiovascular", desc: "High-precision tools engineered for critical cardiac care." },
               { icon: Brain, title: "Neurosurgery", desc: "Microsurgical instruments with zero tolerance for error." },
               { icon: Bone, title: "Orthopedics", desc: "Heavy-duty, perfectly balanced solutions for bone surgery." },
-              { icon: Settings, title: "OEM & Private Label", desc: "Comprehensive white-labeling solutions for global distributors." },
+              { icon: Stethoscope, title: "ENT", desc: "Specialized, precision tools for ear, nose, and throat procedures." },
               { icon: Microscope, title: "Custom Development", desc: "From concept to prototype to mass production." }
             ].map((cat, i) => (
               <FadeIn key={i} delay={i * 0.1}>
