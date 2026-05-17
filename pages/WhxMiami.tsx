@@ -140,8 +140,27 @@ export const WhxMiami: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. BRAND & HERITAGE (Split Layout) */}
-      <section className="py-24 md:py-32 bg-[#0A0A0A] relative border-t border-white/5">
+      {/* 2. TRUST BAR */}
+      <div className="bg-[#111111] border-y border-white/5 py-8">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
+            {[
+              { icon: Settings, text: "OEM Manufacturing" },
+              { icon: Globe, text: "Global Export" },
+              { icon: Award, text: "20+ Years" },
+              { icon: ShieldCheck, text: "ISO Quality" }
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <item.icon size={20} className="text-stone-300" />
+                <span className="font-semibold text-stone-300 text-sm uppercase tracking-widest">{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 3. BRAND & HERITAGE (Split Layout) */}
+      <section className="py-24 md:py-32 bg-[#0A0A0A] relative">
         <div className="container mx-auto px-6">
           <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
             <div className="w-full lg:w-1/2">
@@ -152,7 +171,7 @@ export const WhxMiami: React.FC = () => {
                 </h2>
                 <div className="w-16 h-1 bg-brand-orange mb-8" />
                 <p className="text-stone-400 text-lg md:text-xl font-light leading-relaxed mb-8">
-                  Exhibiting proudly under our manufacturing arm <strong className="text-white font-medium">Snaa Industries</strong>, Smith Instruments brings the world's finest surgical grade stainless steel directly from Sialkot to the global stage.
+                  Exhibiting proudly under our manufacturing parent company, <strong className="text-white font-medium">Snaa Industries</strong>, Smith Instruments brings the world's finest surgical grade stainless steel directly from Sialkot to the global stage.
                 </p>
                 <ul className="space-y-6">
                   {[
@@ -187,7 +206,7 @@ export const WhxMiami: React.FC = () => {
         </div>
       </section>
 
-      {/* 3. CAPABILITIES GRID (Dark Glassmorphism) */}
+      {/* 4. CAPABILITIES GRID (Dark Glassmorphism) */}
       <section className="py-24 bg-[#111111] relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none" />
         
@@ -218,7 +237,66 @@ export const WhxMiami: React.FC = () => {
         </div>
       </section>
 
-      {/* 4. IMMERSIVE GALLERY */}
+      {/* 5. OEM & B2B SOLUTIONS */}
+      <section className="py-24 bg-[#0A0A0A] relative overflow-hidden border-t border-white/5">
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-3xl">
+            <span className="text-brand-orange text-sm font-bold tracking-[0.2em] uppercase mb-4 block">Manufacturing Partners</span>
+            <h2 className="font-heading text-4xl md:text-5xl text-white mb-6">OEM & Private Label Services</h2>
+            <p className="text-stone-400 text-lg md:text-xl font-light leading-relaxed mb-10">
+              Build your own brand with our manufacturing backbone. We offer comprehensive white-labeling solutions tailored for distributors and regional brands.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {[
+                "Custom Logo Laser Engraving",
+                "Bespoke Packaging Design",
+                "New Product R&D",
+                "Exclusive Regional Agreements"
+              ].map((service, i) => (
+                <div key={i} className="flex items-center gap-4 bg-white/5 border border-white/10 p-5 rounded-xl backdrop-blur-sm">
+                  <Settings className="w-5 h-5 text-brand-orange shrink-0" />
+                  <span className="text-stone-300 font-medium">{service}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-12">
+              <Button 
+                onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=I am interested in OEM/Private Label services. Let's discuss at WHX Miami.`, '_blank')} 
+                className="px-8 py-4 bg-white text-[#0A0A0A] hover:bg-stone-200 border-transparent shadow-xl"
+              >
+                Discuss Private Labeling <ArrowRight size={18} className="ml-2 inline" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. WHY VISIT BOOTH P55 */}
+      <section className="py-24 bg-[#111111] border-y border-white/5">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-heading text-4xl md:text-5xl text-white mb-4">Why Visit Booth P55?</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { num: "01", title: "Touch & Feel", desc: "Experience the weight, balance, and precision of our instruments firsthand." },
+              { num: "02", title: "Free Samples", desc: "Select distributors can take home free test samples for quality evaluation." },
+              { num: "03", title: "Meet Leadership", desc: "Speak directly with our technical directors and manufacturing heads." },
+              { num: "04", title: "Event Pricing", desc: "Unlock exclusive volume pricing available only during WHX Miami 2026." }
+            ].map((step, i) => (
+              <FadeIn key={i} delay={i * 0.1}>
+                <div className="bg-white/5 p-8 rounded-2xl border border-white/10 relative overflow-hidden h-full hover:bg-white/10 transition-colors">
+                  <div className="text-7xl font-heading text-white/5 absolute -top-4 -right-4 pointer-events-none select-none">{step.num}</div>
+                  <h3 className="font-heading text-xl text-white mb-3 relative z-10">{step.title}</h3>
+                  <p className="text-stone-400 relative z-10 font-light">{step.desc}</p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. IMMERSIVE GALLERY */}
       <section className="py-24 bg-[#0A0A0A]">
         <div className="container mx-auto px-6 mb-16 flex flex-col md:flex-row justify-between items-end">
           <div>
@@ -248,7 +326,7 @@ export const WhxMiami: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. THE FINAL INVITATION */}
+      {/* 8. THE FINAL INVITATION */}
       <section className="py-32 bg-brand-orange relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/images/exhibition/DSC_0234.JPG')] bg-cover bg-center mix-blend-multiply opacity-20" />
         
