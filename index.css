@@ -37,6 +37,15 @@
   }
 }
 
+@keyframes slow-zoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
 /* i18n text utilities - handles longer translations gracefully */
 @layer utilities {
   .text-balance {
