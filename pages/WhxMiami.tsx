@@ -4,6 +4,7 @@ import { SEO } from '../components/SEO';
 import { ShieldCheck, Globe, Award, Settings, Package, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ArrowRight, MessageCircle, Calendar, CheckCircle2 } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import smithLogo from '../assets/smith instruments logo.png';
+import manufacturingImg from '../assets/factory/manufacturing.jpeg';
 
 // WHX Miami details
 const WHX_WHATSAPP = CONTACT_INFO.phone.replace(/[^0-9]/g, '');
@@ -272,7 +273,7 @@ export const WhxMiami: React.FC = () => {
             <div className="w-full lg:w-1/2 relative">
               <FadeIn delay={0.2}>
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10">
-                  <img src="/images/exhibition/DSC_0165.JPG" alt="OEM Manufacturing" className="w-full h-full object-cover" />
+                  <img src={manufacturingImg} alt="OEM Manufacturing Facility" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-tr from-[#0A0A0A] via-transparent to-transparent opacity-80" />
                 </div>
               </FadeIn>
