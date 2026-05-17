@@ -31,6 +31,7 @@ const InstrumentCategoryView = lazy(() => import('./pages/products/InstrumentCat
 const SpecialtyCategoryView = lazy(() => import('./pages/products/SpecialtyCategoryView').then(module => ({ default: module.SpecialtyCategoryView })));
 const QuoteCart = lazy(() => import('./pages/QuoteCart').then(module => ({ default: module.QuoteCart })));
 const NotFound = lazy(() => import('./pages/NotFound').then(module => ({ default: module.NotFound })));
+const WhxMiami = lazy(() => import('./pages/WhxMiami').then(module => ({ default: module.WhxMiami })));
 
 // Admin Pages
 const AdminLayout = lazy(() => import('./pages/admin/AdminLayout').then(module => ({ default: module.AdminLayout })));
@@ -79,6 +80,7 @@ const AppContent: React.FC = () => {
                 <Route path="/quote-cart" element={<PageTransition><QuoteCart /></PageTransition>} />
                 <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
                 <Route path="/terms-of-service" element={<PageTransition><TermsOfService /></PageTransition>} />
+                <Route path="/whx-miami" element={<PageTransition><WhxMiami /></PageTransition>} />
 
                 {/* Product Routes */}
                 <Route path="/products" element={<PageTransition><ProductsIndex /></PageTransition>} />
