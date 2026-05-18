@@ -351,14 +351,24 @@ export const WhxMiami: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <button 
-                onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I want to confirm a meeting slot for WHX Miami.`, '_blank')} 
+                onClick={() => {
+                  if (typeof (window as any).fbq === 'function') {
+                    (window as any).fbq('track', 'Lead');
+                  }
+                  window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I want to confirm a meeting slot for WHX Miami.`, '_blank');
+                }} 
                 className="inline-flex items-center justify-center bg-white text-brand-orange hover:bg-stone-100 px-10 py-5 text-lg font-bold rounded-md transition-colors"
               >
                 <MessageCircle size={24} className="mr-3" />
                 Connect on WhatsApp
               </button>
               <button 
-                onClick={() => window.location.href = `mailto:${WHX_EMAIL}?subject=Meeting Booking: WHX Miami 2026`} 
+                onClick={() => {
+                  if (typeof (window as any).fbq === 'function') {
+                    (window as any).fbq('track', 'Lead');
+                  }
+                  window.location.href = `mailto:${WHX_EMAIL}?subject=Meeting Booking: WHX Miami 2026`;
+                }} 
                 className="inline-flex items-center justify-center bg-transparent border border-white/50 text-white hover:bg-white/10 hover:border-white px-10 py-5 text-lg font-bold rounded-md transition-colors"
               >
                 <Calendar size={24} className="mr-3" />
@@ -373,13 +383,23 @@ export const WhxMiami: React.FC = () => {
       <div className={`fixed bottom-0 left-0 w-full bg-black/80 backdrop-blur-xl border-t border-white/10 p-4 shadow-2xl transition-transform duration-500 z-50 md:hidden ${showSticky ? 'translate-y-0' : 'translate-y-full'}`}>
         <div className="flex gap-3">
           <button 
-            onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I'd like to book a meeting at WHX Miami.`, '_blank')} 
+            onClick={() => {
+              if (typeof (window as any).fbq === 'function') {
+                (window as any).fbq('track', 'Lead');
+              }
+              window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I'd like to book a meeting at WHX Miami.`, '_blank');
+            }} 
             className="flex-1 bg-brand-orange text-white py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md"
           >
             <MessageCircle size={16} className="mr-2" /> WhatsApp
           </button>
           <button 
-            onClick={() => window.location.href = `mailto:${WHX_EMAIL}?subject=Meeting at WHX Miami 2026`} 
+            onClick={() => {
+              if (typeof (window as any).fbq === 'function') {
+                (window as any).fbq('track', 'Lead');
+              }
+              window.location.href = `mailto:${WHX_EMAIL}?subject=Meeting at WHX Miami 2026`;
+            }} 
             className="flex-1 bg-white/10 text-white border border-white/20 py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md"
           >
             <Calendar size={16} className="mr-2" /> Email Us
