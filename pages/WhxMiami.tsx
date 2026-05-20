@@ -39,43 +39,63 @@ export const WhxMiami: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
 
-    // Dynamic Cal.com Embed script loader
-    (function (C, A, L) {
-      let p = function (a: any, ar: any) { a.q.push(ar); };
-      let c = (C as any).Cal = (C as any).Cal || function () {
-        let a = c; a.q = a.q || [];
-        for (let i = 0; i < arguments.length; i++) p(a, arguments[i]);
-      };
-      if (!(C as any).Cal.loaded) {
-        let s = document.createElement("script");
-        s.src = A;
-        s.async = true;
-        document.body.appendChild(s);
-        (C as any).Cal.loaded = true;
-      }
-    })(window, "https://embed.cal.com/embed.js", "Cal");
-
-    // Initialize Cal with dark theme and brand styling
-    const checkCalAndInit = setInterval(() => {
+    // Initialize Cal.com Embed with dark theme and custom brand styling
+    const initCal = () => {
       const cal = (window as any).Cal;
       if (cal) {
-        clearInterval(checkCalAndInit);
-        cal("init", "snaa-whx", { origin: "https://cal.com" });
-        cal.ns["snaa-whx"]("ui", {
+        cal("init", { origin: "https://cal.com" });
+        cal("ui", {
           theme: "dark",
           styles: { branding: { brandColor: "#FF5E00" } },
           hideEventTypeDetails: false,
           layout: "month_view"
         });
       }
-    }, 100);
+    };
+
+    if (!(window as any).Cal) {
+      const s = document.createElement("script");
+      s.src = "https://embed.cal.com/embed.js";
+      s.async = true;
+      s.onload = initCal;
+      document.body.appendChild(s);
+    } else {
+      initCal();
+    }
 
     return () => {
       clearInterval(timer);
-      clearInterval(checkCalAndInit);
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const handleBookMeeting = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+
+    // Track Meta Pixel Lead event
+    if (typeof (window as any).fbq === 'function') {
+      (window as any).fbq('track', 'Lead');
+    }
+
+    const cal = (window as any).Cal;
+    if (cal) {
+      try {
+        cal("modal", {
+          calLink: "mustafakhurram/snaa-whx",
+          config: {
+            layout: "month_view",
+            theme: "dark"
+          }
+        });
+        return;
+      } catch (err) {
+        console.error("Cal.com modal trigger failed, falling back to direct link:", err);
+      }
+    }
+
+    // Direct link fallback if Cal script is blocked or not loaded
+    window.open("https://cal.com/mustafakhurram/snaa-whx", "_blank");
+  };
 
   return (
     <div className="overflow-x-hidden bg-[#0A0A0A] text-stone-300">
@@ -157,6 +177,7 @@ export const WhxMiami: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row justify-center gap-6 items-center">
               <button 
+                onClick={handleBookMeeting}
                 data-cal-link="mustafakhurram/snaa-whx"
                 data-cal-namespace="snaa-whx"
                 data-cal-config='{"layout":"month_view","theme":"dark"}'
@@ -394,14 +415,10 @@ export const WhxMiami: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <button 
+                onClick={handleBookMeeting}
                 data-cal-link="mustafakhurram/snaa-whx"
                 data-cal-namespace="snaa-whx"
                 data-cal-config='{"layout":"month_view","theme":"dark"}'
-                onClick={() => {
-                  if (typeof (window as any).fbq === 'function') {
-                    (window as any).fbq('track', 'Lead');
-                  }
-                }} 
                 className="inline-flex items-center justify-center bg-white text-brand-orange hover:bg-stone-100 px-10 py-5 text-lg font-bold rounded-md transition-colors"
               >
                 <Calendar size={24} className="mr-3" />
@@ -439,14 +456,10 @@ export const WhxMiami: React.FC = () => {
             <MessageCircle size={16} className="mr-2" /> WhatsApp
           </button>
           <button 
+            onClick={handleBookMeeting}
             data-cal-link="mustafakhurram/snaa-whx"
             data-cal-namespace="snaa-whx"
             data-cal-config='{"layout":"month_view","theme":"dark"}'
-            onClick={() => {
-              if (typeof (window as any).fbq === 'function') {
-                (window as any).fbq('track', 'Lead');
-              }
-            }} 
             className="flex-grow bg-white/10 text-white border border-white/20 py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md"
           >
             <Calendar size={16} className="mr-2" /> Book Slot
