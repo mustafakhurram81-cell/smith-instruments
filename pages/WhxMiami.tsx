@@ -38,8 +38,41 @@ export const WhxMiami: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
+
+    // Dynamic Cal.com Embed script loader
+    (function (C, A, L) {
+      let p = function (a: any, ar: any) { a.q.push(ar); };
+      let c = (C as any).Cal = (C as any).Cal || function () {
+        let a = c; a.q = a.q || [];
+        for (let i = 0; i < arguments.length; i++) p(a, arguments[i]);
+      };
+      if (!(C as any).Cal.loaded) {
+        let s = document.createElement("script");
+        s.src = A;
+        s.async = true;
+        document.body.appendChild(s);
+        (C as any).Cal.loaded = true;
+      }
+    })(window, "https://embed.cal.com/embed.js", "Cal");
+
+    // Initialize Cal with dark theme and brand styling
+    const checkCalAndInit = setInterval(() => {
+      const cal = (window as any).Cal;
+      if (cal) {
+        clearInterval(checkCalAndInit);
+        cal("init", "snaa-whx", { origin: "https://cal.com" });
+        cal.ns["snaa-whx"]("ui", {
+          theme: "dark",
+          styles: { branding: { brandColor: "#FF5E00" } },
+          hideEventTypeDetails: false,
+          layout: "month_view"
+        });
+      }
+    }, 100);
+
     return () => {
       clearInterval(timer);
+      clearInterval(checkCalAndInit);
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
@@ -122,14 +155,24 @@ export const WhxMiami: React.FC = () => {
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-center gap-6">
+            <div className="flex flex-col sm:flex-row justify-center gap-6 items-center">
               <button 
-                onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I'd like to book a meeting at WHX Miami (Booth P55) and claim my free test samples.`, '_blank')} 
+                data-cal-link="mustafakhurram/snaa-whx"
+                data-cal-namespace="snaa-whx"
+                data-cal-config='{"layout":"month_view","theme":"dark"}'
                 className="group relative px-8 py-4 bg-brand-orange text-white text-lg font-medium overflow-hidden rounded-md transition-transform hover:scale-105"
               >
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                 <span className="relative flex items-center justify-center">
-                  <MessageCircle size={20} className="mr-2" /> Book Exclusive Meeting
+                  <Calendar size={20} className="mr-2" /> Book Exclusive Meeting
+                </span>
+              </button>
+              <button
+                onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I'd like to ask a quick question about SNAA Industries at WHX Miami.`, '_blank')}
+                className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-brand-orange/30 text-white text-lg font-medium overflow-hidden rounded-md transition-transform hover:scale-105"
+              >
+                <span className="relative flex items-center justify-center text-stone-200 hover:text-white">
+                  <MessageCircle size={20} className="mr-2 text-green-500" /> Chat on WhatsApp
                 </span>
               </button>
               <div className="flex items-center justify-center gap-2 text-stone-400 text-sm">
@@ -351,28 +394,30 @@ export const WhxMiami: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <button 
+                data-cal-link="mustafakhurram/snaa-whx"
+                data-cal-namespace="snaa-whx"
+                data-cal-config='{"layout":"month_view","theme":"dark"}'
                 onClick={() => {
                   if (typeof (window as any).fbq === 'function') {
                     (window as any).fbq('track', 'Lead');
                   }
-                  window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I want to confirm a meeting slot for WHX Miami.`, '_blank');
                 }} 
                 className="inline-flex items-center justify-center bg-white text-brand-orange hover:bg-stone-100 px-10 py-5 text-lg font-bold rounded-md transition-colors"
               >
-                <MessageCircle size={24} className="mr-3" />
-                Connect on WhatsApp
+                <Calendar size={24} className="mr-3" />
+                Book Meeting Calendar
               </button>
               <button 
                 onClick={() => {
                   if (typeof (window as any).fbq === 'function') {
                     (window as any).fbq('track', 'Lead');
                   }
-                  window.location.href = `mailto:${WHX_EMAIL}?subject=Meeting Booking: WHX Miami 2026`;
+                  window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I want to confirm a meeting slot for WHX Miami.`, '_blank');
                 }} 
                 className="inline-flex items-center justify-center bg-transparent border border-white/50 text-white hover:bg-white/10 hover:border-white px-10 py-5 text-lg font-bold rounded-md transition-colors"
               >
-                <Calendar size={24} className="mr-3" />
-                Email Procurement Team
+                <MessageCircle size={24} className="mr-3" />
+                Connect on WhatsApp
               </button>
             </div>
           </FadeIn>
@@ -389,20 +434,22 @@ export const WhxMiami: React.FC = () => {
               }
               window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I'd like to book a meeting at WHX Miami.`, '_blank');
             }} 
-            className="flex-1 bg-brand-orange text-white py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md"
+            className="flex-grow bg-brand-orange text-white py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md animate-[pulse_2s_infinite]"
           >
             <MessageCircle size={16} className="mr-2" /> WhatsApp
           </button>
           <button 
+            data-cal-link="mustafakhurram/snaa-whx"
+            data-cal-namespace="snaa-whx"
+            data-cal-config='{"layout":"month_view","theme":"dark"}'
             onClick={() => {
               if (typeof (window as any).fbq === 'function') {
                 (window as any).fbq('track', 'Lead');
               }
-              window.location.href = `mailto:${WHX_EMAIL}?subject=Meeting at WHX Miami 2026`;
             }} 
-            className="flex-1 bg-white/10 text-white border border-white/20 py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md"
+            className="flex-grow bg-white/10 text-white border border-white/20 py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md"
           >
-            <Calendar size={16} className="mr-2" /> Email Us
+            <Calendar size={16} className="mr-2" /> Book Slot
           </button>
         </div>
       </div>
