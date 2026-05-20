@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getCalApi } from '@calcom/embed-react';
 import { Button, FadeIn } from '../components/Shared';
 import { SEO } from '../components/SEO';
-import { ShieldCheck, Globe, Award, Settings, Package, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ArrowRight, MessageCircle, Calendar, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Globe, Award, Settings, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ArrowRight, MessageCircle, Calendar, CheckCircle2 } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import smithLogo from '../assets/smith instruments logo.png';
 import manufacturingImg from '../assets/factory/manufacturing.jpeg';
@@ -147,7 +147,7 @@ export const WhxMiami: React.FC = () => {
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-center gap-6 items-center">
+            <div className="flex flex-col sm:flex-row justify-center gap-4 items-center">
               <button 
                 onClick={trackLead}
                 data-cal-link={CAL_LINK}
@@ -168,10 +168,6 @@ export const WhxMiami: React.FC = () => {
                   <MessageCircle size={20} className="mr-2 text-green-500" /> Chat on WhatsApp
                 </span>
               </button>
-              <div className="flex items-center justify-center gap-2 text-stone-400 text-sm">
-                <Package size={16} className="text-brand-orange" />
-                <span>Includes Free Evaluation Samples</span>
-              </div>
             </div>
           </FadeIn>
         </div>
@@ -327,7 +323,7 @@ export const WhxMiami: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { num: "01", title: "Touch & Feel", desc: "Experience the weight, balance, and precision of our instruments firsthand." },
-              { num: "02", title: "Free Samples", desc: "Select distributors can take home free test samples for quality evaluation." },
+              { num: "02", title: "Evaluation Samples", desc: "Select distributors may secure complimentary test samples for hands-on quality assessment." },
               { num: "03", title: "Meet Leadership", desc: "Speak directly with our technical directors and manufacturing heads." },
               { num: "04", title: "Event Pricing", desc: "Unlock exclusive volume pricing available only during WHX Miami 2026." }
             ].map((step, i) => (
@@ -383,7 +379,7 @@ export const WhxMiami: React.FC = () => {
           <FadeIn>
             <h2 className="font-heading text-5xl md:text-7xl text-white mb-8 tracking-tight">Claim Your Time.</h2>
             <p className="text-white/90 text-xl md:text-2xl font-light mb-12 max-w-3xl mx-auto leading-relaxed">
-              Our calendar for WHX Miami 2026 is strictly limited. Book a dedicated slot to explore private labeling, discuss bulk pricing, and secure your complimentary evaluation samples.
+              Our calendar for WHX Miami 2026 is strictly limited. Book a dedicated slot to explore private labeling, discuss bulk pricing, and you may secure your evaluation samples.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <button 
