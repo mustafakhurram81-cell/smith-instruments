@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { getCalApi } from '@calcom/embed-react';
 import { Button, FadeIn } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { ShieldCheck, Globe, Award, Settings, Package, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ArrowRight, MessageCircle, Calendar, CheckCircle2 } from 'lucide-react';
@@ -11,9 +12,25 @@ const WHX_WHATSAPP = CONTACT_INFO.phone.replace(/[^0-9]/g, '');
 const WHX_EMAIL = CONTACT_INFO.email;
 const TARGET_DATE = new Date('2026-06-17T09:00:00-04:00').getTime(); // June 17, 2026 Miami Time
 
+const CAL_NAMESPACE = "snaa-whx";
+const CAL_LINK = "mustafakhurram/snaa-whx";
+
 export const WhxMiami: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [showSticky, setShowSticky] = useState(false);
+
+  // Initialize Cal.com embed via official React package
+  useEffect(() => {
+    (async function () {
+      const cal = await getCalApi({ namespace: CAL_NAMESPACE });
+      cal("ui", {
+        theme: "dark",
+        styles: { branding: { brandColor: "#FF5E00" } },
+        hideEventTypeDetails: false,
+        layout: "month_view"
+      });
+    })();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -39,63 +56,18 @@ export const WhxMiami: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
 
-    // Initialize Cal.com Embed with dark theme and custom brand styling
-    const initCal = () => {
-      const cal = (window as any).Cal;
-      if (cal) {
-        cal("init", { origin: "https://cal.com" });
-        cal("ui", {
-          theme: "dark",
-          styles: { branding: { brandColor: "#FF5E00" } },
-          hideEventTypeDetails: false,
-          layout: "month_view"
-        });
-      }
-    };
-
-    if (!(window as any).Cal) {
-      const s = document.createElement("script");
-      s.src = "https://embed.cal.com/embed.js";
-      s.async = true;
-      s.onload = initCal;
-      document.body.appendChild(s);
-    } else {
-      initCal();
-    }
-
     return () => {
       clearInterval(timer);
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  const handleBookMeeting = (e?: React.MouseEvent) => {
-    if (e) e.preventDefault();
-
-    // Track Meta Pixel Lead event
+  // Track Meta Pixel Lead event on any booking button click
+  const trackLead = useCallback(() => {
     if (typeof (window as any).fbq === 'function') {
       (window as any).fbq('track', 'Lead');
     }
-
-    const cal = (window as any).Cal;
-    if (cal) {
-      try {
-        cal("modal", {
-          calLink: "mustafakhurram/snaa-whx",
-          config: {
-            layout: "month_view",
-            theme: "dark"
-          }
-        });
-        return;
-      } catch (err) {
-        console.error("Cal.com modal trigger failed, falling back to direct link:", err);
-      }
-    }
-
-    // Direct link fallback if Cal script is blocked or not loaded
-    window.open("https://cal.com/mustafakhurram/snaa-whx", "_blank");
-  };
+  }, []);
 
   return (
     <div className="overflow-x-hidden bg-[#0A0A0A] text-stone-300">
@@ -177,9 +149,9 @@ export const WhxMiami: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row justify-center gap-6 items-center">
               <button 
-                onClick={handleBookMeeting}
-                data-cal-link="mustafakhurram/snaa-whx"
-                data-cal-namespace="snaa-whx"
+                onClick={trackLead}
+                data-cal-link={CAL_LINK}
+                data-cal-namespace={CAL_NAMESPACE}
                 data-cal-config='{"layout":"month_view","theme":"dark"}'
                 className="group relative px-8 py-4 bg-brand-orange text-white text-lg font-medium overflow-hidden rounded-md transition-transform hover:scale-105"
               >
@@ -415,9 +387,9 @@ export const WhxMiami: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <button 
-                onClick={handleBookMeeting}
-                data-cal-link="mustafakhurram/snaa-whx"
-                data-cal-namespace="snaa-whx"
+                onClick={trackLead}
+                data-cal-link={CAL_LINK}
+                data-cal-namespace={CAL_NAMESPACE}
                 data-cal-config='{"layout":"month_view","theme":"dark"}'
                 className="inline-flex items-center justify-center bg-white text-brand-orange hover:bg-stone-100 px-10 py-5 text-lg font-bold rounded-md transition-colors"
               >
@@ -456,9 +428,9 @@ export const WhxMiami: React.FC = () => {
             <MessageCircle size={16} className="mr-2" /> WhatsApp
           </button>
           <button 
-            onClick={handleBookMeeting}
-            data-cal-link="mustafakhurram/snaa-whx"
-            data-cal-namespace="snaa-whx"
+            onClick={trackLead}
+            data-cal-link={CAL_LINK}
+            data-cal-namespace={CAL_NAMESPACE}
             data-cal-config='{"layout":"month_view","theme":"dark"}'
             className="flex-grow bg-white/10 text-white border border-white/20 py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md"
           >
