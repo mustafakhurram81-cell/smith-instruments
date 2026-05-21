@@ -369,19 +369,16 @@ export const WhxMiami: React.FC = () => {
         {/* Gallery Grid */}
         <div className="w-full px-6 grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2 aspect-[16/10] overflow-hidden rounded-xl group relative">
-            <img src="/images/exhibition/DSC_0165.JPG" alt="SNAA Industries exhibition booth setup" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-5 text-white/80 text-sm font-medium tracking-wide">Exhibition Booth Setup</div>
+            <img src="/images/exhibition/DSC_0165.JPG" alt="SNAA Industries exhibition booth" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
           </div>
           <div className="aspect-[4/5] md:aspect-auto overflow-hidden rounded-xl group relative">
-            <img src="/images/exhibition/DSC_0226.JPG" alt="Premium surgical instruments on display" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-5 text-white/80 text-sm font-medium tracking-wide">Live Product Display</div>
+            <img src="/images/exhibition/DSC_0226.JPG" alt="Surgical instruments on display" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
           </div>
           <div className="aspect-[4/5] md:aspect-auto overflow-hidden rounded-xl group relative">
-            <img src="/images/exhibition/DSC_0232.JPG" alt="Client engagement at exhibition booth" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-5 text-white/80 text-sm font-medium tracking-wide">Client Engagement</div>
+            <img src="/images/exhibition/DSC_0232.JPG" alt="Client engagement at booth" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
           </div>
         </div>
       </section>
