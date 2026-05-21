@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Section, Button, FadeIn, ParallaxHeader } from '../components/Shared';
 import { Eye, Search, X, Loader2, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -11,11 +11,30 @@ import { SEO } from '../components/SEO';
 // Lazy load FlipBookViewer to defer 507KB PDF library until needed
 const FlipBookViewer = lazy(() => import('../components/FlipBookViewer').then(m => ({ default: m.FlipBookViewer })));
 
+const MOBILE_BREAKPOINT = 768;
+
 export const Catalogues: React.FC = () => {
   const navigate = useNavigate();
   const { data: catalogues = [], isLoading: loading } = useCatalogues();
   const [selectedCatalogue, setSelectedCatalogue] = useState<Catalogue | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < MOBILE_BREAKPOINT);
+
+  // Track viewport for mobile detection
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // On mobile, open PDF in new tab. On desktop, open the flip book viewer.
+  const openCatalogue = useCallback((cat: Catalogue) => {
+    if (isMobile) {
+      window.open(cat.pdf_url, '_blank', 'noopener,noreferrer');
+    } else {
+      setSelectedCatalogue(cat);
+    }
+  }, [isMobile]);
 
   const filteredCatalogues = useMemo(() => {
     return catalogues.filter((cat) => {
@@ -72,7 +91,7 @@ export const Catalogues: React.FC = () => {
               {filteredCatalogues.map((cat, idx) => (
                 // Cap the animation delay to prevent long waits
                 <FadeIn key={cat.id || cat.title} delay={Math.min(idx * 0.05, 0.5)}>
-                  <div className="group cursor-pointer" onClick={() => setSelectedCatalogue(cat)}>
+                  <div className="group cursor-pointer" onClick={() => openCatalogue(cat)}>
                     {/* Book Container */}
                     <div className="relative w-[240px] h-[340px] mx-auto transition-transform duration-300 group-hover:-translate-y-2">
 
@@ -94,7 +113,7 @@ export const Catalogues: React.FC = () => {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              setSelectedCatalogue(cat);
+                              openCatalogue(cat);
                             }}
                             className="w-12 h-12 bg-brand-orange text-brand-charcoal rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
                             title="View Catalogue"

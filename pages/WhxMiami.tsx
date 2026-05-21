@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getCalApi } from '@calcom/embed-react';
 import { Button, FadeIn } from '../components/Shared';
 import { SEO } from '../components/SEO';
-import { ShieldCheck, Globe, Award, Settings, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ArrowRight, MessageCircle, Calendar, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Globe, Award, Settings, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ArrowRight, MessageCircle, Calendar, CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import smithLogo from '../assets/smith instruments logo.png';
 import manufacturingImg from '../assets/factory/manufacturing.jpeg';
@@ -130,7 +130,7 @@ export const WhxMiami: React.FC = () => {
             </p>
 
             {/* Premium Minimalist Countdown */}
-            <div className="flex justify-center gap-6 md:gap-12 mb-16">
+            <div className="flex justify-center gap-6 md:gap-12 mb-10">
               {[
                 { label: 'Days', value: timeLeft.days },
                 { label: 'Hours', value: timeLeft.hours },
@@ -146,6 +146,14 @@ export const WhxMiami: React.FC = () => {
                 </div>
               ))}
             </div>
+
+            {/* Urgency indicator — shows when within 14 days */}
+            {timeLeft.days <= 14 && timeLeft.days > 0 && (
+              <div className="flex items-center justify-center gap-2 mb-10 px-5 py-2.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium animate-pulse">
+                <Clock size={14} />
+                <span>Limited meeting slots remaining — book now</span>
+              </div>
+            )}
 
             <div className="flex flex-col sm:flex-row justify-center gap-4 items-center">
               <button 
@@ -173,19 +181,20 @@ export const WhxMiami: React.FC = () => {
         </div>
       </section>
 
-      {/* 2. TRUST BAR */}
-      <div className="bg-[#111111] border-y border-white/5 py-8">
+      {/* 2. STATS & TRUST BAR */}
+      <div className="bg-[#111111] border-y border-white/5 py-10">
         <div className="container mx-auto px-6">
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
             {[
-              { icon: Settings, text: "OEM Manufacturing" },
-              { icon: Globe, text: "Global Export" },
-              { icon: Award, text: "20+ Years" },
-              { icon: ShieldCheck, text: "ISO Quality" }
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <item.icon size={20} className="text-stone-300" />
-                <span className="font-semibold text-stone-300 text-sm uppercase tracking-widest">{item.text}</span>
+              { number: "5,000+", label: "Instruments", icon: Settings },
+              { number: "40+", label: "Countries Served", icon: Globe },
+              { number: "20+", label: "Years Experience", icon: Award },
+              { number: "ISO 9001", label: "Certified Quality", icon: ShieldCheck }
+            ].map((stat, i) => (
+              <div key={i} className="flex flex-col items-center">
+                <stat.icon size={18} className="text-brand-orange mb-3" />
+                <div className="font-heading text-2xl md:text-3xl text-white font-medium tracking-tight">{stat.number}</div>
+                <span className="text-stone-500 text-xs uppercase tracking-[0.15em] mt-1">{stat.label}</span>
               </div>
             ))}
           </div>
@@ -295,7 +304,10 @@ export const WhxMiami: React.FC = () => {
               </div>
               <div className="mt-12">
                 <button 
-                  onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=I am interested in OEM/Private Label services. Let's discuss at WHX Miami.`, '_blank')} 
+                  onClick={trackLead}
+                  data-cal-link={CAL_LINK}
+                  data-cal-namespace={CAL_NAMESPACE}
+                  data-cal-config='{"layout":"month_view","theme":"dark"}'
                   className="inline-flex items-center justify-center px-8 py-4 bg-white text-[#0A0A0A] hover:bg-stone-200 border-transparent shadow-xl rounded-md font-semibold text-lg transition-colors"
                 >
                   Discuss Private Labeling <ArrowRight size={18} className="ml-2 inline" />
@@ -357,16 +369,19 @@ export const WhxMiami: React.FC = () => {
         {/* Gallery Grid */}
         <div className="w-full px-6 grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2 aspect-[16/10] overflow-hidden rounded-xl group relative">
-            <img src="/images/exhibition/DSC_0165.JPG" alt="Exhibition View 1" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+            <img src="/images/exhibition/DSC_0165.JPG" alt="SNAA Industries exhibition booth setup" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-5 text-white/80 text-sm font-medium tracking-wide">Exhibition Booth Setup</div>
           </div>
           <div className="aspect-[4/5] md:aspect-auto overflow-hidden rounded-xl group relative">
-            <img src="/images/exhibition/DSC_0226.JPG" alt="Exhibition View 2" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+            <img src="/images/exhibition/DSC_0226.JPG" alt="Premium surgical instruments on display" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-5 text-white/80 text-sm font-medium tracking-wide">Live Product Display</div>
           </div>
           <div className="aspect-[4/5] md:aspect-auto overflow-hidden rounded-xl group relative">
-            <img src="/images/exhibition/DSC_0232.JPG" alt="Exhibition View 3" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+            <img src="/images/exhibition/DSC_0232.JPG" alt="Client engagement at exhibition booth" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-5 text-white/80 text-sm font-medium tracking-wide">Client Engagement</div>
           </div>
         </div>
       </section>
@@ -419,7 +434,7 @@ export const WhxMiami: React.FC = () => {
               }
               window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I'd like to book a meeting at WHX Miami.`, '_blank');
             }} 
-            className="flex-grow bg-brand-orange text-white py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md animate-[pulse_2s_infinite]"
+            className="flex-grow bg-brand-orange text-white py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md"
           >
             <MessageCircle size={16} className="mr-2" /> WhatsApp
           </button>
