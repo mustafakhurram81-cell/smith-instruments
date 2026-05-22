@@ -62,12 +62,22 @@ export const WhxMiami: React.FC = () => {
     };
   }, []);
 
-  // Track Meta Pixel Lead event on any booking button click
-  const trackLead = useCallback(() => {
+  // Track Meta Pixel Lead event with source identification
+  const trackLead = useCallback((source: string = 'booking') => {
     if (typeof (window as any).fbq === 'function') {
-      (window as any).fbq('track', 'Lead');
+      (window as any).fbq('track', 'Lead', {
+        content_name: source,
+        content_category: 'WHX Miami 2026'
+      });
     }
   }, []);
+
+  const handleWhatsApp = useCallback((message: string) => {
+    trackLead('whatsapp');
+    window.open(`https://wa.me/${WHX_WHATSAPP}?text=${encodeURIComponent(message)}`, '_blank');
+  }, [trackLead]);
+
+
 
   return (
     <div className="overflow-x-hidden bg-[#0A0A0A] text-stone-300">
@@ -157,7 +167,7 @@ export const WhxMiami: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row justify-center gap-4 items-center">
               <button 
-                onClick={trackLead}
+                onClick={() => trackLead('booking_hero')}
                 data-cal-link={CAL_LINK}
                 data-cal-namespace={CAL_NAMESPACE}
                 data-cal-config='{"layout":"month_view","theme":"dark"}'
@@ -169,7 +179,7 @@ export const WhxMiami: React.FC = () => {
                 </span>
               </button>
               <button
-                onClick={() => window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I'd like to ask a quick question about SNAA Industries at WHX Miami.`, '_blank')}
+                onClick={() => handleWhatsApp("Hi, I'd like to ask a quick question about SNAA Industries at WHX Miami.")}
                 className="group relative px-8 py-4 bg-white/5 border border-white/10 hover:border-brand-orange/30 text-white text-lg font-medium overflow-hidden rounded-md transition-transform hover:scale-105"
               >
                 <span className="relative flex items-center justify-center text-stone-200 hover:text-white">
@@ -304,7 +314,7 @@ export const WhxMiami: React.FC = () => {
               </div>
               <div className="mt-12">
                 <button 
-                  onClick={trackLead}
+                  onClick={() => trackLead('booking_oem')}
                   data-cal-link={CAL_LINK}
                   data-cal-namespace={CAL_NAMESPACE}
                   data-cal-config='{"layout":"month_view","theme":"dark"}'
@@ -395,7 +405,7 @@ export const WhxMiami: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <button 
-                onClick={trackLead}
+                onClick={() => trackLead('booking_final')}
                 data-cal-link={CAL_LINK}
                 data-cal-namespace={CAL_NAMESPACE}
                 data-cal-config='{"layout":"month_view","theme":"dark"}'
@@ -405,12 +415,7 @@ export const WhxMiami: React.FC = () => {
                 Book Meeting Calendar
               </button>
               <button 
-                onClick={() => {
-                  if (typeof (window as any).fbq === 'function') {
-                    (window as any).fbq('track', 'Lead');
-                  }
-                  window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I want to confirm a meeting slot for WHX Miami.`, '_blank');
-                }} 
+                onClick={() => handleWhatsApp('Hi, I want to confirm a meeting slot for WHX Miami.')}
                 className="inline-flex items-center justify-center bg-transparent border border-white/50 text-white hover:bg-white/10 hover:border-white px-10 py-5 text-lg font-bold rounded-md transition-colors"
               >
                 <MessageCircle size={24} className="mr-3" />
@@ -425,18 +430,13 @@ export const WhxMiami: React.FC = () => {
       <div className={`fixed bottom-0 left-0 w-full bg-black/80 backdrop-blur-xl border-t border-white/10 p-4 shadow-2xl transition-transform duration-500 z-50 md:hidden ${showSticky ? 'translate-y-0' : 'translate-y-full'}`}>
         <div className="flex gap-3">
           <button 
-            onClick={() => {
-              if (typeof (window as any).fbq === 'function') {
-                (window as any).fbq('track', 'Lead');
-              }
-              window.open(`https://wa.me/${WHX_WHATSAPP}?text=Hi, I'd like to book a meeting at WHX Miami.`, '_blank');
-            }} 
+            onClick={() => handleWhatsApp("Hi, I'd like to book a meeting at WHX Miami.")}
             className="flex-grow bg-brand-orange text-white py-3 px-2 flex justify-center items-center text-sm font-semibold rounded-md"
           >
             <MessageCircle size={16} className="mr-2" /> WhatsApp
           </button>
           <button 
-            onClick={trackLead}
+            onClick={() => trackLead('booking_sticky')}
             data-cal-link={CAL_LINK}
             data-cal-namespace={CAL_NAMESPACE}
             data-cal-config='{"layout":"month_view","theme":"dark"}'
