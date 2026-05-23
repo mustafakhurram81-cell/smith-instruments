@@ -58,6 +58,25 @@ const PageLoader = () => (
   </div>
 );
 
+// High-converting dynamic redirect route for WHX Miami booking
+const MeetRedirect: React.FC = () => {
+  React.useEffect(() => {
+    const searchParams = window.location.search;
+    // Default to WhatsApp tracking if no custom search parameters are passed
+    const finalParams = searchParams || '?utm_source=whatsapp&utm_medium=outreach';
+    window.location.replace(`https://cal.com/mustafakhurram/snaa-whx${finalParams}`);
+  }, []);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A] text-stone-300">
+      <div className="text-center">
+        <Loader2 className="w-10 h-10 text-brand-orange animate-spin mx-auto mb-4" />
+        <p className="text-lg font-light tracking-wide">Redirecting to our WHX Miami booking calendar...</p>
+      </div>
+    </div>
+  );
+};
+
 const AppContent: React.FC = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
@@ -81,6 +100,7 @@ const AppContent: React.FC = () => {
                 <Route path="/privacy-policy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
                 <Route path="/terms-of-service" element={<PageTransition><TermsOfService /></PageTransition>} />
                 <Route path="/whx-miami" element={<PageTransition><WhxMiami /></PageTransition>} />
+                <Route path="/meet" element={<MeetRedirect />} />
 
                 {/* Product Routes */}
                 <Route path="/products" element={<PageTransition><ProductsIndex /></PageTransition>} />
