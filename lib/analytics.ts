@@ -103,7 +103,7 @@ export const analytics = {
       content_category: source,
     });
 
-    linkedin();
+    linkedin(28337689);
   },
 
   /**
