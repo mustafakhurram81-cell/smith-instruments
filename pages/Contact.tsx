@@ -8,6 +8,8 @@ import { Plus, Minus, Phone, Mail, MapPin, MessageCircle, Clock, Loader2, Award,
 import emailjs from '@emailjs/browser';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { CONTACT_INFO } from '../constants';
+import { analytics } from '../lib/analytics';
+import { formatAttribution } from '../hooks';
 
 const FAQS = [
   { q: "What materials are used in your instruments?", a: "We strictly use high-grade German Stainless Steel (AISI 410, 420, 304) depending on the instrument type, ensuring corrosion resistance and longevity." },
@@ -105,8 +107,20 @@ export const Contact: React.FC = () => {
       // CAPTCHA verified, now send the email
       setFormStatus('sending');
 
+      // Append campaign attribution to message if visitor arrived via an ad
+      const attributionField = formRef.current.querySelector('input[name="attribution"]') as HTMLInputElement | null;
+      const messageField = formRef.current.querySelector('textarea[name="message"]') as HTMLTextAreaElement | null;
+      const attribution = formatAttribution();
+      if (attribution && attributionField) {
+        attributionField.value = attribution;
+      }
+
       emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY)
         .then((_result) => {
+          // Fire unified conversion event across GA4, Meta Pixel, and LinkedIn
+          const interestValue = watch('interest') || 'General Inquiry';
+          analytics.contactSubmit(interestValue);
+
           setFormStatus('success');
           // Reset Form
           reset();
@@ -361,6 +375,9 @@ export const Contact: React.FC = () => {
                         size="invisible"
                       />
                     )}
+
+                    {/* Hidden field for campaign attribution (populated programmatically) */}
+                    <input type="hidden" name="attribution" value="" />
 
                     {/* Hide the floating badge via CSS since we are displaying the legal text manually */}
                     <style>{`

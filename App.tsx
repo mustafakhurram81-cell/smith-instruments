@@ -6,6 +6,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { CartProvider } from './components/CartProvider';
 import { ToastProvider } from './components/ToastProvider';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { useAttribution } from './hooks';
 import { Loader2 } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
@@ -80,6 +81,9 @@ const MeetRedirect: React.FC = () => {
 const AppContent: React.FC = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+
+  // Capture UTM parameters from LinkedIn/Meta/Google ad campaigns on entry
+  useAttribution();
 
   return (
     <div className="flex flex-col min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-brand-orange/30">

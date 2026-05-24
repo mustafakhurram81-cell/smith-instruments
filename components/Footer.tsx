@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight, CreditCard, Lock, MessageCircle } from 'lucide-react';
 import logoTransparent from '../assets/smith instruments logo.png';
 import { SOCIAL_LINKS, CONTACT_INFO } from '../constants';
+import { analytics } from '../lib/analytics';
 
 export const Footer: React.FC = () => {
     return (
@@ -26,14 +27,14 @@ export const Footer: React.FC = () => {
                             <p className="text-sm font-light leading-relaxed text-stone-400">
                                 Precision engineered surgical instruments for the modern medical world.
                             </p>
-                            <div className="flex gap-4">
-                                <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-white transition-colors">
+                             <div className="flex gap-4">
+                                <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" onClick={() => analytics.lead('facebook_click', 'Footer')} className="text-stone-400 hover:text-white transition-colors">
                                     <Facebook size={18} />
                                 </a>
-                                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-white transition-colors">
+                                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" onClick={() => analytics.lead('instagram_click', 'Footer')} className="text-stone-400 hover:text-white transition-colors">
                                     <Instagram size={18} />
                                 </a>
-                                <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-white transition-colors">
+                                <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" onClick={() => analytics.lead('linkedin_click', 'Footer')} className="text-stone-400 hover:text-white transition-colors">
                                     <Linkedin size={18} />
                                 </a>
                             </div>
@@ -65,14 +66,14 @@ export const Footer: React.FC = () => {
                         <div>
                             <h3 className="text-white font-medium text-sm uppercase tracking-wider mb-5">Contact</h3>
                             <div className="space-y-3">
-                                <div className="flex items-center gap-3">
-                                    <Mail size={14} className="text-brand-orange flex-shrink-0" />
-                                    <span className="text-sm text-stone-400">{CONTACT_INFO.email}</span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <Phone size={14} className="text-brand-orange flex-shrink-0" />
-                                    <span className="text-sm text-stone-400">{CONTACT_INFO.phone}</span>
-                                </div>
+                                <a href={`mailto:${CONTACT_INFO.email}`} onClick={() => analytics.lead('email_click', 'Footer')} className="flex items-center gap-3 group w-fit">
+                                    <Mail size={14} className="text-brand-orange flex-shrink-0 group-hover:scale-110 transition-transform" />
+                                    <span className="text-sm text-stone-400 group-hover:text-white transition-colors">{CONTACT_INFO.email}</span>
+                                </a>
+                                <a href={`tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`} onClick={() => analytics.lead('phone_click', 'Footer')} className="flex items-center gap-3 group w-fit">
+                                    <Phone size={14} className="text-brand-orange flex-shrink-0 group-hover:scale-110 transition-transform" />
+                                    <span className="text-sm text-stone-400 group-hover:text-white transition-colors">{CONTACT_INFO.phone}</span>
+                                </a>
                                 {CONTACT_INFO.locations.map((loc, idx) => (
                                     <div key={idx} className="flex items-start gap-3">
                                         <MapPin size={14} className="text-brand-orange flex-shrink-0 mt-0.5" />

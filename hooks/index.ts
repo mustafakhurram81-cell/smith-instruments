@@ -3,3 +3,4 @@
  */
 
 export { useRecentlyViewed } from './useRecentlyViewed';
+export { useAttribution, getAttribution, formatAttribution } from './useAttribution';

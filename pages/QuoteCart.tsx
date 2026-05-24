@@ -10,6 +10,8 @@ import emailjs from '@emailjs/browser';
 import { SEO } from '../components/SEO';
 import { supabase } from '../lib/supabase';
 import { EmptyState } from '../components/ui/EmptyState';
+import { analytics } from '../lib/analytics';
+import { formatAttribution } from '../hooks';
 
 export const QuoteCart: React.FC = () => {
     const { items, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -50,8 +52,14 @@ export const QuoteCart: React.FC = () => {
             image_url: item.image_url || null
         }));
 
+        // Append campaign attribution if the visitor arrived via an ad
+        const attribution = formatAttribution();
+        const messageWithAttribution = data.message
+            ? `${data.message}${attribution || ''}`
+            : attribution || '';
+
         try {
-            // 1. Save to Supabase database
+            // 1. Save to Supabase database (with attribution metadata)
             const { error: dbError } = await supabase
                 .from('quote_requests')
                 .insert({
@@ -60,7 +68,7 @@ export const QuoteCart: React.FC = () => {
                     customer_phone: data.phone || null,
                     customer_country: data.country || null,
                     products: productsData,
-                    message: data.message || null,
+                    message: messageWithAttribution || null,
                     status: 'new'
                 });
 
@@ -69,7 +77,9 @@ export const QuoteCart: React.FC = () => {
                 // Continue anyway - email is more important
             }
 
-            // 2. Send email notification
+            // 2. Send email notification (with attribution metadata)
+            const fullMessage = `${data.message || ''}\n\n--- Requested Items ---\n${productList}${attribution || ''}`;
+
             const templateParams = {
                 to_name: "Smith Instruments Sales",
                 items_count: items.length,
@@ -88,6 +98,9 @@ export const QuoteCart: React.FC = () => {
                 templateParams,
                 PUBLIC_KEY
             );
+
+            // 3. Fire unified conversion event across all ad platforms
+            analytics.quoteRequest(items.length);
 
             setSuccess(true);
             clearCart();

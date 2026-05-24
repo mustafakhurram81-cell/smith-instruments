@@ -4,6 +4,7 @@ import { Button, FadeIn } from '../components/Shared';
 import { SEO } from '../components/SEO';
 import { ShieldCheck, Globe, Award, Settings, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, ArrowRight, MessageCircle, Calendar, CheckCircle2, Clock, AlertTriangle } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
+import { analytics } from '../lib/analytics';
 import smithLogo from '../assets/smith instruments logo.png';
 import manufacturingImg from '../assets/factory/manufacturing.jpeg';
 
@@ -62,20 +63,26 @@ export const WhxMiami: React.FC = () => {
     };
   }, []);
 
-  // Track Meta Pixel Lead event with source identification
+  // Track lead events across GA4, Meta Pixel, and LinkedIn
   const trackLead = useCallback((source: string = 'booking') => {
-    if (typeof (window as any).fbq === 'function') {
-      (window as any).fbq('track', 'Lead', {
-        content_name: source,
-        content_category: 'WHX Miami 2026'
-      });
-    }
+    analytics.lead(source, 'WHX Miami 2026');
   }, []);
 
   const handleWhatsApp = useCallback((message: string) => {
-    trackLead('whatsapp');
+    analytics.whatsAppClick('whx_miami');
     window.open(`https://wa.me/${WHX_WHATSAPP}?text=${encodeURIComponent(message)}`, '_blank');
-  }, [trackLead]);
+  }, []);
+
+  // Listen for Cal.com booking confirmations via postMessage
+  useEffect(() => {
+    const handleCalMessage = (e: MessageEvent) => {
+      if (e.data?.action === 'bookingSuccessful') {
+        analytics.bookingConfirmed('whx_miami');
+      }
+    };
+    window.addEventListener('message', handleCalMessage);
+    return () => window.removeEventListener('message', handleCalMessage);
+  }, []);
 
 
 
