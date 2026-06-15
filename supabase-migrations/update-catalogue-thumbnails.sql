@@ -1,0 +1,34 @@
+-- Update catalogue thumbnail URLs to point to pre-generated WebP images
+-- These images are stored in Supabase Storage under product-images/catalogue-thumbnails/
+
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/scalpels.webp' WHERE id = '5b193d4e-524f-4ea8-abd1-65d7d39a643f';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/scissors.webp' WHERE id = 'c8bfdc55-f824-4bd2-aa62-7323afda3cff';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/dissecting-tissue-forceps.webp' WHERE id = '61fd01e4-648c-4329-9177-ec4ae85a3221';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/artery-forceps.webp' WHERE id = 'fa1c159b-bb82-445e-bec3-a123032fdd8b';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/cotton-swab-forceps.webp' WHERE id = '269c6863-8817-4d4a-a084-e13ac063dbc4';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/retractors.webp' WHERE id = 'e3ff8aab-e114-420f-b86f-b2016b3b2181';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/probes.webp' WHERE id = '0cd2b461-47fb-43f2-bafa-4f236cb85b33';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/diagnostics.webp' WHERE id = 'ffbfb1a3-7349-4228-ae0d-820e40fe4c20';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/trocars-suction-tubes-cannulas.webp' WHERE id = 'b77e0830-9ed9-4a27-bc08-d50f483803d1';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/anaesthesia.webp' WHERE id = 'ee6531e1-69c1-4145-aac3-6d865117e7d6';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/suture.webp' WHERE id = 'fbb72282-cbd2-4b93-97af-72429d76d620';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/dressing.webp' WHERE id = 'abaaf4af-4fb1-416b-9021-5d7dee0278d4';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/bone-surgery.webp' WHERE id = '26984ce5-1509-4627-a971-a47c75c60a74';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/cardiovascular-surgery.webp' WHERE id = '889fcd24-c352-4965-a9db-3f339c2b100a';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/neurosurgery-laminectomy.webp' WHERE id = '93b654d8-161a-4b5e-8dea-15d86137aab6';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/tracheotomy.webp' WHERE id = '0c3a1f92-6e5b-40b5-a7fc-9e89076f4655';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/dermatology.webp' WHERE id = '9fbd1439-6121-45c6-98ef-ba21a8f854a0';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/stomach-intestines-rectum.webp' WHERE id = '9d70f1b5-19f9-4e09-9456-fc44da1a8556';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/liver-gall-bladder-kidney-urology.webp' WHERE id = 'a0b72d77-d5ca-423e-a53f-da2f16b57790';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/gynecology.webp' WHERE id = '0e34a942-962c-4e54-9236-e138c647650c';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/obstetrics.webp' WHERE id = 'ff702eb4-7c45-4bf7-9546-becf46c66622';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/calipers.webp' WHERE id = '8d1be149-7e6d-4089-9828-53a8c3b5b830';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/otology.webp' WHERE id = '33142ff9-2580-497d-80c0-9c36c990f02a';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/rhinology.webp' WHERE id = 'e269d2d8-d9b4-47ad-9fa6-0477fa5e1bec';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/oral-maxillo-facial-surgery.webp' WHERE id = '40be42e2-b987-43af-b991-116c37a0662b';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/tonsillectomy-laryngo-bronchoscopy.webp' WHERE id = '0da86f77-09ec-4ae5-ab4d-436395ab3a45';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/cranio-maxillo-facial-surgery.webp' WHERE id = '3fd8ea6c-3ab2-4361-b54a-ff4729410af9';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/holloware.webp' WHERE id = 'cca78d0f-524b-4544-8d39-c00bc6bd73f0';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/dissecting-kits.webp' WHERE id = '49cbf327-b476-4f3f-84bf-e70a70d19017';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/electro-surgery.webp' WHERE id = 'd4f85f42-b083-494c-89c3-16893eded4bc';
+UPDATE catalogues SET thumbnail_url = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/catalogue-thumbnails/plastic-aesthetic-surgery.webp' WHERE id = 'f35b2743-655c-4156-8541-78b6fbb4877c';
