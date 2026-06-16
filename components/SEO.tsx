@@ -38,7 +38,7 @@ export const SEO: React.FC<SEOProps> = ({
             "@type": "ContactPoint",
             "telephone": "+92-330-2449855",
             "contactType": "sales",
-            "email": "sales@smithinstruments.net"
+            "email": "info@smithinstruments.net"
         },
         "sameAs": Object.values(SOCIAL_LINKS)
     };

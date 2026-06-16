@@ -50,7 +50,7 @@ export const SOCIAL_LINKS = {
 } as const;
 
 export const CONTACT_INFO = {
-    email: 'sales@smithinstruments.net',
+    email: 'info@smithinstruments.net',
     phone: '+92 330 2449855',
     locations: [
         {

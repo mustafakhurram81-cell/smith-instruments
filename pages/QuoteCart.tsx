@@ -42,8 +42,6 @@ export const QuoteCart: React.FC = () => {
         // Prepare the product list string for email
         const productList = items.map(i => `• ${i.sku} - ${i.name} (Qty: ${i.quantity})`).join('\n');
 
-        const fullMessage = `${data.message || ''}\n\n--- Requested Items ---\n${productList}`;
-
         // Prepare products array for database
         const productsData = items.map(item => ({
             sku: item.sku,
@@ -106,9 +104,10 @@ export const QuoteCart: React.FC = () => {
             clearCart();
         } catch (error) {
             console.error('Failed to send quote', error);
-            alert('Failed to send request. Please email us directly at sales@smithsurgical.uk');
+            alert('Failed to send request. Please email us directly at sales@smithinstruments.net');
+        } finally {
+            setSending(false);
         }
-        setSending(false);
     };
 
     if (items.length === 0 && !success) {
