@@ -17,7 +17,7 @@ export const SEO: React.FC<SEOProps> = ({
     title,
     description,
     keywords,
-    image = 'https://images.unsplash.com/photo-1626315869436-d6781ba69d6e?q=80&w=1200', /* Default image */
+    image = 'https://smithinstruments.net/og-image.png', /* Default image */
     url = '',
     type = 'website',
     structuredData,
