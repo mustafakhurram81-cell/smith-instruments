@@ -1,4 +1,34 @@
 {
+    "redirects": [
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "smith-instruments.vercel.app"
+                }
+            ],
+            "destination": "https://smithinstruments.net/$1",
+            "permanent": true
+        }
+    ],
+    "headers": [
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "smith-instruments.vercel.app"
+                }
+            ],
+            "headers": [
+                {
+                    "key": "X-Robots-Tag",
+                    "value": "noindex, nofollow"
+                }
+            ]
+        }
+    ],
     "rewrites": [
         {
             "source": "/(.*)",

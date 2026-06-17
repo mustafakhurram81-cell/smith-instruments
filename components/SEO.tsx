@@ -18,7 +18,7 @@ export const SEO: React.FC<SEOProps> = ({
     description,
     keywords,
     image = 'https://images.unsplash.com/photo-1626315869436-d6781ba69d6e?q=80&w=1200', /* Default image */
-    url = typeof window !== 'undefined' ? window.location.href : 'https://smithinstruments.net',
+    url = '',
     type = 'website',
     structuredData,
     breadcrumbs
@@ -43,11 +43,21 @@ export const SEO: React.FC<SEOProps> = ({
         "sameAs": Object.values(SOCIAL_LINKS)
     };
 
-    // Ensure absolute URL
-    const absoluteUrl = url.startsWith('http') ? url : `https://smithinstruments.net${url.startsWith('/') ? url : `/${url}`}`;
+    // Ensure absolute URL strictly using the primary domain
+    const cleanUrl = url.replace(/^https?:\/\/[^\/]+/, '');
+    const absoluteUrl = `https://smithinstruments.net${cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`}`;
+
+    // WebSite schema to enforce Site Name
+    const websiteSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": siteTitle,
+        "alternateName": "Smith Surgical",
+        "url": "https://smithinstruments.net/"
+    };
 
     // Combine schemas
-    const schemas: object[] = [organizationSchema];
+    const schemas: object[] = [organizationSchema, websiteSchema];
 
     if (breadcrumbs && breadcrumbs.length > 0) {
         schemas.push({
@@ -79,7 +89,7 @@ export const SEO: React.FC<SEOProps> = ({
 
             {/* Open Graph / Facebook */}
             <meta property="og:type" content={type} />
-            <meta property="og:url" content={url} />
+            <meta property="og:url" content={absoluteUrl} />
             <meta property="og:title" content={fullTitle} />
             <meta property="og:description" content={description} />
             <meta property="og:image" content={image} />
@@ -87,7 +97,7 @@ export const SEO: React.FC<SEOProps> = ({
 
             {/* Twitter */}
             <meta property="twitter:card" content="summary_large_image" />
-            <meta property="twitter:url" content={url} />
+            <meta property="twitter:url" content={absoluteUrl} />
             <meta property="twitter:title" content={fullTitle} />
             <meta property="twitter:description" content={description} />
             <meta property="twitter:image" content={image} />
