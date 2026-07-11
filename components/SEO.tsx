@@ -32,7 +32,7 @@ export const SEO: React.FC<SEOProps> = ({
         "@type": "Organization",
         "name": "Smith Instruments",
         "url": "https://smithinstruments.net",
-        "logo": "https://smithinstruments.net/smith-logo-full.webp",
+        "logo": "https://smithinstruments.net/smith-logo-transparent.png",
         "description": "Premium manufacturer of precision surgical instruments",
         "contactPoint": {
             "@type": "ContactPoint",
