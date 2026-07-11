@@ -7,7 +7,7 @@ import { LanguageSwitcher } from './LanguageSwitcher';
 import { useCart } from './CartProvider';
 import { useCategoryNames } from '../lib/queries';
 import { SearchOverlay } from './SearchOverlay';
-import logoTransparent from '../assets/smith instruments logo.png';
+import logoTransparent from '../assets/smith-logo-transparent.png';
 
 const COMPANY_LINKS = [
     { to: '/about', label: 'About Us' },

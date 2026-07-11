@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowRight, CreditCard, Lock, MessageCircle } from 'lucide-react';
-import logoTransparent from '../assets/smith instruments logo.png';
+import logoTransparent from '../assets/smith-logo-transparent.png';
 import { SOCIAL_LINKS, CONTACT_INFO } from '../constants';
 import { analytics } from '../lib/analytics';
 
