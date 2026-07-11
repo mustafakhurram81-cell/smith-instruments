@@ -17,11 +17,11 @@ export const Footer: React.FC = () => {
 
                         {/* Brand */}
                         <div className="space-y-5">
-                            <div className="h-14 w-52 relative overflow-hidden">
+                            <div className="h-16 w-64 relative overflow-hidden">
                                 <img
                                     src={logoTransparent}
                                     alt="Smith Instruments"
-                                    className="w-full h-full object-contain brightness-0 invert opacity-90"
+                                    className="w-full h-full object-contain scale-[1.35] origin-left brightness-0 invert opacity-90"
                                 />
                             </div>
                             <p className="text-sm font-light leading-relaxed text-stone-400">

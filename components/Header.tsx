@@ -69,11 +69,11 @@ export const Header: React.FC = () => {
                     {/* Left: Logo */}
                     <div className="flex-1 flex items-center">
                         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
-                            <div className="h-12 w-48 relative overflow-hidden flex items-center">
+                            <div className="h-16 w-64 relative overflow-hidden flex items-center">
                                 <img
                                     src={logoTransparent}
                                     alt="Smith Instruments"
-                                    className={`w-full h-full object-contain transition-all duration-300 ${isTransparent
+                                    className={`w-full h-full object-contain scale-[1.35] origin-left transition-all duration-300 ${isTransparent
                                         ? 'brightness-0 invert'
                                         : ''
                                         }`}
