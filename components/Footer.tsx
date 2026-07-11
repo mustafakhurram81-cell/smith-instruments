@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
                                 <img
                                     src={logoTransparent}
                                     alt="Smith Instruments"
-                                    className="w-full h-full object-contain scale-[1.35] origin-left brightness-0 invert opacity-90"
+                                    className="w-full h-full object-contain brightness-0 invert opacity-90"
                                 />
                             </div>
                             <p className="text-sm font-light leading-relaxed text-stone-400">

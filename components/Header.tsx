@@ -73,7 +73,7 @@ export const Header: React.FC = () => {
                                 <img
                                     src={logoTransparent}
                                     alt="Smith Instruments"
-                                    className={`w-full h-full object-contain scale-[1.35] origin-left transition-all duration-300 ${isTransparent
+                                    className={`w-full h-full object-contain transition-all duration-300 ${isTransparent
                                         ? 'brightness-0 invert'
                                         : ''
                                         }`}
