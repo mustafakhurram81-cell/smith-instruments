@@ -219,6 +219,15 @@ export const ProductDetail: React.FC = () => {
                         <div
                             className="bg-white border border-stone-100 overflow-hidden aspect-square flex items-center justify-center relative cursor-zoom-in group"
                             onClick={() => product.image_url && setIsZoomed(true)}
+                            onKeyDown={(event) => {
+                                if (product.image_url && (event.key === 'Enter' || event.key === ' ')) {
+                                    event.preventDefault();
+                                    setIsZoomed(true);
+                                }
+                            }}
+                            role={product.image_url ? 'button' : undefined}
+                            tabIndex={product.image_url ? 0 : undefined}
+                            aria-label={product.image_url ? `Enlarge image of ${product.name}` : undefined}
                             onMouseMove={(e) => {
                                 if (!product.image_url) return;
                                 const rect = e.currentTarget.getBoundingClientRect();
@@ -571,4 +580,3 @@ export const ProductDetail: React.FC = () => {
         </div>
     );
 };
-

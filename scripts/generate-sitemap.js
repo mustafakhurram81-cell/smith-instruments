@@ -55,12 +55,23 @@ async function generateSitemap() {
     let subcategoryCount = 0;
     let productCount = 0;
 
+    const addUrl = (routePath, lastmod, changefreq, priority) => {
+        xml += `  <url>
+    <loc>${BASE_URL}${routePath}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>
+`;
+    };
+
     // Static Routes with priorities
     const staticRoutes = [
         { path: '/', priority: '1.0', changefreq: 'weekly' },
         { path: '/products', priority: '0.9', changefreq: 'daily' },
         { path: '/catalogues', priority: '0.8', changefreq: 'weekly' },
         { path: '/about', priority: '0.7', changefreq: 'monthly' },
+        { path: '/distributor', priority: '0.7', changefreq: 'monthly' },
         { path: '/contact', priority: '0.7', changefreq: 'monthly' },
         { path: '/privacy-policy', priority: '0.3', changefreq: 'yearly' },
         { path: '/terms-of-service', priority: '0.3', changefreq: 'yearly' }
@@ -71,15 +82,7 @@ async function generateSitemap() {
 `;
 
     // Add Static Routes
-    staticRoutes.forEach(route => {
-        xml += `  <url>
-    <loc>${BASE_URL}${route.path}</loc>
-    <lastmod>${TODAY}</lastmod>
-    <changefreq>${route.changefreq}</changefreq>
-    <priority>${route.priority}</priority>
-  </url>
-`;
-    });
+    staticRoutes.forEach(route => addUrl(route.path, TODAY, route.changefreq, route.priority));
 
     let fetchFailed = false;
 
@@ -92,7 +95,7 @@ async function generateSitemap() {
         while (hasMore) {
             const { data, error } = await supabase
                 .from('products')
-                .select('sku, category, subcategory, updated_at')
+                .select('sku, category, subcategory, instrument_category, instrument_subcategory, specialty_category, specialty_subcategory, updated_at')
                 .range(page * limit, (page + 1) * limit - 1);
 
             if (error) {
@@ -112,65 +115,43 @@ async function generateSitemap() {
         const products = allProducts;
 
         if (products && products.length > 0) {
-            // Build category -> subcategory -> products map
-            const categoryMap = new Map();
+            const addNavigationRoutes = (prefix, categoryField, subcategoryField) => {
+                const categoryMap = new Map();
 
-            products.forEach(p => {
-                if (!p.category) return;
+                products.forEach(product => {
+                    const category = product[categoryField];
+                    if (!category) return;
 
-                if (!categoryMap.has(p.category)) {
-                    categoryMap.set(p.category, new Map());
-                }
-
-                const subMap = categoryMap.get(p.category);
-                const sub = p.subcategory || 'General';
-
-                if (!subMap.has(sub)) {
-                    subMap.set(sub, []);
-                }
-                subMap.get(sub).push(p);
-            });
-
-            // Add category routes
-            for (const [category, subMap] of categoryMap) {
-                const safeCat = encodeURIComponent(category);
-                xml += `  <url>
-    <loc>${BASE_URL}/products/${safeCat}</loc>
-    <lastmod>${TODAY}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-`;
-                categoryCount++;
-
-                // Add subcategory routes
-                for (const [subcategory, prods] of subMap) {
+                    if (!categoryMap.has(category)) categoryMap.set(category, new Set());
+                    const subcategory = product[subcategoryField];
                     if (subcategory && subcategory !== 'General') {
-                        const safeSub = encodeURIComponent(subcategory);
-                        xml += `  <url>
-    <loc>${BASE_URL}/products/${safeCat}/${safeSub}</loc>
-    <lastmod>${TODAY}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-`;
+                        categoryMap.get(category).add(subcategory);
+                    }
+                });
+
+                for (const [category, subcategories] of categoryMap) {
+                    const categoryPath = `${prefix}/${encodeURIComponent(category)}`;
+                    addUrl(categoryPath, TODAY, 'weekly', '0.8');
+                    categoryCount++;
+
+                    for (const subcategory of subcategories) {
+                        addUrl(`${categoryPath}/${encodeURIComponent(subcategory)}`, TODAY, 'weekly', '0.7');
                         subcategoryCount++;
                     }
                 }
-            }
+            };
+
+            // Keep legacy routes indexed while adding the current dual-navigation URLs.
+            addNavigationRoutes('/products', 'category', 'subcategory');
+            addNavigationRoutes('/products/instruments', 'instrument_category', 'instrument_subcategory');
+            addNavigationRoutes('/products/specialty', 'specialty_category', 'specialty_subcategory');
 
             // Add product routes
             products.forEach(product => {
                 const lastMod = product.updated_at
                     ? product.updated_at.split('T')[0]
                     : TODAY;
-                xml += `  <url>
-    <loc>${BASE_URL}/product/${encodeURIComponent(product.sku)}</loc>
-    <lastmod>${lastMod}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-`;
+                addUrl(`/product/${encodeURIComponent(product.sku)}`, lastMod, 'monthly', '0.6');
                 productCount++;
             });
         }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { PrefetchNavLink } from './PrefetchLink';
 import { Menu, X, ShoppingCart, Search as SearchIcon, ChevronDown, ChevronRight, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -23,7 +23,6 @@ export const Header: React.FC = () => {
     const [isProductsOpen, setIsProductsOpen] = useState(false);
     const [isCompanyOpen, setIsCompanyOpen] = useState(false);
     const location = useLocation();
-    const navigate = useNavigate();
     const { cartCount } = useCart();
     const { data: categoryNames = [] } = useCategoryNames();
     const categories = categoryNames.slice(0, 8).map(name => ({ name }));
@@ -68,7 +67,7 @@ export const Header: React.FC = () => {
 
                     {/* Left: Logo */}
                     <div className="flex-1 flex items-center">
-                        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigate('/')}>
+                        <NavLink to="/" className="flex items-center gap-3 group" aria-label="Smith Instruments home">
                             <div className="h-16 w-64 relative overflow-hidden flex items-center">
                                 <img
                                     src={logoTransparent}
@@ -79,7 +78,7 @@ export const Header: React.FC = () => {
                                         }`}
                                 />
                             </div>
-                        </div>
+                        </NavLink>
                     </div>
 
                     <nav className="hidden md:flex items-center gap-6">
@@ -92,8 +91,12 @@ export const Header: React.FC = () => {
                             className="relative group"
                             onMouseEnter={() => setIsProductsOpen(true)}
                             onMouseLeave={() => setIsProductsOpen(false)}
+                            onFocusCapture={() => setIsProductsOpen(true)}
+                            onBlurCapture={(event) => {
+                                if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsProductsOpen(false);
+                            }}
                         >
-                            <PrefetchNavLink to="/products" className={({ isActive }) => dropdownLinkClass(isActive)}>
+                            <PrefetchNavLink to="/products" aria-expanded={isProductsOpen} className={({ isActive }) => dropdownLinkClass(isActive)}>
                                 Products <ChevronDown size={14} className={`transition-transform duration-300 ${isProductsOpen ? 'rotate-180' : ''}`} />
                             </PrefetchNavLink>
 
@@ -138,8 +141,12 @@ export const Header: React.FC = () => {
                             className="relative group"
                             onMouseEnter={() => setIsCompanyOpen(true)}
                             onMouseLeave={() => setIsCompanyOpen(false)}
+                            onFocusCapture={() => setIsCompanyOpen(true)}
+                            onBlurCapture={(event) => {
+                                if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsCompanyOpen(false);
+                            }}
                         >
-                            <button className={dropdownLinkClass(isCompanyActive)}>
+                            <button className={dropdownLinkClass(isCompanyActive)} aria-expanded={isCompanyOpen}>
                                 Company <ChevronDown size={14} className={`transition-transform duration-300 ${isCompanyOpen ? 'rotate-180' : ''}`} />
                             </button>
 
@@ -240,6 +247,7 @@ export const Header: React.FC = () => {
                                 <div className="space-y-2">
                                     <button
                                         onClick={() => setIsProductsOpen(!isProductsOpen)}
+                                        aria-expanded={isProductsOpen}
                                         className="w-full text-lg font-heading text-left text-stone-500 hover:text-brand-charcoal transition-colors flex items-center justify-between"
                                     >
                                         Products
@@ -275,6 +283,7 @@ export const Header: React.FC = () => {
                                 <div className="space-y-2">
                                     <button
                                         onClick={() => setIsCompanyOpen(!isCompanyOpen)}
+                                        aria-expanded={isCompanyOpen}
                                         className={`w-full text-lg font-heading text-left transition-colors flex items-center justify-between ${isCompanyActive ? 'text-brand-charcoal' : 'text-stone-500 hover:text-brand-charcoal'}`}
                                     >
                                         Company

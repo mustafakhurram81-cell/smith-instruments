@@ -6,9 +6,9 @@ import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Sciss
 import { CONTACT_INFO } from '../constants';
 import { ProductCard } from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
-import heroMethods from '../assets/hero-premium.png';
-import legacyImg from '../assets/factory/legacy.jpeg';
-import artisan1 from '../assets/factory/artisan-1.jpeg';
+import heroMethods from '../assets/hero-premium.webp';
+import legacyImg from '../assets/factory/legacy.webp';
+import artisan1 from '../assets/factory/artisan-1.webp';
 import workshopExtra from '../assets/factory/workshop-extra.jpeg';
 
 const PRODUCTS = [

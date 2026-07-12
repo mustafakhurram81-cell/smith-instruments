@@ -4,10 +4,10 @@ import { SEO } from '../components/SEO';
 import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck, Award, Globe, Factory, Package, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CONTACT_INFO } from '../constants';
-import heritageImg from '../assets/factory/heritage.jpeg';
-import manufacturingImg from '../assets/factory/manufacturing.jpeg';
-import legacyImg from '../assets/factory/legacy.jpeg';
-import artisan2 from '../assets/factory/artisan-2.jpeg';
+import heritageImg from '../assets/factory/heritage.webp';
+import manufacturingImg from '../assets/factory/manufacturing.webp';
+import legacyImg from '../assets/factory/legacy.webp';
+import artisan2 from '../assets/factory/artisan-2.webp';
 import artisan3 from '../assets/factory/artisan-3.jpeg';
 import workshopExtra from '../assets/factory/workshop-extra.jpeg';
 

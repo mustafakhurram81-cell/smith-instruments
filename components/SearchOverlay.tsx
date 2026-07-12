@@ -51,6 +51,9 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                     exit={{ opacity: 0 }}
                     className="fixed inset-0 z-[60] bg-stone-900/40 backdrop-blur-sm"
                     onClick={onClose}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Search instruments"
                 >
                     <motion.div
                         initial={{ y: -50, opacity: 0 }}
@@ -69,7 +72,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                                 value={query}
                                 onChange={e => setQuery(e.target.value)}
                             />
-                            <button onClick={onClose} className="p-2 hover:bg-stone-100 rounded-full">
+                            <button onClick={onClose} aria-label="Close search" className="p-2 hover:bg-stone-100 rounded-full">
                                 <X className="text-stone-400" size={20} />
                             </button>
                         </div>
@@ -82,10 +85,10 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                             ) : results.length > 0 ? (
                                 <div className="grid gap-2">
                                     {results.map(prod => (
-                                        <div
+                                        <button
                                             key={prod.id}
                                             onClick={() => handleSelect(prod.sku)}
-                                            className="flex items-center gap-4 p-3 hover:bg-stone-50 border-b border-stone-50 last:border-0 cursor-pointer transition-colors group"
+                                            className="w-full text-left flex items-center gap-4 p-3 hover:bg-stone-50 border-b border-stone-50 last:border-0 cursor-pointer transition-colors group"
                                         >
                                             <div className="w-12 h-12 bg-stone-200 rounded-md overflow-hidden flex-shrink-0 border border-stone-200">
                                                 {prod.image_url ? (
@@ -99,7 +102,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                                                 <p className="text-xs text-stone-500 font-mono">{prod.sku}</p>
                                             </div>
                                             <ArrowRight className="ml-auto text-gray-300 group-hover:text-brand-orange opacity-0 group-hover:opacity-100 transition-all" size={16} />
-                                        </div>
+                                        </button>
                                     ))}
                                 </div>
                             ) : query.length > 1 ? (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Section, FadeIn, ParallaxHeader } from '../../components/Shared';
 import { SEO } from '../../components/SEO';
 import { CategoryGridSkeleton } from '../../components/ui/Skeleton';
@@ -9,7 +9,6 @@ import { ArrowRight, Stethoscope, Scissors } from 'lucide-react';
 type ViewMode = 'specialty' | 'instrument';
 
 export const ProductsIndex: React.FC = () => {
-    const navigate = useNavigate();
     const [viewMode, setViewMode] = useState<ViewMode>('specialty');
 
     // Use new dual navigation hooks
@@ -65,6 +64,7 @@ export const ProductsIndex: React.FC = () => {
                         <div className="flex items-center bg-stone-100 p-1 rounded-lg">
                             <button
                                 onClick={() => setViewMode('specialty')}
+                                aria-pressed={viewMode === 'specialty'}
                                 className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-md transition-all ${viewMode === 'specialty'
                                     ? 'bg-white text-brand-charcoal shadow-sm'
                                     : 'text-stone-500 hover:text-stone-700'
@@ -75,6 +75,7 @@ export const ProductsIndex: React.FC = () => {
                             </button>
                             <button
                                 onClick={() => setViewMode('instrument')}
+                                aria-pressed={viewMode === 'instrument'}
                                 className={`flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-md transition-all ${viewMode === 'instrument'
                                     ? 'bg-white text-brand-charcoal shadow-sm'
                                     : 'text-stone-500 hover:text-stone-700'
@@ -111,14 +112,10 @@ export const ProductsIndex: React.FC = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {items.map((item, idx) => (
                                     <FadeIn key={item.name} delay={Math.min(idx * 0.03, 0.3)}>
-                                        <div
-                                            onClick={() => {
-                                                if (viewMode === 'specialty') {
-                                                    navigate(`/products/specialty/${encodeURIComponent(item.name)}`);
-                                                } else {
-                                                    navigate(`/products/instruments/${encodeURIComponent(item.name)}`);
-                                                }
-                                            }}
+                                        <Link
+                                            to={viewMode === 'specialty'
+                                                ? `/products/specialty/${encodeURIComponent(item.name)}`
+                                                : `/products/instruments/${encodeURIComponent(item.name)}`}
                                             className="group cursor-pointer h-full bg-white border border-stone-200 hover:border-brand-orange/30 rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
                                         >
                                             {/* Image Section - Clean Medical Look */}
@@ -156,7 +153,7 @@ export const ProductsIndex: React.FC = () => {
                                                     View Collection <ArrowRight size={14} className="ml-2" />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </FadeIn>
                                 ))}
                             </div>
@@ -167,4 +164,3 @@ export const ProductsIndex: React.FC = () => {
         </div>
     );
 };
-

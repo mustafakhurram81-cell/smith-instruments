@@ -40,12 +40,14 @@ const AccordionItem: React.FC<{ item: { q: string, a: string } }> = ({ item }) =
       <button
         className="w-full py-6 px-6 flex justify-between items-center text-left focus:outline-none group hover:bg-stone-50 transition-colors"
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
       >
         <span className="font-heading text-lg text-brand-charcoal group-hover:text-stone-600 transition-colors">{item.q}</span>
         {isOpen ? <Minus size={20} className="text-brand-orange shrink-0 ml-4" /> : <Plus size={20} className="text-stone-400 shrink-0 ml-4" />}
       </button>
       <div
         className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'}`}
+        aria-hidden={!isOpen}
       >
         <div className="p-6 pt-0 text-stone-500 font-light leading-relaxed">
           {item.a}
