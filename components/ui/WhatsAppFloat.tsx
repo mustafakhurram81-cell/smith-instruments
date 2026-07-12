@@ -1,19 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
 import { analytics } from '../../lib/analytics';
 
 export const WhatsAppFloat: React.FC = () => {
-    const { pathname } = useLocation();
-    const hideOnMobile = pathname === '/whx-miami';
-
     return (
         <motion.a
             href="https://wa.me/923302449855?text=Hi,%20I'm%20interested%20in%20Smith%20Instruments%20products"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => analytics.whatsAppClick('floating_button')}
-            className={`fixed bottom-6 right-6 z-50 items-center justify-center bg-[#25D366] text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-shadow ${hideOnMobile ? 'hidden md:flex' : 'flex'}`}
+            className={`fixed bottom-6 right-6 z-50 flex items-center justify-center bg-[#25D366] text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl transition-shadow`}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             whileHover={{ scale: 1.05 }}

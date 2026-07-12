@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 import { SOCIAL_LINKS } from '../constants';
 
 interface SEOProps {
@@ -11,6 +12,7 @@ interface SEOProps {
     type?: string;
     structuredData?: object | object[]; // JSON-LD schemas
     breadcrumbs?: { name: string; item: string }[];
+    noIndex?: boolean;
 }
 
 export const SEO: React.FC<SEOProps> = ({
@@ -21,8 +23,10 @@ export const SEO: React.FC<SEOProps> = ({
     url = '',
     type = 'website',
     structuredData,
-    breadcrumbs
+    breadcrumbs,
+    noIndex = false
 }) => {
+    const location = useLocation();
     const siteTitle = 'Smith Instruments';
     const fullTitle = `${title} | ${siteTitle}`;
 
@@ -44,8 +48,12 @@ export const SEO: React.FC<SEOProps> = ({
     };
 
     // Ensure absolute URL strictly using the primary domain
-    const cleanUrl = url.replace(/^https?:\/\/[^\/]+/, '');
+    const requestedUrl = url || location.pathname;
+    const cleanUrl = requestedUrl.replace(/^https?:\/\/[^\/]+/, '');
     const absoluteUrl = `https://smithinstruments.net${cleanUrl.startsWith('/') ? cleanUrl : `/${cleanUrl}`}`;
+    const absoluteImage = image.startsWith('http')
+        ? image
+        : `https://smithinstruments.net${image.startsWith('/') ? image : `/${image}`}`;
 
     // WebSite schema to enforce Site Name
     const websiteSchema = {
@@ -85,6 +93,7 @@ export const SEO: React.FC<SEOProps> = ({
             {/* Standard Meta Tags */}
             <title>{fullTitle}</title>
             <meta name="description" content={description} />
+            <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow'} />
             {keywords && <meta name="keywords" content={keywords} />}
 
             {/* Open Graph / Facebook */}
@@ -92,7 +101,8 @@ export const SEO: React.FC<SEOProps> = ({
             <meta property="og:url" content={absoluteUrl} />
             <meta property="og:title" content={fullTitle} />
             <meta property="og:description" content={description} />
-            <meta property="og:image" content={image} />
+            <meta property="og:image" content={absoluteImage} />
+            <meta property="og:image:alt" content={`${title} | ${siteTitle}`} />
             <meta property="og:site_name" content={siteTitle} />
 
             {/* Twitter */}
@@ -100,7 +110,7 @@ export const SEO: React.FC<SEOProps> = ({
             <meta property="twitter:url" content={absoluteUrl} />
             <meta property="twitter:title" content={fullTitle} />
             <meta property="twitter:description" content={description} />
-            <meta property="twitter:image" content={image} />
+            <meta property="twitter:image" content={absoluteImage} />
 
             {/* Canonical URL and hreflang */}
             <link rel="canonical" href={absoluteUrl} />

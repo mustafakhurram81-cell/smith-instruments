@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Lock, Mail, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '../../components/Shared';
+import { SEO } from '../../components/SEO';
 
 export const Login: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -31,6 +32,7 @@ export const Login: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
+            <SEO title="Admin Login" description="Smith Instruments administration login." noIndex />
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
                 <div className="bg-brand-charcoal p-8 text-center border-b border-brand-orange/20">
                     <h1 className="font-heading text-2xl text-white mb-2">Smith Instruments</h1>

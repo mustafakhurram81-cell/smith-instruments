@@ -2,12 +2,18 @@ import React from 'react';
 import { Section, Button, FadeIn } from '../components/Shared';
 import { Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { SEO } from '../components/SEO';
 
 export const Blog: React.FC = () => {
   const navigate = useNavigate();
 
-  return (
+    return (
     <div className="pt-20 min-h-screen bg-stone-50 flex flex-col">
+      <SEO
+        title="Blog Coming Soon"
+        description="Smith Instruments articles and surgical industry insights are coming soon."
+        noIndex
+      />
       <div className="flex-grow flex items-center justify-center">
         <Section className="text-center">
           <FadeIn>

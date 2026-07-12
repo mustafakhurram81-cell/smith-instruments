@@ -41,6 +41,16 @@ const TODAY = new Date().toISOString().split('T')[0];
 async function generateSitemap() {
     console.log('Generating sitemap...');
 
+    const publicDir = path.join(__dirname, '../public');
+    const sitemapPath = path.join(publicDir, 'sitemap.xml');
+
+    // A transient API/configuration failure must never replace a complete
+    // production sitemap with a static-only version.
+    if ((!SUPABASE_URL || !SUPABASE_KEY) && fs.existsSync(sitemapPath)) {
+        console.warn('Keeping the existing sitemap because Supabase credentials are unavailable.');
+        return;
+    }
+
     let categoryCount = 0;
     let subcategoryCount = 0;
     let productCount = 0;
@@ -52,8 +62,6 @@ async function generateSitemap() {
         { path: '/catalogues', priority: '0.8', changefreq: 'weekly' },
         { path: '/about', priority: '0.7', changefreq: 'monthly' },
         { path: '/contact', priority: '0.7', changefreq: 'monthly' },
-        { path: '/blog', priority: '0.6', changefreq: 'weekly' },
-        { path: '/quote-cart', priority: '0.5', changefreq: 'monthly' },
         { path: '/privacy-policy', priority: '0.3', changefreq: 'yearly' },
         { path: '/terms-of-service', priority: '0.3', changefreq: 'yearly' }
     ];
@@ -73,6 +81,8 @@ async function generateSitemap() {
 `;
     });
 
+    let fetchFailed = false;
+
     try {
         let allProducts = [];
         let hasMore = true;
@@ -87,6 +97,7 @@ async function generateSitemap() {
 
             if (error) {
                 console.error('Error fetching products:', error);
+                fetchFailed = true;
                 break;
             }
 
@@ -166,17 +177,22 @@ async function generateSitemap() {
 
     } catch (error) {
         console.error('Error fetching data:', error);
+        fetchFailed = true;
+    }
+
+    if (fetchFailed && fs.existsSync(sitemapPath)) {
+        console.warn('Keeping the existing sitemap because product data could not be fetched.');
+        return;
     }
 
     xml += '</urlset>';
 
     // Ensure public dir exists
-    const publicDir = path.join(__dirname, '../public');
     if (!fs.existsSync(publicDir)) {
         fs.mkdirSync(publicDir);
     }
 
-    fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), xml);
+    fs.writeFileSync(sitemapPath, xml);
 
     console.log(`Sitemap generated:`);
     console.log(`  - ${staticRoutes.length} static routes`);
@@ -187,4 +203,3 @@ async function generateSitemap() {
 }
 
 generateSitemap();
-

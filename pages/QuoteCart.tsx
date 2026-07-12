@@ -113,7 +113,7 @@ export const QuoteCart: React.FC = () => {
     if (items.length === 0 && !success) {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center pt-20 px-4">
-                <SEO title="Quote Cart" description="Review your selected surgical instruments." />
+                <SEO title="Quote Cart" description="Review your selected surgical instruments." noIndex />
                 <EmptyState
                     title="Your Quote Cart is Empty"
                     description="Browse our catalogue to add instruments to your quotation request."
@@ -129,7 +129,7 @@ export const QuoteCart: React.FC = () => {
     if (success) {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center pt-20 text-center px-4">
-                <SEO title="Quote Sent" description="Your quote request has been successfully sent." />
+                <SEO title="Quote Sent" description="Your quote request has been successfully sent." noIndex />
                 <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6">
                     <Send size={32} />
                 </div>
@@ -147,7 +147,7 @@ export const QuoteCart: React.FC = () => {
 
     return (
         <div className="pt-24 pb-20 bg-stone-50 min-h-screen">
-            <SEO title="Request a Quote" description="Submit your list of surgical instruments for a custom price quote." />
+            <SEO title="Request a Quote" description="Submit your list of surgical instruments for a custom price quote." noIndex />
             <div className="container mx-auto px-6">
                 <h1 className="text-3xl md:text-4xl font-heading text-brand-charcoal mb-2">Request a Quote</h1>
                 <Link to="/products" className="text-brand-orange hover:underline text-sm mb-8 inline-block flex items-center">

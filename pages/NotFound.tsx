@@ -10,6 +10,7 @@ export const NotFound: React.FC = () => {
             <SEO
                 title="Page Not Found"
                 description="The page you're looking for doesn't exist or has been moved."
+                noIndex
             />
 
             <div className="text-center max-w-md">
