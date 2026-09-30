@@ -23,13 +23,13 @@ const Distributor = lazy(() => import('./pages/Distributor').then(module => ({ d
 const Events = lazy(() => import('./pages/Events').then(module => ({ default: module.Events })));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(module => ({ default: module.PrivacyPolicy })));
 const TermsOfService = lazy(() => import('./pages/TermsOfService').then(module => ({ default: module.TermsOfService })));
-const ProductsIndex = lazy(() => import('./pages/products/ProductsIndex').then(module => ({ default: module.ProductsIndex })));
-const CategoryView = lazy(() => import('./pages/products/CategoryView').then(module => ({ default: module.CategoryView })));
-const SubcategoryView = lazy(() => import('./pages/products/SubcategoryView').then(module => ({ default: module.SubcategoryView })));
-const ProductDetail = lazy(() => import('./pages/products/ProductDetail').then(module => ({ default: module.ProductDetail })));
-const InstrumentTypeView = lazy(() => import('./pages/products/InstrumentTypeView').then(module => ({ default: module.InstrumentTypeView })));
-const InstrumentCategoryView = lazy(() => import('./pages/products/InstrumentCategoryView').then(module => ({ default: module.InstrumentCategoryView })));
-const SpecialtyCategoryView = lazy(() => import('./pages/products/SpecialtyCategoryView').then(module => ({ default: module.SpecialtyCategoryView })));
+const CatalogIndex = lazy(() => import('./pages/catalog/CatalogIndex').then(module => ({ default: module.CatalogIndex })));
+const TypePage = lazy(() => import('./pages/catalog/ListingPages').then(module => ({ default: module.TypePage })));
+const SubtypePage = lazy(() => import('./pages/catalog/ListingPages').then(module => ({ default: module.SubtypePage })));
+const SpecialtyPage = lazy(() => import('./pages/catalog/ListingPages').then(module => ({ default: module.SpecialtyPage })));
+const SpecialtyTypePage = lazy(() => import('./pages/catalog/ListingPages').then(module => ({ default: module.SpecialtyTypePage })));
+const ProductPage = lazy(() => import('./pages/catalog/ProductPage').then(module => ({ default: module.ProductPage })));
+const LegacyRedirect = lazy(() => import('./pages/catalog/LegacyRedirect').then(module => ({ default: module.LegacyRedirect })));
 const QuoteCart = lazy(() => import('./pages/QuoteCart').then(module => ({ default: module.QuoteCart })));
 const NotFound = lazy(() => import('./pages/NotFound').then(module => ({ default: module.NotFound })));
 
@@ -88,20 +88,19 @@ const AppContent: React.FC = () => {
                 <Route path="/whx-miami" element={<Navigate to="/contact" replace />} />
                 <Route path="/meet" element={<Navigate to="/contact" replace />} />
 
-                {/* Product Routes */}
-                <Route path="/products" element={<PageTransition><ProductsIndex /></PageTransition>} />
-                {/* Instrument Type Navigation */}
-                <Route path="/products/instruments/:categoryName" element={<PageTransition><InstrumentCategoryView /></PageTransition>} />
-                <Route path="/products/instruments/:categoryName/:subcategoryName" element={<PageTransition><InstrumentCategoryView /></PageTransition>} />
-                {/* Specialty Navigation */}
-                <Route path="/products/specialty/:categoryName" element={<PageTransition><SpecialtyCategoryView /></PageTransition>} />
-                <Route path="/products/specialty/:categoryName/:subcategoryName" element={<PageTransition><SpecialtyCategoryView /></PageTransition>} />
-                {/* Legacy routes for backwards compatibility */}
-                <Route path="/products/browse" element={<PageTransition><InstrumentTypeView /></PageTransition>} />
-                <Route path="/products/:categoryName" element={<PageTransition><CategoryView /></PageTransition>} />
-                <Route path="/products/:categoryName/:subcategoryName" element={<PageTransition><SubcategoryView /></PageTransition>} />
-                <Route path="/products/:categoryName/:subcategoryName/:productSKU" element={<PageTransition><ProductDetail /></PageTransition>} />
-                <Route path="/product/:productId" element={<PageTransition><ProductDetail /></PageTransition>} />
+                {/* Catalog: by instrument type and by specialty */}
+                <Route path="/products" element={<PageTransition><CatalogIndex /></PageTransition>} />
+                <Route path="/products/type/:type" element={<PageTransition><TypePage /></PageTransition>} />
+                <Route path="/products/type/:type/:subtype" element={<PageTransition><SubtypePage /></PageTransition>} />
+                <Route path="/products/specialty/:specialty" element={<PageTransition><SpecialtyPage /></PageTransition>} />
+                <Route path="/products/specialty/:specialty/:type" element={<PageTransition><SpecialtyTypePage /></PageTransition>} />
+                <Route path="/product/:sku" element={<PageTransition><ProductPage /></PageTransition>} />
+                {/* Old category URLs from the previous catalog, sent to the closest new page */}
+                <Route path="/products/instruments/*" element={<LegacyRedirect />} />
+                <Route path="/products/browse" element={<LegacyRedirect />} />
+                <Route path="/products/:categoryName" element={<LegacyRedirect />} />
+                <Route path="/products/:categoryName/:subcategoryName" element={<LegacyRedirect />} />
+                <Route path="/products/:categoryName/:subcategoryName/:productSKU" element={<LegacyRedirect />} />
 
                 {/* Admin Routes */}
                 <Route path="/admin/login" element={<PageTransition><Login /></PageTransition>} />

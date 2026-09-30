@@ -7,7 +7,7 @@ export async function getProductsByCategory(category: string, page: number = 1, 
     const to = from + limit - 1;
 
     const { data, error, count } = await supabase
-        .from('products')
+        .from('catalog_products')
         .select('*', { count: 'exact' })
         .eq('category', category)
         .order('sku', { ascending: true })
@@ -27,7 +27,7 @@ export async function getProductsBySubcategory(category: string, subcategory: st
     const to = from + limit - 1;
 
     let query = supabase
-        .from('products')
+        .from('catalog_products')
         .select('*', { count: 'exact' })
         .eq('category', category)
         .eq('subcategory', subcategory);
@@ -55,7 +55,7 @@ export async function getProductsBySpecialty(category: string, subcategory?: str
     const to = from + limit - 1;
 
     let query = supabase
-        .from('products')
+        .from('catalog_products')
         .select('*', { count: 'exact' })
         .eq('specialty_category', category);
 
@@ -81,7 +81,7 @@ export async function getProductsByInstrument(category: string, subcategory?: st
     const to = from + limit - 1;
 
     let query = supabase
-        .from('products')
+        .from('catalog_products')
         .select('*', { count: 'exact' })
         .eq('instrument_category', category);
 
@@ -104,7 +104,7 @@ export async function getProductsByInstrument(category: string, subcategory?: st
 // Get single product by SKU
 export async function getProductBySku(sku: string): Promise<Product | null> {
     const { data, error } = await supabase
-        .from('products')
+        .from('catalog_products')
         .select('*')
         .eq('sku', sku)
         .single();
@@ -129,7 +129,7 @@ export async function searchProducts(query: string): Promise<Product[]> {
     if (!sanitized) return [];
 
     const { data, error } = await supabase
-        .from('products')
+        .from('catalog_products')
         .select('*')
         .or(`name.ilike.%${sanitized}%,sku.ilike.%${sanitized}%,description.ilike.%${sanitized}%`)
         .limit(50);
@@ -153,7 +153,7 @@ export async function getProductVariants(sku: string): Promise<Product[]> {
     const prefix = skuParts.slice(0, -1).join('-');
 
     const { data, error } = await supabase
-        .from('products')
+        .from('catalog_products')
         .select('*')
         .ilike('sku', `${prefix}-%`)
         .order('sku', { ascending: true });
@@ -171,4 +171,20 @@ export async function getProductVariants(sku: string): Promise<Product[]> {
     });
 
     return variants;
+}
+
+// Fetch a hand-picked set of products by SKU, returned in the order requested.
+export async function getProductsBySkus(skus: string[]): Promise<Product[]> {
+    const { data, error } = await supabase
+        .from('catalog_products')
+        .select('*')
+        .in('sku', skus);
+
+    if (error) {
+        if (import.meta.env.DEV) console.error('Error fetching featured products:', error);
+        return [];
+    }
+
+    const bySku = new Map((data || []).map(p => [p.sku, p]));
+    return skus.map(sku => bySku.get(sku)).filter((p): p is Product => Boolean(p));
 }

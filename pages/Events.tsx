@@ -4,66 +4,38 @@ import { SEO } from '../components/SEO';
 import { Calendar, MapPin, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
-/**
- * PLACEHOLDER DATA — Replace with your real exhibition photos and event details.
- * Each event should have:
- *   - name: Event name
- *   - location: City, Country
- *   - year: Year of the event
- *   - description: Brief description
- *   - coverImage: URL to the main event photo
- *   - photos: Array of URLs for the photo gallery
- */
-const EVENTS = [
+// Real exhibitions only. Add new shows here once they are public.
+type ExhibitionEvent = {
+  id: number;
+  name: string;
+  location?: string;
+  year?: string;
+  description: string;
+  coverImage: string;
+  coverPosition?: string;
+  photos: string[];
+};
+
+const STAND_PHOTOS = ['DSC_0165', 'DSC_0226', 'DSC_0232', 'DSC_0161', 'DSC_0166', 'DSC_0234'].map(p => `/images/exhibition/${p}.JPG`);
+
+const EVENTS: ExhibitionEvent[] = [
   {
     id: 1,
-    name: 'Arab Health',
-    location: 'Dubai, UAE',
-    year: '2024',
-    description: 'One of the largest healthcare exhibitions in the Middle East. We showcased our complete range of surgical instruments and connected with distributors from across the GCC.',
-    coverImage: '/images/headers/events-header.webp', // PLACEHOLDER — Replace with real photo
-    photos: [
-      '/images/headers/events-header.webp', // PLACEHOLDER
-      '/images/headers/about-header.webp',  // PLACEHOLDER
-      '/images/headers/products-header.webp', // PLACEHOLDER
-    ]
+    name: 'WHX Miami 2026',
+    location: 'Miami Beach Convention Center, USA',
+    year: '2026',
+    description: 'World Health Expo Miami, 17–19 June 2026. We exhibited our instrument range at Booth P55.',
+    coverImage: '/images/exhibition/whx-miami-2026.jpg',
+    coverPosition: 'object-[center_28%]',
+    photos: ['/images/exhibition/whx-miami-2026.jpg'],
   },
   {
     id: 2,
-    name: 'Medica',
-    location: 'Düsseldorf, Germany',
-    year: '2023',
-    description: 'The world\'s largest medical trade fair. Smith Instruments presented our latest innovations in plastic surgery and cardiovascular instruments to a global audience.',
-    coverImage: '/images/headers/about-header.webp', // PLACEHOLDER
-    photos: [
-      '/images/headers/about-header.webp',  // PLACEHOLDER
-      '/images/headers/events-header.webp', // PLACEHOLDER
-    ]
+    name: 'At Our Exhibition Stand',
+    description: 'Our team and instrument displays at recent trade shows.',
+    coverImage: STAND_PHOTOS[0],
+    photos: STAND_PHOTOS,
   },
-  {
-    id: 3,
-    name: 'FIME',
-    location: 'Miami, USA',
-    year: '2024',
-    description: 'Florida International Medical Expo — the leading trade show for the Americas market. We strengthened our partnerships across Latin America.',
-    coverImage: '/images/headers/contact-header.webp', // PLACEHOLDER
-    photos: [
-      '/images/headers/contact-header.webp', // PLACEHOLDER
-      '/images/headers/products-header.webp', // PLACEHOLDER
-    ]
-  },
-  {
-    id: 4,
-    name: 'Surgical Instruments Expo',
-    location: 'Sialkot, Pakistan',
-    year: '2023',
-    description: 'Annual expo at the heart of surgical instrument manufacturing. We showcased our production capabilities and precision craftsmanship.',
-    coverImage: '/images/headers/catalogues-header.webp', // PLACEHOLDER
-    photos: [
-      '/images/headers/catalogues-header.webp', // PLACEHOLDER
-      '/images/headers/about-header.webp', // PLACEHOLDER
-    ]
-  }
 ];
 
 // Lightbox component for photo gallery
@@ -160,8 +132,8 @@ export const Events: React.FC = () => {
     <div className="overflow-x-hidden">
       <SEO
         title="Events & Exhibitions"
-        description="Explore Smith Instruments' presence at international medical trade shows and exhibitions. See our team, products, and booths at Arab Health, Medica, FIME, and more."
-        keywords="surgical instruments exhibitions, medical trade shows, Smith Instruments events, Arab Health, Medica, FIME, medical device expo"
+        description="Smith Instruments at international medical trade shows, including WHX Miami 2026 (Booth P55). Meet our team and see our surgical instruments in person."
+        keywords="surgical instruments exhibitions, medical trade shows, Smith Instruments events, WHX Miami, World Health Expo, medical device expo"
       />
 
       {/* HERO */}
@@ -196,21 +168,22 @@ export const Events: React.FC = () => {
                   >
                     <img
                       src={event.coverImage}
-                      alt={`${event.name} ${event.year}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      alt={event.name}
+                      className={`w-full h-full object-cover ${event.coverPosition ?? ""} group-hover:scale-105 transition-transform duration-500`}
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal/60 via-transparent to-transparent" />
 
                     {/* Photo count badge */}
                     <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm text-brand-charcoal text-xs font-medium px-3 py-1.5 rounded-full">
-                      {event.photos.length} Photos
+                      {event.photos.length} {event.photos.length === 1 ? 'Photo' : 'Photos'}
                     </div>
 
-                    {/* Year badge */}
-                    <div className="absolute top-4 left-4 bg-brand-orange text-white text-xs font-bold px-3 py-1.5 rounded-full">
-                      {event.year}
-                    </div>
+                    {event.year && (
+                      <div className="absolute top-4 left-4 bg-brand-orange text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                        {event.year}
+                      </div>
+                    )}
                   </div>
 
                   {/* Content */}
@@ -219,16 +192,22 @@ export const Events: React.FC = () => {
                       {event.name}
                     </h3>
 
-                    <div className="flex items-center gap-4 mb-4 text-sm text-stone-500">
-                      <span className="flex items-center gap-1.5">
-                        <MapPin size={14} className="text-brand-orange" />
-                        {event.location}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Calendar size={14} className="text-brand-orange" />
-                        {event.year}
-                      </span>
-                    </div>
+                    {(event.location || event.year) && (
+                      <div className="flex flex-wrap items-center gap-4 mb-4 text-sm text-stone-500">
+                        {event.location && (
+                          <span className="flex items-center gap-1.5">
+                            <MapPin size={14} className="text-brand-orange" />
+                            {event.location}
+                          </span>
+                        )}
+                        {event.year && (
+                          <span className="flex items-center gap-1.5">
+                            <Calendar size={14} className="text-brand-orange" />
+                            {event.year}
+                          </span>
+                        )}
+                      </div>
+                    )}
 
                     <p className="text-stone-500 text-sm leading-relaxed">{event.description}</p>
 

@@ -10,7 +10,8 @@
     "build:app": "vite build",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run build:app",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "catalog": "node scripts/build-catalog-index.mjs"
   },
   "dependencies": {
     "@calcom/embed-react": "^1.5.3",

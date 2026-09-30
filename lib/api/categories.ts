@@ -21,7 +21,7 @@ export async function getCategoryNames(): Promise<string[]> {
         }
 
         const { data, error } = await supabase
-            .from('products')
+            .from('catalog_products')
             .select('category')
             .not('category', 'is', null)
             .neq('category', '')

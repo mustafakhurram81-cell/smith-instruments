@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search as SearchIcon, Loader2, ArrowRight, X, TrendingUp, Scissors, Stethoscope } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchProducts } from '../lib/queries';
-import type { Product } from '../types';
-import { DEBOUNCE_MS, PAGE_SIZE } from '../constants';
+import { searchFamilies, useCatalog } from '../lib/catalog';
+import { DEBOUNCE_MS } from '../constants';
 
 interface SearchOverlayProps {
     isOpen: boolean;
@@ -34,11 +33,13 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
         return () => clearTimeout(timeout);
     }, [query]);
 
-    // React Query hook replaces old state
-    const { data: results = [], isLoading: loading } = useSearchProducts(debouncedQuery);
+    // One result per instrument (not per size), from the catalog index; loaded the first time search opens.
+    const { data: catalog, isLoading: catalogLoading } = useCatalog(isOpen);
+    const results = useMemo(() => (catalog ? searchFamilies(catalog, debouncedQuery, 30) : []), [catalog, debouncedQuery]);
+    const loading = catalogLoading && debouncedQuery.length > 1;
 
-    const handleSelect = (sku: string) => {
-        navigate(`/product/${encodeURIComponent(sku)}`);
+    const handleSelect = (code: string) => {
+        navigate(`/product/${encodeURIComponent(code)}`);
         onClose();
     };
 
@@ -86,20 +87,20 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose })
                                 <div className="grid gap-2">
                                     {results.map(prod => (
                                         <button
-                                            key={prod.id}
-                                            onClick={() => handleSelect(prod.sku)}
+                                            key={prod.code}
+                                            onClick={() => handleSelect(prod.code)}
                                             className="w-full text-left flex items-center gap-4 p-3 hover:bg-stone-50 border-b border-stone-50 last:border-0 cursor-pointer transition-colors group"
                                         >
-                                            <div className="w-12 h-12 bg-stone-200 rounded-md overflow-hidden flex-shrink-0 border border-stone-200">
-                                                {prod.image_url ? (
-                                                    <img src={prod.image_url} alt={prod.name} className="w-full h-full object-cover" />
+                                            <div className="w-12 h-12 bg-stone-50 rounded-md overflow-hidden flex-shrink-0 border border-stone-200">
+                                                {prod.image ? (
+                                                    <img src={prod.image} alt="" className="w-full h-full object-contain mix-blend-multiply" />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center text-stone-400 text-xs">IMG</div>
                                                 )}
                                             </div>
                                             <div>
                                                 <h4 className="font-medium text-brand-charcoal group-hover:text-brand-orange transition-colors">{prod.name}</h4>
-                                                <p className="text-xs text-stone-500 font-mono">{prod.sku}</p>
+                                                <p className="text-xs text-stone-500 font-mono">{prod.code}{catalog ? `, ${catalog.labels.types[prod.type]}` : ''}</p>
                                             </div>
                                             <ArrowRight className="ml-auto text-gray-300 group-hover:text-brand-orange opacity-0 group-hover:opacity-100 transition-all" size={16} />
                                         </button>

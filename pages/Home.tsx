@@ -1,24 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { Section, Button, FadeIn, AnimatedCounter, ExperienceGrid } from '../components/Shared';
 
 import { SEO } from '../components/SEO';
-import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Scissors, HeartPulse, Brain, Bone, Stethoscope, Microscope, Award, Globe, Users, Package, MessageCircle, Mail } from 'lucide-react';
+import { ArrowRight, ShieldCheck, PenTool, CreditCard, Truck, Star, Quote, Award, Globe, Users, Package, MessageCircle, Mail } from 'lucide-react';
 import { CONTACT_INFO } from '../constants';
 import { ProductCard } from '../components/ProductCard';
 import { useNavigate } from 'react-router-dom';
+import { useFeaturedProducts } from '../lib/queries';
 import heroMethods from '../assets/hero-premium.webp';
 import legacyImg from '../assets/factory/legacy.webp';
 import artisan1 from '../assets/factory/artisan-1.webp';
 import workshopExtra from '../assets/factory/workshop-extra.jpeg';
 
-const PRODUCTS = [
-  { id: 1, name: "Plastic Surgery", icon: Scissors, desc: "Precision instruments for reconstruction" },
-  { id: 2, name: "Cardiovascular", icon: HeartPulse, desc: "Advanced tools for cardiac procedures" },
-  { id: 3, name: "Neurology", icon: Brain, desc: "Microsurgical instruments for neurosurgery" },
-  { id: 4, name: "Orthopedics", icon: Bone, desc: "Heavy-duty solutions for bone surgery" },
-  { id: 5, name: "Diagnostics", icon: Stethoscope, desc: "Essential diagnostic equipment" },
-  { id: 6, name: "Laryngoscopes", icon: Microscope, desc: "High-visibility optical instruments" },
-];
+// Hand-picked instruments for the homepage, one per major instrument type.
+const FEATURED_SKUS = ['11-444-20', '04-670-22', '02-134-20', '15-571-05', '13-320-30', '06-310-05', '14-212-10', '03-196-20'];
 
 const TESTIMONIALS = [
   { id: 1, text: "The precision of Smith Instruments matches the highest standards we require in reconstructive surgery.", author: "Dr. Almeida", location: "São Paulo, Brazil", role: "Chief Surgeon" },
@@ -29,48 +24,7 @@ const TESTIMONIALS = [
 export const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  // Professional Infinite Carousel Logic
-  const [isPaused, setIsPaused] = useState(false);
-  const [activeSlide, setActiveSlide] = useState(0);
-  const animationStartTime = useRef(Date.now());
-  const pausedTime = useRef(0);
-
-  // Duplicate products for seamless loop (we need 2 copies for the infinite effect)
-  const duplicatedProducts = [...PRODUCTS, ...PRODUCTS];
-
-  // Animation duration: 30s total, divided by number of products = time per slide
-  const ANIMATION_DURATION = 30000; // 30 seconds
-  const TIME_PER_SLIDE = ANIMATION_DURATION / PRODUCTS.length;
-
-  // Lightweight time-based slide tracking (optimized for Chrome)
-  useEffect(() => {
-    const updateActiveSlide = () => {
-      if (!isPaused) {
-        const elapsed = Date.now() - animationStartTime.current - pausedTime.current;
-        const currentSlide = Math.floor((elapsed % ANIMATION_DURATION) / TIME_PER_SLIDE) % PRODUCTS.length;
-        setActiveSlide(currentSlide);
-      }
-    };
-
-    // Update every 500ms instead of every frame for better performance
-    const intervalId = setInterval(updateActiveSlide, 500);
-    return () => clearInterval(intervalId);
-  }, [isPaused]);
-
-  // Track paused duration for accurate slide position
-  const pauseStartTime = useRef(0);
-
-  const handleMouseEnter = () => {
-    setIsPaused(true);
-    pauseStartTime.current = Date.now();
-  };
-
-  const handleMouseLeave = () => {
-    if (pauseStartTime.current > 0) {
-      pausedTime.current += Date.now() - pauseStartTime.current;
-    }
-    setIsPaused(false);
-  };
+  const { data: featured = [], isLoading: featuredLoading } = useFeaturedProducts(FEATURED_SKUS);
 
   return (
     <div className="overflow-x-hidden">
@@ -226,85 +180,30 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* PRODUCTS CAROUSEL - Professional Infinite Loop */}
-      <section className="bg-white py-16 md:py-24 overflow-hidden relative border-y border-stone-200/50">
-        <div className="container mx-auto px-6 mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
-          <div className="max-w-2xl">
-            <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Our Specialties</span>
-            <h2 className="font-heading text-4xl text-brand-charcoal mb-4">Explore Our Products</h2>
-            <p className="text-stone-500 font-light text-lg">A comprehensive range of instruments for every surgical specialty.</p>
+      {/* FEATURED PRODUCTS */}
+      <section className="bg-white py-16 md:py-24 relative border-y border-stone-200/50">
+        <div className="container mx-auto px-6">
+          <div className="mb-10 md:mb-12 flex flex-col md:flex-row justify-between md:items-end gap-6">
+            <div className="max-w-2xl">
+              <span className="text-brand-orange font-bold text-xs tracking-widest uppercase mb-3 block">Featured Products</span>
+              <h2 className="font-heading text-4xl text-brand-charcoal mb-4">Most Requested Instruments</h2>
+              <p className="text-stone-500 font-light text-lg">Instruments surgeons and distributors order from us most, each available in multiple sizes.</p>
+            </div>
+            <Button variant="outline" onClick={() => navigate('/products')}>
+              View All Products <ArrowRight size={16} className="ml-2" />
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+            {featuredLoading
+              ? FEATURED_SKUS.map(sku => (
+                  <div key={sku} className="aspect-[3/4] rounded-lg bg-stone-100 animate-pulse" />
+                ))
+              : featured.map((product, idx) => (
+                  <ProductCard key={product.sku} product={product} index={idx} />
+                ))}
           </div>
         </div>
-
-        {/* Infinite Carousel Container */}
-        <div
-          className="relative w-full overflow-hidden"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          {/* Gradient fade masks for professional look */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
-
-          {/* Scrolling track */}
-          <div
-            className="flex gap-6 py-4"
-            style={{
-              animation: `scroll 30s linear infinite`,
-              animationPlayState: isPaused ? 'paused' : 'running',
-              width: 'max-content'
-            }}
-          >
-            {duplicatedProducts.map((product, idx) => (
-              <div
-                key={`${product.id}-${idx}`}
-                className="w-[280px] md:w-[350px] shrink-0 group cursor-pointer"
-                onClick={() => navigate('/products')}
-              >
-                <div className="bg-white rounded-2xl border border-stone-200/60 shadow-[0_4px_20px_rgb(0,0,0,0.03)] p-8 h-[320px] flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-brand-orange/30">
-                  <div>
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-brand-orange/10 to-brand-orange/5 flex items-center justify-center mb-6 group-hover:from-brand-orange/20 group-hover:to-brand-orange/10 transition-all duration-300">
-                      <product.icon size={28} className="text-brand-orange" strokeWidth={1.5} />
-                    </div>
-                    <h3 className="font-heading text-2xl text-brand-charcoal mb-2 group-hover:text-brand-orange transition-colors duration-300">{product.name}</h3>
-                    <p className="text-stone-500 text-sm leading-relaxed">{product.desc}</p>
-                  </div>
-
-                  <div className="flex items-center text-sm font-medium text-stone-500 mt-6 group-hover:text-brand-orange transition-colors">
-                    <span className="mr-2">Explore</span>
-                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Dot Indicators */}
-        <div className="flex justify-center items-center gap-2 mt-8">
-          {PRODUCTS.map((_, idx) => (
-            <button
-              key={idx}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${activeSlide === idx
-                ? 'bg-brand-orange w-6'
-                : 'bg-stone-300 hover:bg-stone-400'
-                }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* CSS Keyframes for infinite scroll animation */}
-        <style>{`
-          @keyframes scroll {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-        `}</style>
       </section>
 
       {/* ABOUT SECTION */}

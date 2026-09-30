@@ -4,7 +4,7 @@ import { NavLink, NavLinkProps } from 'react-router-dom';
 // Map of routes to their lazy import functions
 const prefetchMap: Record<string, () => Promise<unknown>> = {
     '/': () => import('../pages/Home'),
-    '/products': () => import('../pages/products/ProductsIndex'),
+    '/products': () => import('../pages/catalog/CatalogIndex'),
     '/catalogues': () => import('../pages/Catalogues'),
     '/about': () => import('../pages/About'),
     '/blog': () => import('../pages/Blog'),

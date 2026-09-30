@@ -87,13 +87,13 @@ export const Catalogues: React.FC = () => {
               <Loader2 className="w-10 h-10 text-brand-orange animate-spin" />
             </div>
           ) : filteredCatalogues.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 sm:gap-x-8 gap-y-12 sm:gap-y-14">
               {filteredCatalogues.map((cat, idx) => (
                 // Cap the animation delay to prevent long waits
                 <FadeIn key={cat.id || cat.title} delay={Math.min(idx * 0.05, 0.5)}>
-                  <div className="group cursor-pointer" onClick={() => openCatalogue(cat)}>
+                  <div className="group cursor-pointer pl-3 pr-1" onClick={() => openCatalogue(cat)}>
                     {/* Book Container */}
-                    <div className="relative w-[240px] h-[340px] mx-auto transition-transform duration-300 group-hover:-translate-y-2">
+                    <div className="relative w-full max-w-[180px] aspect-[240/340] mx-auto transition-transform duration-300 group-hover:-translate-y-2">
 
                       {/* Front Cover */}
                       <div className="absolute inset-0 bg-white rounded-r-md shadow-xl overflow-hidden border-l-[6px] border-stone-800">
@@ -107,7 +107,7 @@ export const Catalogues: React.FC = () => {
                         <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-black/20 to-transparent"></div>
 
                         {/* Hover Overlay */}
-                        <div className="absolute inset-0 bg-brand-charcoal/80 flex items-center justify-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 backdrop-blur-[1px]">
+                        <div className="absolute inset-0 bg-brand-charcoal/80 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 backdrop-blur-[1px]">
 
                           {/* View Button */}
                           <button
@@ -115,10 +115,10 @@ export const Catalogues: React.FC = () => {
                               e.stopPropagation();
                               openCatalogue(cat);
                             }}
-                            className="w-12 h-12 bg-brand-orange text-brand-charcoal rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+                            className="w-10 h-10 bg-brand-orange text-brand-charcoal rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
                             title="View Catalogue"
                           >
-                            <Eye size={20} />
+                            <Eye size={18} />
                           </button>
 
                           {/* Download Button */}
@@ -128,29 +128,29 @@ export const Catalogues: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="w-12 h-12 bg-white text-brand-charcoal rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
+                            className="w-10 h-10 bg-white text-brand-charcoal rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg"
                             title="Download PDF"
                           >
-                            <Download size={20} />
+                            <Download size={18} />
                           </a>
 
                         </div>
                       </div>
 
                       {/* Book Spine */}
-                      <div className="absolute left-[-10px] top-1 bottom-1 w-[10px] bg-gradient-to-r from-stone-900 to-stone-700 rounded-l-sm shadow-lg"></div>
+                      <div className="absolute left-[-8px] top-1 bottom-1 w-[8px] bg-gradient-to-r from-stone-900 to-stone-700 rounded-l-sm shadow-lg"></div>
 
                       {/* Pages Effect */}
                       <div className="absolute right-0 top-2 bottom-2 w-3 bg-white border-r border-stone-200 translate-x-[2px] z-[-1]"></div>
                       <div className="absolute right-0 top-2 bottom-2 w-3 bg-stone-100 translate-x-[4px] z-[-2]"></div>
 
                       {/* Shadow */}
-                      <div className="absolute -bottom-5 left-4 right-4 h-4 bg-black/20 blur-lg rounded-[100%] transition-all group-hover:bg-black/30"></div>
+                      <div className="absolute -bottom-4 left-3 right-3 h-3 bg-black/20 blur-lg rounded-[100%] transition-all group-hover:bg-black/30"></div>
                     </div>
 
                     {/* Title Below */}
-                    <div className="text-center mt-6">
-                      <h3 className="font-heading text-lg text-brand-charcoal group-hover:text-brand-orange transition-colors">
+                    <div className="text-center mt-5">
+                      <h3 className="font-heading text-sm sm:text-base leading-snug text-brand-charcoal group-hover:text-brand-orange transition-colors line-clamp-2">
                         {cat.title}
                       </h3>
                       <p className="text-xs text-stone-400 mt-1">{cat.size}</p>

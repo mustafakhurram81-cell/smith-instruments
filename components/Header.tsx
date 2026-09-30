@@ -5,7 +5,6 @@ import { Menu, X, ShoppingCart, Search as SearchIcon, ChevronDown, ChevronRight,
 import { motion, AnimatePresence } from 'framer-motion';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useCart } from './CartProvider';
-import { useCategoryNames } from '../lib/queries';
 import { SearchOverlay } from './SearchOverlay';
 import logoTransparent from '../assets/smith-logo-transparent.png';
 
@@ -24,8 +23,18 @@ export const Header: React.FC = () => {
     const [isCompanyOpen, setIsCompanyOpen] = useState(false);
     const location = useLocation();
     const { cartCount } = useCart();
-    const { data: categoryNames = [] } = useCategoryNames();
-    const categories = categoryNames.slice(0, 8).map(name => ({ name }));
+    // The largest instrument types in the catalog; a fixed list so the menu needs no data request.
+    const categories = [
+        { name: 'Retractors & Hooks', to: '/products/type/retractors' },
+        { name: 'Haemostatic Forceps & Clamps', to: '/products/type/haemostats-clamps' },
+        { name: 'Grasping & Biopsy Forceps', to: '/products/type/specialty-forceps' },
+        { name: 'Scissors', to: '/products/type/scissors' },
+        { name: 'Rongeurs & Bone Cutters', to: '/products/type/rongeurs-bone-cutters' },
+        { name: 'Elevators & Dissectors', to: '/products/type/elevators-dissectors' },
+        { name: 'Tissue & Dressing Forceps', to: '/products/type/tissue-forceps' },
+        { name: 'Needle Holders', to: '/products/type/needle-holders' },
+        { name: 'Browse by Specialty', to: '/products?by=specialty' },
+    ];
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -107,11 +116,11 @@ export const Header: React.FC = () => {
                                     : 'opacity-0 -translate-y-2 pointer-events-none'
                                     }`}
                             >
-                                <div className="w-56 bg-white/95 backdrop-blur-xl border border-stone-200/60 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] py-2 text-brand-charcoal">
+                                <div className="w-64 bg-white/95 backdrop-blur-xl border border-stone-200/60 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] py-2 text-brand-charcoal">
                                     {categories.map((cat, idx) => (
                                         <NavLink
                                             key={cat.name}
-                                            to={`/products/${encodeURIComponent(cat.name)}`}
+                                            to={cat.to}
                                             className="block px-4 py-2.5 hover:bg-stone-50 text-sm hover:text-brand-orange transition-colors"
                                             style={{
                                                 transitionDelay: isProductsOpen ? `${idx * 30}ms` : '0ms',
@@ -157,7 +166,7 @@ export const Header: React.FC = () => {
                                     : 'opacity-0 -translate-y-2 pointer-events-none'
                                     }`}
                             >
-                                <div className="w-56 bg-white/95 backdrop-blur-xl border border-stone-200/60 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] py-2 text-brand-charcoal">
+                                <div className="w-64 bg-white/95 backdrop-blur-xl border border-stone-200/60 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] py-2 text-brand-charcoal">
                                     {COMPANY_LINKS.map((link, idx) => (
                                         <NavLink
                                             key={link.to}
@@ -266,8 +275,8 @@ export const Header: React.FC = () => {
                                                     <NavLink to="/products" onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400 hover:text-brand-orange transition-colors">
                                                         All Products
                                                     </NavLink>
-                                                    {categories.slice(0, 6).map(cat => (
-                                                        <NavLink key={cat.name} to={`/products/${encodeURIComponent(cat.name)}`} onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400 hover:text-brand-orange transition-colors">
+                                                    {categories.map(cat => (
+                                                        <NavLink key={cat.name} to={cat.to} onClick={() => setIsMobileOpen(false)} className="text-sm text-stone-400 hover:text-brand-orange transition-colors">
                                                             {cat.name}
                                                         </NavLink>
                                                     ))}

@@ -20,6 +20,7 @@ import {
     getInstrumentCategoriesNew,
     getInstrumentSubcategoriesNew,
     getProductsByInstrument,
+    getProductsBySkus,
     Product
 } from './database';
 
@@ -221,5 +222,14 @@ export function useCatalogueForProduct(product: Product | null) {
         queryFn: () => product ? getCatalogueForProduct(product) : null as any,
         enabled: !!product,
         staleTime: 1000 * 60 * 60
+    });
+}
+
+// Hand-picked products for the homepage "Featured products" grid
+export function useFeaturedProducts(skus: string[]) {
+    return useQuery({
+        queryKey: ['featuredProducts', ...skus],
+        queryFn: () => getProductsBySkus(skus),
+        staleTime: 1000 * 60 * 30,
     });
 }

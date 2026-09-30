@@ -1,0 +1,24 @@
+# Deploys from this machine should upload exactly what a git push would.
+node_modules
+dist
+.env
+.env.*
+.vercel
+.DS_Store
+*.csv
+*.xlsx
+*.pdf
+*.mp4
+# Work in progress and local assets that are not part of the live site
+web
+design
+.venv-rembg
+.agents
+.agent
+.thumbnail-tmp
+Exhibition Pictures
+letterhead
+social-stand
+supabase/.temp
+generate_invoice.py
+brand-identity.html

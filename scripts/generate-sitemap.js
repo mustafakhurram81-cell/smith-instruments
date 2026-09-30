@@ -94,8 +94,10 @@ async function generateSitemap() {
 
         while (hasMore) {
             const { data, error } = await supabase
-                .from('products')
+                .from('catalog_products')
                 .select('sku, category, subcategory, instrument_category, instrument_subcategory, specialty_category, specialty_subcategory, updated_at')
+                .eq('is_native_catalogue', true)
+                .order('sku')
                 .range(page * limit, (page + 1) * limit - 1);
 
             if (error) {
@@ -141,17 +143,32 @@ async function generateSitemap() {
                 }
             };
 
-            // Keep legacy routes indexed while adding the current dual-navigation URLs.
-            addNavigationRoutes('/products', 'category', 'subcategory');
-            addNavigationRoutes('/products/instruments', 'instrument_category', 'instrument_subcategory');
-            addNavigationRoutes('/products/specialty', 'specialty_category', 'specialty_subcategory');
-
-            // Add product routes
+            // Catalog pages from public/catalog/index.json (built by `npm run catalog`): one URL per
+            // instrument type, subtype and specialty, and one per instrument (its sizes live on that page).
+            const index = JSON.parse(fs.readFileSync(path.join(publicDir, 'catalog', 'index.json'), 'utf8'));
+            const lastModByCode = new Map();
             products.forEach(product => {
-                const lastMod = product.updated_at
-                    ? product.updated_at.split('T')[0]
-                    : TODAY;
-                addUrl(`/product/${encodeURIComponent(product.sku)}`, lastMod, 'monthly', '0.6');
+                const code = product.sku.match(/^\d+-\d+/)?.[0];
+                const day = product.updated_at ? product.updated_at.split('T')[0] : TODAY;
+                if (code && (!lastModByCode.has(code) || lastModByCode.get(code) < day)) lastModByCode.set(code, day);
+            });
+
+            const types = [...new Set(index.families.map(f => f.t))];
+            types.forEach(type => {
+                addUrl(`/products/type/${type}`, TODAY, 'weekly', '0.8');
+                categoryCount++;
+                const subtypes = new Set(index.families.filter(f => f.t === type && f.st).map(f => f.st));
+                if (subtypes.size > 1) subtypes.forEach(st => { addUrl(`/products/type/${type}/${st}`, TODAY, 'weekly', '0.7'); subcategoryCount++; });
+            });
+            [...new Set(index.families.flatMap(f => f.sp))].forEach(sp => {
+                addUrl(`/products/specialty/${sp}`, TODAY, 'weekly', '0.7');
+                categoryCount++;
+            });
+
+            index.families.forEach(f => {
+                const codes = f.cs ?? [f.c];
+                const lastMod = codes.map(c => lastModByCode.get(c) ?? TODAY).sort().pop();
+                addUrl(`/product/${f.c}`, lastMod, 'monthly', '0.6');
                 productCount++;
             });
         }
