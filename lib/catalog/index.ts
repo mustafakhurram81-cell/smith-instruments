@@ -136,6 +136,8 @@ async function loadVariants(family: Family): Promise<Variant[]> {
   const { data, error } = await supabase
     .from('catalog_products')
     .select('sku, name, image_url, specifications')
+    // Only our own catalogue: old ERP items can share a SKU prefix with a catalogue family.
+    .eq('is_native_catalogue', true)
     .or(family.codes.map(c => `sku.like.${c}-*`).join(','))
     .order('sku');
   if (error) throw error;
