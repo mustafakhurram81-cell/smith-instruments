@@ -1,5 +1,7 @@
 // Builds public/catalog/index.json: every instrument family on the website with its category,
-// subtype, specialties, features and size range, plus the category labels.
+// subtype, specialties, features and size range, plus the category labels; and
+// public/catalog/variants/NN.json: every SKU (name, picture, size) by its two-digit prefix,
+// which the product pages read for their size tables.
 //
 // Source data: web/data/catalog-snapshot.json (refresh with `npm --prefix web run snapshot`) and the
 // taxonomy in web/data/taxonomy.json + web/scripts. Run locally with `npm run catalog`; the output
@@ -28,6 +30,12 @@ const FEATURES = [
 // Most images share one CDN folder; storing only the file name keeps the index small.
 const IMG_PREFIX = 'https://assets.smithinstruments.net/legacy-products/';
 const shortImg = url => (url?.startsWith(IMG_PREFIX) ? url.slice(IMG_PREFIX.length) : url);
+// Pictures that were in the old Supabase storage bucket now live on the CDN under the same names.
+const OLD_STORAGE = 'https://jnvdysssdnttlybycefh.supabase.co/storage/v1/object/public/product-images/';
+const NEW_STORAGE = 'https://assets.smithinstruments.net/product-images/';
+for (const p of snapshot.products) {
+  if (p.image_url?.startsWith(OLD_STORAGE)) p.image_url = NEW_STORAGE + p.image_url.slice(OLD_STORAGE.length);
+}
 
 
 // SKU families (NN-NNN) with the same name and type are merged into one product.
@@ -77,4 +85,16 @@ const labels = {
 const out = path.join(root, 'public', 'catalog', 'index.json');
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, JSON.stringify({ generatedAt: snapshot.generatedAt, imgPrefix: IMG_PREFIX, labels, families }));
+// Variants as [sku, name, image (short when on the CDN folder), size_cm], in the snapshot's SKU order.
+const variantsDir = path.join(root, 'public', 'catalog', 'variants');
+fs.rmSync(variantsDir, { recursive: true, force: true });
+fs.mkdirSync(variantsDir, { recursive: true });
+const byPrefix = new Map();
+for (const p of snapshot.products) {
+  const prefix = p.sku.slice(0, 2);
+  if (!byPrefix.has(prefix)) byPrefix.set(prefix, []);
+  byPrefix.get(prefix).push([p.sku, p.name, shortImg(p.image_url) ?? null, p.size_cm > 0 ? p.size_cm : null]);
+}
+for (const [prefix, rows] of byPrefix) fs.writeFileSync(path.join(variantsDir, `${prefix}.json`), JSON.stringify(rows));
+
 console.log(`catalog index: ${families.length} products from ${snapshot.products.length} SKUs -> public/catalog/index.json (${Math.round(fs.statSync(out).size / 1024)} KB)`);

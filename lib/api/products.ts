@@ -1,5 +1,6 @@
 import { supabase } from '../supabase';
 import type { Product } from '../types';
+import { loadCatalogRows } from '../catalog';
 
 // Get products by category - with pagination to get ALL
 export async function getProductsByCategory(category: string, page: number = 1, limit: number = 24): Promise<{ data: Product[]; count: number }> {
@@ -175,16 +176,8 @@ export async function getProductVariants(sku: string): Promise<Product[]> {
 
 // Fetch a hand-picked set of products by SKU, returned in the order requested.
 export async function getProductsBySkus(skus: string[]): Promise<Product[]> {
-    const { data, error } = await supabase
-        .from('catalog_products')
-        .select('*')
-        .in('sku', skus);
-
-    if (error) {
-        if (import.meta.env.DEV) console.error('Error fetching featured products:', error);
-        return [];
-    }
-
-    const bySku = new Map((data || []).map(p => [p.sku, p]));
+    // Read from the static catalogue files (public/catalog/variants), not the database.
+    const rows = await loadCatalogRows(skus);
+    const bySku = new Map(rows.map(r => [r.sku, { id: r.sku, sku: r.sku, name: r.name, image_url: r.image ?? undefined } as Product]));
     return skus.map(sku => bySku.get(sku)).filter((p): p is Product => Boolean(p));
 }

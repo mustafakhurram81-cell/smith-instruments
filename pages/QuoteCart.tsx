@@ -8,7 +8,6 @@ import { Trash2, Plus, Minus, Send, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import { SEO } from '../components/SEO';
-import { supabase } from '../lib/supabase';
 import { EmptyState } from '../components/ui/EmptyState';
 import { analytics } from '../lib/analytics';
 import { formatAttribution } from '../hooks';
@@ -42,14 +41,6 @@ export const QuoteCart: React.FC = () => {
         // Prepare the product list string for email
         const productList = items.map(i => `• ${i.sku} - ${i.name} (Qty: ${i.quantity})`).join('\n');
 
-        // Prepare products array for database
-        const productsData = items.map(item => ({
-            sku: item.sku,
-            name: item.name,
-            quantity: item.quantity,
-            image_url: item.image_url || null
-        }));
-
         // Append campaign attribution if the visitor arrived via an ad
         const attribution = formatAttribution();
         const messageWithAttribution = data.message
@@ -57,25 +48,7 @@ export const QuoteCart: React.FC = () => {
             : attribution || '';
 
         try {
-            // 1. Save to Supabase database (with attribution metadata)
-            const { error: dbError } = await supabase
-                .from('quote_requests')
-                .insert({
-                    customer_name: data.name,
-                    customer_email: data.email,
-                    customer_phone: data.phone || null,
-                    customer_country: data.country || null,
-                    products: productsData,
-                    message: messageWithAttribution || null,
-                    status: 'new'
-                });
-
-            if (dbError) {
-                console.warn('Failed to save to database:', dbError);
-                // Continue anyway - email is more important
-            }
-
-            // 2. Send email notification (with attribution metadata)
+            // 1. Send email notification (with attribution metadata)
             const fullMessage = `${data.message || ''}\n\n--- Requested Items ---\n${productList}${attribution || ''}`;
 
             const templateParams = {
@@ -97,7 +70,7 @@ export const QuoteCart: React.FC = () => {
                 PUBLIC_KEY
             );
 
-            // 3. Fire unified conversion event across all ad platforms
+            // 2. Fire unified conversion event across all ad platforms
             analytics.quoteRequest(items.length);
 
             setSuccess(true);

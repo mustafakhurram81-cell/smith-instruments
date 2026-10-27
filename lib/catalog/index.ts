@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../supabase';
 
 // ── Catalog index (public/catalog/index.json, built by `npm run catalog`) ──
 
@@ -124,27 +123,43 @@ export function searchFamilies(catalog: Catalog, query: string, limit = 20) {
   return scored.sort((a, b) => b.score - a.score || a.f.name.length - b.f.name.length).slice(0, limit).map(s => s.f);
 }
 
-// ── Variants for one product, live from Supabase ──
+// ── Variants for one product (public/catalog/variants/NN.json, built by `npm run catalog`) ──
 
 export type Variant = { sku: string; label: string; sizeCm: number | null; image: string | null };
+
+type RawVariant = [sku: string, name: string, image: string | null, sizeCm: number | null];
+
+const IMG_PREFIX = 'https://assets.smithinstruments.net/legacy-products/';
+
+// One file per two-digit SKU prefix, cached for the session.
+const variantFiles = new Map<string, Promise<RawVariant[]>>();
+function loadVariantFile(prefix: string) {
+  if (!variantFiles.has(prefix)) {
+    variantFiles.set(prefix, fetch(`/catalog/variants/${prefix}.json`).then(res => {
+      if (!res.ok) { variantFiles.delete(prefix); throw new Error(`Variants failed to load (${res.status})`); }
+      return res.json();
+    }));
+  }
+  return variantFiles.get(prefix)!;
+}
+
+// Every catalogue SKU that shares a two-digit prefix with one of these codes, in SKU order.
+export async function loadCatalogRows(codes: string[]) {
+  const files = await Promise.all([...new Set(codes.map(c => c.slice(0, 2)))].sort().map(loadVariantFile));
+  return files.flat().map(([sku, name, image, sizeCm]) => ({
+    sku, name, sizeCm, image: image ? (image.startsWith('http') ? image : IMG_PREFIX + image) : null,
+  }));
+}
 
 // The part of a SKU's name that differs from the product name, e.g. "Jaw: 3 x 8 mm".
 const variantLabel = (name: string, familyName: string) =>
   (name.startsWith(familyName) ? name.slice(familyName.length) : name).replace(/^[\s,.]+/, '').trim();
 
 async function loadVariants(family: Family): Promise<Variant[]> {
-  const { data, error } = await supabase
-    .from('catalog_products')
-    .select('sku, name, image_url, specifications')
-    // Only our own catalogue: old ERP items can share a SKU prefix with a catalogue family.
-    .eq('is_native_catalogue', true)
-    .or(family.codes.map(c => `sku.like.${c}-*`).join(','))
-    .order('sku');
-  if (error) throw error;
-  return (data ?? []).map(r => {
-    const size = Number((r.specifications as { size_cm?: number } | null)?.size_cm ?? 0);
-    return { sku: r.sku, label: variantLabel(r.name, family.name), sizeCm: size > 0 ? size : null, image: r.image_url || null };
-  });
+  const rows = await loadCatalogRows(family.codes);
+  return rows
+    .filter(r => family.codes.some(c => r.sku.startsWith(`${c}-`)))
+    .map(r => ({ sku: r.sku, label: variantLabel(r.name, family.name), sizeCm: r.sizeCm, image: r.image }));
 }
 
 export function useVariants(family: Family | undefined) {

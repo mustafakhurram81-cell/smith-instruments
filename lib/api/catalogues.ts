@@ -1,27 +1,21 @@
 import { supabase } from '../supabase';
 import type { Catalogue, CatalogueRef, Product } from '../types';
+import catalogueData from '../catalog/catalogues.json';
+
+// The public site reads the catalogues from this file (the website no longer uses a database);
+// the admin functions further down still write to the old Supabase table.
+const CATALOGUES = catalogueData as Omit<Catalogue, 'category' | 'color'>[] as Catalogue[];
+const activeCatalogues = () => CATALOGUES.filter(c => c.is_active).sort((a, b) => a.display_order - b.display_order);
+const toRef = ({ id, title, pdf_url }: Catalogue): CatalogueRef => ({ id, title, pdf_url });
 
 export async function getCatalogueById(id: string): Promise<CatalogueRef | null> {
-    const { data, error } = await supabase
-        .from('catalogues')
-        .select('id, title, pdf_url')
-        .eq('id', id)
-        .single();
-
-    if (error) return null;
-    return data;
+    const catalogue = CATALOGUES.find(c => c.id === id);
+    return catalogue ? toRef(catalogue) : null;
 }
 
 export async function getCatalogueByTitle(title: string): Promise<CatalogueRef | null> {
-    const { data, error } = await supabase
-        .from('catalogues')
-        .select('id, title, pdf_url')
-        .ilike('title', title)
-        .eq('is_active', true)
-        .single();
-
-    if (error) return null;
-    return data;
+    const matches = activeCatalogues().filter(c => c.title.toLowerCase() === title.toLowerCase());
+    return matches.length === 1 ? toRef(matches[0]) : null;
 }
 
 const SKU_PREFIX_TO_CATALOGUE: Record<string, string> = {
@@ -67,18 +61,7 @@ export async function getCatalogueForProduct(product: Product): Promise<Catalogu
 }
 
 export async function getCatalogues(): Promise<Catalogue[]> {
-    const { data, error } = await supabase
-        .from('catalogues')
-        .select('*')
-        .eq('is_active', true)
-        .order('display_order', { ascending: true });
-
-    if (error) {
-        if (import.meta.env.DEV) console.error('Error fetching catalogues:', error);
-        return [];
-    }
-
-    return data || [];
+    return activeCatalogues();
 }
 
 export async function getAllCatalogues(): Promise<Catalogue[]> {
@@ -96,18 +79,8 @@ export async function getAllCatalogues(): Promise<Catalogue[]> {
 }
 
 export async function getCatalogueCategories(): Promise<string[]> {
-    const { data, error } = await supabase
-        .from('catalogues')
-        .select('category')
-        .eq('is_active', true);
-
-    if (error) {
-        if (import.meta.env.DEV) console.error('Error fetching catalogue categories:', error);
-        return [];
-    }
-
     const uniqueCategories = new Set<string>();
-    data?.forEach(c => {
+    activeCatalogues().forEach(c => {
         if (c.category) uniqueCategories.add(c.category);
     });
 
