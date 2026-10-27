@@ -6,16 +6,15 @@
 
 Premium surgical instruments manufacturer website — [smithinstruments.net](https://smithinstruments.net)
 
-Built with **React 18**, **TypeScript**, **Vite**, **Tailwind CSS**, **Supabase**, and **Framer Motion**.
+Built with **React 18**, **TypeScript**, **Vite**, **Tailwind CSS**, and **Framer Motion**.
 
 ## Features
 
-- 📦 Product catalog with 1000+ surgical instruments
-- 🔍 Search with real-time Supabase queries
+- 📦 Product catalog with 3,000+ surgical instruments, served as static data (`npm run catalog`)
+- 🔍 Instant catalogue search
 - 📄 Interactive PDF catalogue viewer (FlipBook)
 - 🛒 Quote request cart system
 - 🌐 Multi-language support (Google Translate)
-- 🔐 Admin dashboard for product/catalogue management
 - 📊 SEO optimized with structured data (JSON-LD)
 - ⚡ Code-split lazy loading for fast page loads
 
@@ -36,10 +35,8 @@ Built with **React 18**, **TypeScript**, **Vite**, **Tailwind CSS**, **Supabase*
 ## Environment Variables
 
 See [.env.example](.env.example) for the full list of required variables:
-- `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` — Supabase project credentials
 - `VITE_EMAILJS_*` — EmailJS for contact/quote forms
 - `VITE_RECAPTCHA_SITE_KEY` — Google reCAPTCHA v2
-- `VITE_ADMIN_EMAILS` — Comma-separated admin emails
 
 ## Deployment
 

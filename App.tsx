@@ -1,8 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Header, Footer, WhatsAppFloat } from './components/Shared';
-import { AuthProvider } from './components/AuthProvider';
-import { ProtectedRoute } from './components/ProtectedRoute';
 import { CartProvider } from './components/CartProvider';
 import { ToastProvider } from './components/ToastProvider';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -33,11 +31,6 @@ const LegacyRedirect = lazy(() => import('./pages/catalog/LegacyRedirect').then(
 const QuoteCart = lazy(() => import('./pages/QuoteCart').then(module => ({ default: module.QuoteCart })));
 const NotFound = lazy(() => import('./pages/NotFound').then(module => ({ default: module.NotFound })));
 
-// Admin Pages
-const AdminLayout = lazy(() => import('./pages/admin/AdminLayout').then(module => ({ default: module.AdminLayout })));
-const Dashboard = lazy(() => import('./pages/admin/Dashboard').then(module => ({ default: module.Dashboard })));
-const Login = lazy(() => import('./pages/admin/Login').then(module => ({ default: module.Login })));
-
 // Scroll to top on route change
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -61,14 +54,13 @@ const PageLoader = () => (
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
 
   // Capture UTM parameters from LinkedIn/Meta/Google ad campaigns on entry
   useAttribution();
 
   return (
     <div className="flex flex-col min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-brand-orange/30">
-      {!isAdminRoute && <Header />}
+      <Header />
       <main className="flex-grow flex flex-col">
         <Suspense fallback={<PageLoader />}>
           <div className="flex-grow">
@@ -102,21 +94,12 @@ const AppContent: React.FC = () => {
                 <Route path="/products/:categoryName/:subcategoryName" element={<LegacyRedirect />} />
                 <Route path="/products/:categoryName/:subcategoryName/:productSKU" element={<LegacyRedirect />} />
 
-                {/* Admin Routes */}
-                <Route path="/admin/login" element={<PageTransition><Login /></PageTransition>} />
-
-                <Route element={<ProtectedRoute />}>
-                  <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<Dashboard />} />
-                  </Route>
-                </Route>
-
                 {/* 404 Catch-all Route - must be last */}
                 <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
               </Routes>
             </AnimatePresence>
           </div>
-          {!isAdminRoute && <Footer />}
+          <Footer />
         </Suspense>
       </main>
       <WhatsAppFloat />
@@ -127,17 +110,15 @@ const AppContent: React.FC = () => {
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <CartProvider>
-          <ToastProvider>
-            <Router>
-              <ScrollToTop />
-              <AppContent />
-              <SpeedInsights />
-            </Router>
-          </ToastProvider>
-        </CartProvider>
-      </AuthProvider>
+      <CartProvider>
+        <ToastProvider>
+          <Router>
+            <ScrollToTop />
+            <AppContent />
+            <SpeedInsights />
+          </Router>
+        </ToastProvider>
+      </CartProvider>
     </ErrorBoundary>
   );
 }

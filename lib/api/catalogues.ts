@@ -1,9 +1,7 @@
-import { supabase } from '../supabase';
 import type { Catalogue, CatalogueRef, Product } from '../types';
 import catalogueData from '../catalog/catalogues.json';
 
-// The public site reads the catalogues from this file (the website no longer uses a database);
-// the admin functions further down still write to the old Supabase table.
+// The catalogues shown on the site (the website does not use a database).
 const CATALOGUES = catalogueData as Omit<Catalogue, 'category' | 'color'>[] as Catalogue[];
 const activeCatalogues = () => CATALOGUES.filter(c => c.is_active).sort((a, b) => a.display_order - b.display_order);
 const toRef = ({ id, title, pdf_url }: Catalogue): CatalogueRef => ({ id, title, pdf_url });
@@ -64,20 +62,6 @@ export async function getCatalogues(): Promise<Catalogue[]> {
     return activeCatalogues();
 }
 
-export async function getAllCatalogues(): Promise<Catalogue[]> {
-    const { data, error } = await supabase
-        .from('catalogues')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-    if (error) {
-        if (import.meta.env.DEV) console.error('Error fetching all catalogues:', error);
-        return [];
-    }
-
-    return data || [];
-}
-
 export async function getCatalogueCategories(): Promise<string[]> {
     const uniqueCategories = new Set<string>();
     activeCatalogues().forEach(c => {
@@ -85,49 +69,4 @@ export async function getCatalogueCategories(): Promise<string[]> {
     });
 
     return ['All', ...Array.from(uniqueCategories).sort()];
-}
-
-export async function createCatalogue(catalogue: Omit<Catalogue, 'id' | 'created_at'>): Promise<Catalogue | null> {
-    const { data, error } = await supabase
-        .from('catalogues')
-        .insert(catalogue)
-        .select()
-        .single();
-
-    if (error) {
-        if (import.meta.env.DEV) console.error('Error creating catalogue:', error);
-        return null;
-    }
-
-    return data;
-}
-
-export async function updateCatalogue(id: string, updates: Partial<Catalogue>): Promise<Catalogue | null> {
-    const { data, error } = await supabase
-        .from('catalogues')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-
-    if (error) {
-        if (import.meta.env.DEV) console.error('Error updating catalogue:', error);
-        return null;
-    }
-
-    return data;
-}
-
-export async function deleteCatalogue(id: string): Promise<boolean> {
-    const { error } = await supabase
-        .from('catalogues')
-        .delete()
-        .eq('id', id);
-
-    if (error) {
-        if (import.meta.env.DEV) console.error('Error deleting catalogue:', error);
-        return false;
-    }
-
-    return true;
 }

@@ -23,8 +23,7 @@ export default defineConfig(({ mode }) => {
             'vendor-react': ['react', 'react-dom', 'react-router-dom'],
             'vendor-animation': ['framer-motion'],
             'vendor-pdf': ['react-pdf', 'react-pageflip'],
-            'vendor-icons': ['lucide-react'],
-            'vendor-supabase': ['@supabase/supabase-js']
+            'vendor-icons': ['lucide-react']
           }
         }
       }
