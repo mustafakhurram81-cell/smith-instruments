@@ -11,7 +11,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { TYPE_RULES, CHAPTER_SPECIALTY } from './catalog/taxonomy-rules.mjs';
 import { classifySubtype } from './catalog/subtypes.mjs';
-// Each code's page in its chapter's PDF catalogue, read from the printed catalogues (28 Oct 2026).
+// Each code's page in its chapter's PDF catalogue, read from the printed catalogues (scripts/catalog/read-catalogues).
 const CATALOGUE_PAGES = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'catalog', 'catalogue-pages.json'), 'utf8'));
 
 const root = path.join(import.meta.dirname, '..');
