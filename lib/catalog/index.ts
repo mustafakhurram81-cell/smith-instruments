@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 type RawFamily = {
   c: string; cs?: string[]; n: string; t: string; st?: string; sp: string[]; f?: string[];
   i?: string; v: number; mn?: number; mx?: number;
+  w?: string[]; pa?: string[]; k?: 1;
 };
 type RawIndex = {
   generatedAt: string;
@@ -32,6 +33,9 @@ export type Family = {
   count: number;
   sizeMin: number | null;
   sizeMax: number | null;
+  usedWith: string[];  // pages this one's parts fit (its names mention their codes)
+  parts: string[];     // pages of parts and accessories that fit this one
+  hasSet: boolean;     // one of its codes is a set whose contents are listed
 };
 
 export type Catalog = {
@@ -61,6 +65,9 @@ async function loadCatalog(): Promise<Catalog> {
     count: f.v,
     sizeMin: f.mn ?? null,
     sizeMax: f.mx ?? null,
+    usedWith: f.w ?? [],
+    parts: f.pa ?? [],
+    hasSet: f.k === 1,
   }));
   const byCode = new Map<string, Family>();
   for (const f of families) for (const c of f.codes) byCode.set(c, f);
@@ -125,9 +132,10 @@ export function searchFamilies(catalog: Catalog, query: string, limit = 20) {
 
 // ── Variants for one product (public/catalog/variants/NN.json, built by `npm run catalog`) ──
 
-export type Variant = { sku: string; label: string; sizeCm: number | null; image: string | null };
+export type Variant = { sku: string; label: string; sizeCm: number | null; image: string | null; page: number | null };
 
-type RawVariant = [sku: string, name: string, image: string | null, sizeCm: number | null];
+// page: the code's page in its chapter's PDF catalogue.
+type RawVariant = [sku: string, name: string, image: string | null, sizeCm: number | null, page?: number | null];
 
 const IMG_PREFIX = 'https://assets.smithinstruments.net/legacy-products/';
 
@@ -146,8 +154,8 @@ function loadVariantFile(prefix: string) {
 // Every catalogue SKU that shares a two-digit prefix with one of these codes, in SKU order.
 export async function loadCatalogRows(codes: string[]) {
   const files = await Promise.all([...new Set(codes.map(c => c.slice(0, 2)))].sort().map(loadVariantFile));
-  return files.flat().map(([sku, name, image, sizeCm]) => ({
-    sku, name, sizeCm, image: image ? (image.startsWith('http') ? image : IMG_PREFIX + image) : null,
+  return files.flat().map(([sku, name, image, sizeCm, page]) => ({
+    sku, name, sizeCm, page: page ?? null, image: image ? (image.startsWith('http') ? image : IMG_PREFIX + image) : null,
   }));
 }
 
@@ -159,7 +167,26 @@ async function loadVariants(family: Family): Promise<Variant[]> {
   const rows = await loadCatalogRows(family.codes);
   return rows
     .filter(r => family.codes.some(c => r.sku.startsWith(`${c}-`)))
-    .map(r => ({ sku: r.sku, label: variantLabel(r.name, family.name), sizeCm: r.sizeCm, image: r.image }));
+    .map(r => ({ sku: r.sku, label: variantLabel(r.name, family.name), sizeCm: r.sizeCm, image: r.image, page: r.page }));
+}
+
+// ── Set contents (public/catalog/sets.json, built by `npm run catalog`) ──
+
+export type SetItem = { sku: string; name: string; quantity: number; onWebsite: boolean };
+type RawSetItem = [sku: string, name: string, quantity: number, onWebsite: boolean];
+
+export function useSetContents(family: Family | undefined) {
+  return useQuery({
+    queryKey: ['sets'],
+    queryFn: async () => {
+      const res = await fetch('/catalog/sets.json');
+      if (!res.ok) throw new Error(`Set contents failed to load (${res.status})`);
+      const raw: Record<string, RawSetItem[]> = await res.json();
+      return new Map(Object.entries(raw).map(([set, items]) => [set, items.map(([sku, name, quantity, onWebsite]) => ({ sku, name, quantity, onWebsite }))]));
+    },
+    enabled: !!family?.hasSet,
+    staleTime: 1000 * 60 * 30,
+  });
 }
 
 export function useVariants(family: Family | undefined) {

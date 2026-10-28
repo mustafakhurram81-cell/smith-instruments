@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback, Suspense, lazy } from 'react';
 import { Section, Button, FadeIn, ParallaxHeader } from '../components/Shared';
 import { Eye, Search, X, Loader2, Download } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Catalogue } from '../lib/database';
 import { useCatalogues } from '../lib/queries';
@@ -17,6 +17,9 @@ export const Catalogues: React.FC = () => {
   const navigate = useNavigate();
   const { data: catalogues = [], isLoading: loading } = useCatalogues();
   const [selectedCatalogue, setSelectedCatalogue] = useState<Catalogue | null>(null);
+  const [startPage, setStartPage] = useState<number | undefined>();
+  // A product's "see it in the catalogue" link: /catalogues?catalogue=<chapter>&page=<page>.
+  const [params, setParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < MOBILE_BREAKPOINT);
 
@@ -35,6 +38,18 @@ export const Catalogues: React.FC = () => {
       setSelectedCatalogue(cat);
     }
   }, [isMobile]);
+
+  useEffect(() => {
+    const chapter = params.get('catalogue');
+    if (!chapter || !catalogues.length) return;
+    const cat = catalogues.find(c => c.chapter === chapter);
+    const page = Number(params.get('page')) || undefined;
+    setParams({}, { replace: true });
+    if (!cat) return;
+    if (isMobile) { window.location.assign(page ? `${cat.pdf_url}#page=${page}` : cat.pdf_url); return; }
+    setStartPage(page);
+    setSelectedCatalogue(cat);
+  }, [params, catalogues, isMobile, setParams]);
 
   const filteredCatalogues = useMemo(() => {
     return catalogues.filter((cat) => {
@@ -196,7 +211,7 @@ export const Catalogues: React.FC = () => {
               <Loader2 className="w-12 h-12 text-brand-orange animate-spin" />
             </div>
           }>
-            <FlipBookViewer catalogue={selectedCatalogue} onClose={() => setSelectedCatalogue(null)} />
+            <FlipBookViewer catalogue={selectedCatalogue} startPage={startPage} onClose={() => { setSelectedCatalogue(null); setStartPage(undefined); }} />
           </Suspense>
         )}
       </AnimatePresence>

@@ -9,15 +9,16 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.vers
 interface FlipBookViewerProps {
     catalogue: any;
     onClose: () => void;
+    startPage?: number; // 1-based page to open at, e.g. a product's page
 }
 
-export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClose }) => {
+export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClose, startPage }) => {
     const [numPages, setNumPages] = useState<number>(0);
     const [loadedPages, setLoadedPages] = useState<number>(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(startPage ? startPage - 1 : 0);
     const [showControls, setShowControls] = useState(true);
 
     const book = useRef<any>(null);
@@ -244,6 +245,7 @@ export const FlipBookViewer: React.FC<FlipBookViewerProps> = ({ catalogue, onClo
                                 maxHeight={2500}
                                 maxShadowOpacity={0.4}
                                 showCover={true}
+                                startPage={startPage ? startPage - 1 : 0}
                                 mobileScrollSupport={false}
                                 usePortrait={false}
                                 autoSize={false}

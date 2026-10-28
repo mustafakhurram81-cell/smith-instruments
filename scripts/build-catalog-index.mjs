@@ -11,6 +11,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { TYPE_RULES, CHAPTER_SPECIALTY } from './catalog/taxonomy-rules.mjs';
 import { classifySubtype } from './catalog/subtypes.mjs';
+// Each code's page in its chapter's PDF catalogue, read from the printed catalogues (28 Oct 2026).
+const CATALOGUE_PAGES = JSON.parse(fs.readFileSync(path.join(import.meta.dirname, 'catalog', 'catalogue-pages.json'), 'utf8'));
 
 const root = path.join(import.meta.dirname, '..');
 for (const line of fs.existsSync(path.join(root, '.env.local')) ? fs.readFileSync(path.join(root, '.env.local'), 'utf8').split('\n') : []) {
@@ -39,7 +41,7 @@ async function read(resource, query = '') {
   }
 }
 
-const [items, pages, families, pageSpecialties, types, subtypes, specialties, catalogues] = await Promise.all([
+const [items, pages, families, pageSpecialties, types, subtypes, specialties, catalogues, setRows] = await Promise.all([
   read('rpc/website_catalogue_items'),
   read('website_pages', 'select=code,name,type_slug,subtype_slug&visible=is.true'),
   read('website_families', 'select=family_code,page_code&order=family_code'),
@@ -48,6 +50,7 @@ const [items, pages, families, pageSpecialties, types, subtypes, specialties, ca
   read('website_subtypes', 'select=type_slug,slug,label&order=sort'),
   read('website_specialties', 'select=slug,label&order=sort'),
   read('website_catalogues', 'select=id,title,description,file_size,pdf_url,thumbnail_url,chapter,sort,active,created_at&order=sort'),
+  read('rpc/website_set_contents'),
 ]);
 items.sort((a, b) => (a.sku < b.sku ? -1 : a.sku > b.sku ? 1 : 0));
 
@@ -119,6 +122,31 @@ for (const [fam, rows] of unplaced) {
   });
 }
 
+// Parts and accessories: a name that mentions other codes ("Blade for Henley Retractor, used with ref. 06-540-00",
+// "Used with: 04-168-04 - 04-182-09") links its page to theirs, and theirs back to it.
+const pageOfFamily = new Map();
+for (const [code, { codes }] of groups) for (const f of codes) pageOfFamily.set(f, code);
+const familyCodes = [...pageOfFamily.keys()].sort();
+const usedWith = new Map(), partsFor = new Map();
+const link = (map, from, to) => { if (!map.has(from)) map.set(from, new Set()); map.get(from).add(to); };
+for (const [page, { items: rows }] of groups) {
+  for (const it of rows) {
+    const text = it.name.replace(/[‐–—]/g, '-');
+    const targets = new Set();
+    for (const m of text.matchAll(/\b(\d{2}-\d{3})-[0-9A-Z]{1,2}\b(?:\s*-\s*(\d{2}-\d{3})-[0-9A-Z]{1,2}\b)?/g)) {
+      const [from, to] = [m[1], m[2] ?? m[1]].sort();
+      for (const f of familyCodes) if (f >= from && f <= to && f.slice(0, 2) === from.slice(0, 2)) targets.add(pageOfFamily.get(f));
+    }
+    for (const t of targets) if (t !== page) { link(usedWith, page, t); link(partsFor, t, page); }
+  }
+}
+const firstFew = set => (set?.size ? [...set].sort().slice(0, 12) : undefined);
+
+// What is in each set: [code, name, quantity, on the website] by the set's code.
+const sets = {};
+for (const r of setRows) (sets[r.set_sku] ??= []).push([r.sku, r.name, Number(r.quantity), r.on_website]);
+const setPages = new Set(Object.keys(sets).map(sku => pageOfFamily.get(sku.slice(0, 6))).filter(Boolean));
+
 const index = [];
 for (const [code, { codes, items: rows }] of groups) {
   const p = pageByCode.get(code);
@@ -136,6 +164,9 @@ for (const [code, { codes, items: rows }] of groups) {
     v: rows.length,
     mn: sizes.length ? Math.min(...sizes) : undefined,
     mx: sizes.length ? Math.max(...sizes) : undefined,
+    w: firstFew(usedWith.get(code)),
+    pa: firstFew(partsFor.get(code)),
+    k: setPages.has(code) ? 1 : undefined,
   });
 }
 
@@ -156,7 +187,7 @@ const out = path.join(root, 'public', 'catalog', 'index.json');
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, JSON.stringify({ generatedAt: new Date().toISOString(), imgPrefix: IMG_PREFIX, labels, families: index }));
 
-// Variants as [sku, name, image (short when on the CDN folder), size_cm], in SKU order.
+// Variants as [sku, name, image (short when on the CDN folder), size_cm, catalogue page], in SKU order.
 const variantsDir = path.join(root, 'public', 'catalog', 'variants');
 fs.rmSync(variantsDir, { recursive: true, force: true });
 fs.mkdirSync(variantsDir, { recursive: true });
@@ -164,10 +195,11 @@ const byPrefix = new Map();
 for (const it of items) {
   const prefix = it.sku.slice(0, 2);
   if (!byPrefix.has(prefix)) byPrefix.set(prefix, []);
-  byPrefix.get(prefix).push([it.sku, it.name, shortImg(it.image_url) ?? null, Number(it.size_cm) > 0 ? Number(it.size_cm) : null]);
+  byPrefix.get(prefix).push([it.sku, it.name, shortImg(it.image_url) ?? null, Number(it.size_cm) > 0 ? Number(it.size_cm) : null, CATALOGUE_PAGES[it.sku] ?? null]);
 }
 for (const [prefix, rows] of byPrefix) fs.writeFileSync(path.join(variantsDir, `${prefix}.json`), JSON.stringify(rows));
 
+fs.writeFileSync(path.join(root, 'public', 'catalog', 'sets.json'), JSON.stringify(sets));
 fs.writeFileSync(path.join(root, 'lib', 'catalog', 'catalogues.json'), `${JSON.stringify(catalogues.map(c => ({
   id: c.id, title: c.title, description: c.description, size: c.file_size, pdf_url: c.pdf_url,
   thumbnail_url: c.thumbnail_url, chapter: c.chapter, display_order: c.sort, is_active: c.active, created_at: c.created_at,
