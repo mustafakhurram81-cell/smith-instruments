@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-sitemap.js",
+    "prebuild": "node scripts/build-catalog-index.mjs --keep-on-failure && node scripts/generate-sitemap.js",
     "build": "vite build",
     "build:app": "vite build",
     "typecheck": "tsc --noEmit",

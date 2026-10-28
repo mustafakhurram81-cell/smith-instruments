@@ -6,7 +6,9 @@
 //
 // The ERP keeps the website categories in its website_* tables; a family (NN-NNN) not given a page there yet still
 // shows, classified by name with the rules in scripts/catalog. Run `npm run catalog` with ERP_SUPABASE_URL and
-// ERP_SUPABASE_PUBLISHABLE_KEY set (.env.local); the output is committed.
+// ERP_SUPABASE_PUBLISHABLE_KEY set (.env.local); the output is committed. Every deploy runs it again with
+// --keep-on-failure (the prebuild), so "Publish to website" in the ERP rebuilds the site from the ERP; if the ERP can't
+// be read, or hands back far fewer products than the committed files hold, the committed files are kept.
 import fs from 'node:fs';
 import path from 'node:path';
 import { TYPE_RULES, CHAPTER_SPECIALTY } from './catalog/taxonomy-rules.mjs';
@@ -19,8 +21,15 @@ for (const line of fs.existsSync(path.join(root, '.env.local')) ? fs.readFileSyn
   const m = line.match(/^(ERP_[A-Z_]+)=(.*)$/);
   if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^"|"$/g, '');
 }
+const keepOnFailure = process.argv.includes('--keep-on-failure');
+// Stops without touching the files: an error for a person running it, a warning (exit 0) for a deploy.
+function stop(message) {
+  if (!keepOnFailure) throw new Error(message);
+  console.warn(`catalog: ${message} Keeping the committed catalogue files.`);
+  process.exit(0);
+}
 const { ERP_SUPABASE_URL: url, ERP_SUPABASE_PUBLISHABLE_KEY: key } = process.env;
-if (!url || !key) throw new Error('Set ERP_SUPABASE_URL and ERP_SUPABASE_PUBLISHABLE_KEY (see .env.example).');
+if (!url || !key) stop('Set ERP_SUPABASE_URL and ERP_SUPABASE_PUBLISHABLE_KEY (see .env.example).');
 
 // A slow connection gets three tries before the build gives up.
 async function get(address, headers) {
@@ -51,7 +60,12 @@ const [items, pages, families, pageSpecialties, types, subtypes, specialties, ca
   read('website_specialties', 'select=slug,label&order=sort'),
   read('website_catalogues', 'select=id,title,description,file_size,pdf_url,thumbnail_url,chapter,sort,active,created_at&order=sort'),
   read('rpc/website_set_contents'),
-]);
+]).catch(err => stop(`The ERP couldn't be read (${err.message}).`));
+// A sudden drop means something is wrong on the ERP side (a permission, a filter), not that products went away.
+const committed = fs.existsSync(path.join(root, 'public', 'catalog', 'variants'))
+  ? fs.readdirSync(path.join(root, 'public', 'catalog', 'variants')).reduce((n, f) => n + JSON.parse(fs.readFileSync(path.join(root, 'public', 'catalog', 'variants', f), 'utf8')).length, 0)
+  : 0;
+if (items.length < committed * 0.9) stop(`The ERP returned ${items.length} products, far fewer than the ${committed} committed.`);
 items.sort((a, b) => (a.sku < b.sku ? -1 : a.sku > b.sku ? 1 : 0));
 
 const FEATURES = [
