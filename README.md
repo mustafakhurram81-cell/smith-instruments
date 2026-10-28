@@ -10,7 +10,7 @@ Built with **React 18**, **TypeScript**, **Vite**, **Tailwind CSS**, and **Frame
 
 ## Features
 
-- 📦 Product catalog with 3,000+ surgical instruments, served as static data (`npm run catalog`)
+- 📦 Product catalog with 3,000+ surgical instruments from Snaa ERP v3, served as static data (`npm run catalog`)
 - 🔍 Instant catalogue search
 - 📄 Interactive PDF catalogue viewer (FlipBook)
 - 🛒 Quote request cart system

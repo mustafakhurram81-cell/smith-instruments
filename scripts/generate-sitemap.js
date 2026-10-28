@@ -7,9 +7,9 @@ const __dirname = path.dirname(__filename);
 
 const BASE_URL = 'https://smithinstruments.net';
 const TODAY = new Date().toISOString().split('T')[0];
-// Last change to the product data in public/catalog (the catalogue snapshot). Update it when the
+// Last change to the product data in public/catalog (built from Snaa ERP v3). Update it when the
 // catalogue is refreshed with `npm run catalog`.
-const CATALOG_UPDATED = '2026-09-24';
+const CATALOG_UPDATED = '2026-10-28';
 
 function generateSitemap() {
     console.log('Generating sitemap...');

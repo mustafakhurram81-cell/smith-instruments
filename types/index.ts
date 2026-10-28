@@ -63,6 +63,7 @@ export interface Catalogue {
     color: string;
     pdf_url: string;
     thumbnail_url: string | null;
+    chapter: string | null;  // two-digit SKU chapter of a chapter catalogue, e.g. '12'
     display_order: number;
     is_active: boolean;
     created_at: string;
