@@ -40,7 +40,6 @@ export const SEO: React.FC<SEOProps> = ({
         "description": "Premium manufacturer of precision surgical instruments",
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+92-330-2449855",
             "contactType": "sales",
             "email": "info@smithinstruments.net"
         },

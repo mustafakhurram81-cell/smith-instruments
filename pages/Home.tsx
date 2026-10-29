@@ -220,7 +220,7 @@ export const Home: React.FC = () => {
             <div className="w-full md:w-1/2 text-stone-600">
               <h2 className="font-heading text-4xl text-brand-charcoal mb-6">Our Legacy, <br /><span className="text-brand-orange">Your Trust.</span></h2>
               <p className="font-light leading-relaxed mb-6 text-lg text-stone-500">
-                Headquartered in the United States and powered by world-class manufacturing facilities in Pakistan, Smith Instruments combines the best of both worlds: American quality standards with skilled craftsmanship honed over generations in one of the world's premier surgical instrument manufacturing hubs.
+                Headquartered in the United States and backed by our own manufacturing facility, Smith Instruments combines American quality standards with skilled craftsmanship honed over generations.
               </p>
               <p className="font-light leading-relaxed mb-10 text-lg text-stone-500">
                 For over two decades, we've partnered with healthcare professionals across 20+ countries, delivering precision instruments that surgeons trust in the most critical moments. Our commitment: uncompromising quality, competitive pricing, and a satisfaction-first approach.

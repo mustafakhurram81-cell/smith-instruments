@@ -70,9 +70,9 @@ export const Footer: React.FC = () => {
                                     <Mail size={14} className="text-brand-orange flex-shrink-0 group-hover:scale-110 transition-transform" />
                                     <span className="text-sm text-stone-400 group-hover:text-white transition-colors">{CONTACT_INFO.email}</span>
                                 </a>
-                                <a href={`tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`} onClick={() => analytics.lead('phone_click', 'Footer')} className="flex items-center gap-3 group w-fit">
+                                <a href={`https://wa.me/${CONTACT_INFO.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" onClick={() => analytics.lead('whatsapp_click', 'Footer')} className="flex items-center gap-3 group w-fit">
                                     <Phone size={14} className="text-brand-orange flex-shrink-0 group-hover:scale-110 transition-transform" />
-                                    <span className="text-sm text-stone-400 group-hover:text-white transition-colors">{CONTACT_INFO.phone}</span>
+                                    <span className="text-sm text-stone-400 group-hover:text-white transition-colors">WhatsApp</span>
                                 </a>
                                 {CONTACT_INFO.locations.map((loc, idx) => (
                                     <div key={idx} className="flex items-start gap-3">

@@ -124,7 +124,6 @@ export const PrivacyPolicy: React.FC = () => {
                                     </p>
                                     <div className="mt-4 text-brand-charcoal font-medium">
                                         <p>Email: privacy@smithinstruments.net</p>
-                                        <p>Phone: +92 330 2449855</p>
                                     </div>
                                 </div>
                             </div>

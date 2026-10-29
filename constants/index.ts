@@ -54,10 +54,6 @@ export const CONTACT_INFO = {
     phone: '+92 330 2449855',
     locations: [
         {
-            type: 'Manufacturing Plant',
-            address: 'Sialkot Punjab 51310 Capital Road pakistan'
-        },
-        {
             type: 'Head Office',
             address: 'Alexandria Virginia 22310 USA'
         }

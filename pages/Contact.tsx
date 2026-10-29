@@ -189,8 +189,8 @@ export const Contact: React.FC = () => {
                       <Phone size={20} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-brand-charcoal mb-1">Phone</h4>
-                      <p className="text-stone-600 font-light">{CONTACT_INFO.phone}</p>
+                      <h4 className="font-bold text-brand-charcoal mb-1">WhatsApp</h4>
+                      <p className="text-stone-600 font-light">Chat with our team using the button below</p>
                       <p className="text-xs text-stone-400 mt-1">Mon-Fri, 9am-6pm EST</p>
                     </div>
                   </div>
