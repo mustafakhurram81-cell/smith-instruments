@@ -55,7 +55,7 @@ export const CONTACT_INFO = {
     locations: [
         {
             type: 'Head Office',
-            address: 'Alexandria Virginia 22310 USA'
+            address: '13251 Overcup Oak Ct, Apt 201, Herndon, VA 20171, USA'
         }
     ]
 } as const;
