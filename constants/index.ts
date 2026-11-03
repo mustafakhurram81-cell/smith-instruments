@@ -56,6 +56,10 @@ export const CONTACT_INFO = {
         {
             type: 'Head Office',
             address: '13251 Overcup Oak Ct, Apt 201, Herndon, VA 20171, USA'
+        },
+        {
+            type: 'Distributor in Chile',
+            address: 'Mainz Medical SpA, Ramón Puelma No. 2386, Ñuñoa, Santiago, Chile'
         }
     ]
 } as const;
