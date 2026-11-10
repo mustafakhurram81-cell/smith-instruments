@@ -1,7 +1,7 @@
 import React from 'react';
 import { Section, FadeIn, Button, ParallaxHeader, ExperienceGrid } from '../components/Shared';
 import { SEO } from '../components/SEO';
-import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck, Award, Globe, Factory, Package, Mail } from 'lucide-react';
+import { Users, Heart, CheckCircle2, PenTool, Handshake, MessageCircle, Hammer, ShieldCheck, Globe, Factory, Package, Mail, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CONTACT_INFO } from '../constants';
 import heritageImg from '../assets/factory/heritage.webp';
@@ -13,23 +13,32 @@ import workshopExtra from '../assets/factory/workshop-extra.jpeg';
 
 
 
+// Our certificates from IFC (Inter Frontier Certification), issued 7 November 2026. Each one can be checked on IFC's own site.
+const VERIFY_URL = 'https://if-cb.com/validate-certificate/';
 const CERTIFICATIONS = [
   {
     name: 'ISO 9001:2015',
     description: 'Quality Management System — ensuring consistent quality and customer satisfaction across all processes.',
-    icon: Award,
+    number: 'UK-IFC-10201755',
+    preview: '/certificates/iso-9001-2015.webp',
+    file: '/certificates/smith-instruments-iso-9001-2015.pdf',
   },
   {
     name: 'ISO 13485:2016',
     description: 'Medical Devices Quality Management — the international standard for medical device manufacturing.',
-    icon: ShieldCheck,
+    number: 'UK-IFC-10201756',
+    preview: '/certificates/iso-13485-2016.webp',
+    file: '/certificates/smith-instruments-iso-13485-2016.pdf',
   },
   {
     name: 'CE Certified',
-    description: 'European Conformity — our instruments meet EU health, safety, and environmental protection standards.',
-    icon: CheckCircle2,
+    description: 'EC Certificate of Conformity under the EU Medical Device Regulation 2017/745, Class I.',
+    number: 'CE-EU-1014304',
+    preview: '/certificates/ce-certificate.webp',
+    file: '/certificates/smith-instruments-ce-certificate.pdf',
   },
 ];
+const VALID_UNTIL = 'November 6, 2029';
 
 export const About: React.FC = () => {
   const navigate = useNavigate();
@@ -201,19 +210,31 @@ export const About: React.FC = () => {
             <span className="text-brand-orange uppercase tracking-[0.2em] text-sm font-bold block mb-3">Quality Assurance</span>
             <h2 className="font-heading text-4xl text-brand-charcoal mb-4">Certifications & Compliance</h2>
             <p className="text-stone-500 font-light text-lg max-w-2xl mx-auto">
-              Our commitment to quality is verified by internationally recognized standards and certifications.
+              Our commitment to quality is verified by internationally recognized standards. Certified by IFC (Inter Frontier Certification).
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {CERTIFICATIONS.map((cert, idx) => (
               <FadeIn key={idx} delay={idx * 0.1}>
-                <div className="text-center p-8 bg-stone-50 rounded-2xl border border-stone-200/60 hover:border-brand-orange/20 hover:shadow-lg transition-all duration-300">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-brand-orange/10 flex items-center justify-center mb-5">
-                    <cert.icon className="w-8 h-8 text-brand-orange" strokeWidth={1.5} />
+                <div className="h-full flex flex-col text-center p-6 bg-stone-50 rounded-2xl border border-stone-200/60 hover:border-brand-orange/20 hover:shadow-lg transition-all duration-300">
+                  <a href={cert.file} target="_blank" rel="noopener noreferrer" className="block mb-5 rounded-lg overflow-hidden border border-stone-200 bg-white" aria-label={`Open the ${cert.name} certificate`}>
+                    <img src={cert.preview} alt={`${cert.name} certificate of Smith Instruments Inc.`} loading="lazy" className="w-full h-56 object-contain bg-white" />
+                  </a>
+                  <h3 className="font-heading text-xl text-brand-charcoal mb-2">{cert.name}</h3>
+                  <p className="text-stone-500 text-sm leading-relaxed mb-4">{cert.description}</p>
+                  <dl className="text-xs text-stone-500 space-y-1 mb-5 mt-auto">
+                    <div><dt className="inline">Certificate No. </dt><dd className="inline font-medium text-brand-charcoal">{cert.number}</dd></div>
+                    <div><dt className="inline">Valid until </dt><dd className="inline font-medium text-brand-charcoal">{VALID_UNTIL}</dd></div>
+                  </dl>
+                  <div className="flex items-center justify-center gap-5 text-sm">
+                    <a href={cert.file} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-brand-orange font-medium hover:underline">
+                      <FileText size={16} /> View certificate
+                    </a>
+                    <a href={VERIFY_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-stone-500 hover:text-brand-charcoal hover:underline">
+                      <ShieldCheck size={16} /> Verify
+                    </a>
                   </div>
-                  <h3 className="font-heading text-xl text-brand-charcoal mb-3">{cert.name}</h3>
-                  <p className="text-stone-500 text-sm leading-relaxed">{cert.description}</p>
                 </div>
               </FadeIn>
             ))}
