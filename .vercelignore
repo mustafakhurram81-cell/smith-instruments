@@ -8,6 +8,8 @@ dist
 *.csv
 *.xlsx
 *.pdf
+# except the certificates the About page links to
+!public/certificates/*.pdf
 *.mp4
 # Work in progress and local assets that are not part of the live site
 web
