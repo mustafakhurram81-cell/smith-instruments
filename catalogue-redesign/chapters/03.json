@@ -1,0 +1,167 @@
+{
+ "chapter": "03",
+ "title": "Dissecting & Tissue Forceps",
+ "translations": [
+  "Präparierende & Gewebszange",
+  "Pinça de dissecção e tecido",
+  "Disección y pinzas de tejido"
+ ],
+ "source": "https://pub-053a419f2e51468589f2d7fee4b30df0.r2.dev/catalogues/dissecting-tissue-forceps.pdf",
+ "pages": [
+  [
+   "Dissecting Forceps",
+   "Präparierzange",
+   "Pinça de dissecação",
+   "Pinzas de disección"
+  ],
+  [
+   "Dissecting Forceps",
+   "Präparierzange",
+   "Pinça de dissecação",
+   "Pinzas de disección"
+  ],
+  [
+   "Dissecting Forceps",
+   "Präparierzange",
+   "Pinça de dissecação",
+   "Pinzas de disección"
+  ],
+  [
+   "Atraumatic Dressing Forceps",
+   "Atraumatische Verbandzange",
+   "Pinça de Molho Atraumático",
+   "Fórceps de vendaje atraumático"
+  ],
+  [
+   "Bayonet - Shaped Forceps, Ear Forceps, Nasal Forceps",
+   "Bajonett - förmige Pinzette, Ohrzange, Nasenklemme",
+   "Pinça em Forma de Baioneta, Pinça de Orelha, Fórceps Nasal",
+   "Bayoneta - Pinza con forma, Pinza para el oído, Pinza nasal"
+  ],
+  [
+   "Tissue Forceps",
+   "Gewebefingerzange",
+   "Pinça de tecido",
+   "Pinzas de tejido"
+  ],
+  [
+   "Tissue Forceps",
+   "Gewebefingerzange",
+   "Pinça de tecido",
+   "Pinzas de tejido"
+  ],
+  [
+   "Tissue Forceps",
+   "Gewebefingerzange",
+   "Pinça de tecido",
+   "Pinzas de tejido"
+  ],
+  [
+   "Tissue Forceps, Dissecting Forceps",
+   "Gewebepinzetten, Präparierpinzetten",
+   "Pinça de tecido, fórceps dissecante",
+   "Pinzas de tejido, pinzas de disección"
+  ],
+  [
+   "Tissue Forceps, Intestinal Forceps",
+   "Gewebszange, Darmzange",
+   "Pinça de tecido, fórceps intestinal",
+   "Pinza de tejido, pinzas intestinales"
+  ],
+  [
+   "Micro, Tissue Forceps",
+   "Mikro-, Gewebezange",
+   "Micro, pinça de tecido",
+   "Micro, pinzas de tejido"
+  ],
+  [
+   "Grasping Forceps, Tumor and Vessel Forceps",
+   "Greifzange, Tumor und Gefäßzange",
+   "Pinça de apreensão, pinça de tumor e vaso",
+   "Fórceps de agarre, fórceps tumoral y de vasos"
+  ],
+  [
+   "Ligature Forceps, Micro Forceps (Light Patterns)",
+   "Ligaturzange, Mikrozange (Lichtmuster)",
+   "Pinça de Ligadura, Micro Pinças (Padrões de Luz)",
+   "Pinzas de ligadura, pinzas micro (patrones de luz)"
+  ],
+  [
+   "Micro Forceps, Micro Dilating Forceps",
+   "Mikrozange, Mikro-Dilatationszange",
+   "Micro Pinças, Pinças Micro Dilatadoras",
+   "Pinzas Micro, Pinzas Micro Dilatadores"
+  ],
+  [
+   "Micro Forceps, Micro Dilating Forceps",
+   "Mikrozange, Mikro-Dilatationszange",
+   "Micro Pinças, Pinças Micro Dilatadoras",
+   "Pinzas Micro, Pinzas Micro Dilatadores"
+  ],
+  [
+   "Micro Forceps",
+   "Mikrozange",
+   "Micro Pinças",
+   "Micro Fórceps"
+  ],
+  [
+   "Jeweler Type Forceps",
+   "Juwelier Art Pinzetten",
+   "Fórceps Tipo Joalheiro",
+   "Tipo de joyero pinzas"
+  ],
+  [
+   "Splinter Forceps, Cilia Forceps, Foreign Baby Forceps",
+   "Splinter-Zange, Cilia-Zange, Former-Baby-Zange",
+   "Pinça Splinter, Pinças Cilia, Pinças estrangeiras para bebês",
+   "Pinzas astilladas, pinzas cilias, pinzas foráneas para bebés"
+  ],
+  [
+   "Dissecting Forceps T.C., Tissue Forceps T.C.",
+   "Spaltpinzette T.C., Gewebepinzette T.C.",
+   "Pinça Dissecante T.C., Pinça de Tecido T.C.",
+   "Disección de fórceps T.C., pinzas de tejido T.C."
+  ],
+  [
+   "Dissecting Forceps T.C., Tissue Forceps T.C.",
+   "Spaltpinzette T.C., Gewebepinzette T.C.",
+   "Pinça Dissecante T.C., Pinça de Tecido T.C.",
+   "Disección de fórceps T.C., pinzas de tejido T.C."
+  ],
+  [
+   "Dissecting Forceps T.C., Tissue Forceps T.C.",
+   "Spaltpinzette T.C., Gewebepinzette T.C.",
+   "Pinça Dissecante T.C., Pinça de Tecido T.C.",
+   "Disección de fórceps T.C., pinzas de tejido T.C."
+  ]
+ ],
+ "check": [
+  {
+   "page": 4,
+   "read": [
+    "Atraumatic Dressing Forceps",
+    "Atraumatische Verbandzange",
+    "Pinça de Molho Atraumático",
+    "Fórceps de vendaje atraumático",
+    "2 mm",
+    "2.8 mm",
+    "3.3 mm",
+    "15 mm"
+   ]
+  },
+  {
+   "page": 12,
+   "read": [
+    "Grasping Forceps, Tumor and Vessel Forceps",
+    "Greifzange, Tumor und Gefäßzange",
+    "Pinça de apreensão, pinça de tumor e vaso",
+    "Fórceps de agarre, fórceps tumoral y de vasos",
+    "5 mm",
+    "3 mm",
+    "4 mm",
+    "3 mm",
+    "4mm 5 mm"
+   ]
+  }
+ ]
+}

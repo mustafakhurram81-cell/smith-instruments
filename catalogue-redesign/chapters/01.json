@@ -1,0 +1,78 @@
+{
+ "chapter": "01",
+ "title": "Scalpels",
+ "translations": [
+  "Skalpelle",
+  "Bisturis",
+  "Escalpelos"
+ ],
+ "source": "https://pub-053a419f2e51468589f2d7fee4b30df0.r2.dev/catalogues/scalpels.pdf",
+ "pages": [
+  [
+   "Dissecting Knives",
+   "Messer sezieren",
+   "Facas de dissecação",
+   "Disección de cuchillos"
+  ],
+  [
+   "Autopsy, Cartilage, Post Mortem Knives",
+   "Autopsie, Knorpel, Post Mortem Messer",
+   "Autópsia, cartilagem, Post Mortem Knives",
+   "Autopsia, Cartílago, Cuchillos Post Mortem"
+  ],
+  [
+   "Amputating, Cartilage, Autopsy Knives, Interosseous Knives",
+   "Amputation, Knorpel, Autopsie Messer, Interosseus Messer",
+   "Amputação, Cartilagem, Facas de Autópsia, Facas Interósseas",
+   "Amputaciones, cartílagos, cuchillos de autopsia, cuchillos interóseos"
+  ],
+  [
+   "Amputation, Operating, Cataract, Resection Knives",
+   "Amputation, Operation, Katarakt, Resektionsmesser",
+   "Amputação, Operacional, Catarata, Facas de Ressecção",
+   "Amputación, operación, catarata, cuchillas de resección"
+  ],
+  [
+   "Scalpels, Tenotomes",
+   "Skalpelle, Tenotome",
+   "Bisturis, Tenotomes",
+   "Escalpelos, tenotomos"
+  ],
+  [
+   "Cone Knives, Myomatome, Trigeminal, Tonsil Knives",
+   "Kegelmesser, Myomatome, Trigeminus, Tonsillenmesser",
+   "Facas Cone, Myomatome, Trigeminal, Facas Amígdalas",
+   "Cuchillos Cono, Myomatome, Trigeminal, Tonsil Knives"
+  ],
+  [
+   "Blade Holders / Blade Breakers",
+   "Klingenhalter / Klingenbrecher",
+   "Suportes de Lâmina / Destruidores de Lâmina",
+   "Portacuchillas / Disyuntores"
+  ],
+  [
+   "Scalpel Handle",
+   "Skalpell Griff",
+   "Bisturi de bisturi",
+   "Mango de bisturí"
+  ],
+  [
+   "Scalpel Handle",
+   "Skalpell Griff",
+   "Bisturi de bisturi",
+   "Mango de bisturí"
+  ],
+  [
+   "Dermatomes / Skin Grafting Knives",
+   "Dermatome / Hautpfropfmesser",
+   "Dermatomes / facas de enxerto de pele",
+   "Dermatomas / Cuchillos para injertos de piel"
+  ],
+  [
+   "Dermatomes",
+   "Dermatome",
+   "Dermatomes",
+   "Dermatomas"
+  ]
+ ]
+}

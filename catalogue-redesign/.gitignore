@@ -1,0 +1,5 @@
+# Downloads, page readings and finished PDFs: rebuilt by extract.py and build.py
+work/
+out/
+ocr
+covers-preview.png

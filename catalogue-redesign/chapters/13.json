@@ -1,0 +1,726 @@
+{
+ "chapter": "13",
+ "title": "Bone Surgery",
+ "translations": [
+  "Knochenchirurgie",
+  "Cirurgia óssea",
+  "Cirugía ósea"
+ ],
+ "source": "https://pub-053a419f2e51468589f2d7fee4b30df0.r2.dev/catalogues/bone-surgery.pdf",
+ "pages": [
+  [
+   "Amputation Saws",
+   "Amputationssägen",
+   "Serras de Amputação",
+   "Sierras de amputación"
+  ],
+  [
+   "Amputation Saws",
+   "Amputationssägen",
+   "Serras de Amputação",
+   "Sierras de amputación"
+  ],
+  [
+   "Bone Hand Drills",
+   "Knochen-Handbohrer",
+   "Brocas de mão óssea",
+   "Taladros de mano de hueso"
+  ],
+  [
+   "Bone Hand Drills",
+   "Knochen-Handbohrer",
+   "Brocas de mão óssea",
+   "Taladros de mano de hueso"
+  ],
+  [
+   "Bone Holding Clamps",
+   "Knochenhalteklammern",
+   "Braçadeiras de fixação óssea",
+   "Abrazaderas de sujeción de hueso"
+  ],
+  [
+   "Bone Holding Clamps, Traction Bars",
+   "Knochenhalteklammern, Traction Bars",
+   "Bone Holding Clamps, barra de tração",
+   "Bone Holding Clamps, Traction Bars"
+  ],
+  [
+   "Wire Twisting Forceps T.C.",
+   "Drahtzwirnzange T.C.",
+   "Pinça de Torção de Arame T.C.",
+   "Wire Twisting Forceps T.C."
+  ],
+  [
+   "Flat Nose Pliers, Vise Grip",
+   "Flachzange, Schraubstock",
+   "Alicates de nariz liso, punho de torno",
+   "Alicates de punta plana, Vise Grip"
+  ],
+  [
+   "Flat Nose Pliers",
+   "Flachzange",
+   "Alicate de nariz plano",
+   "Alicates de punta plana"
+  ],
+  [
+   "Wire Cutting Pliers",
+   "Drahtzangen",
+   "Alicate de corte de fio",
+   "Alicates de corte de alambre"
+  ],
+  [
+   "Wire Cutting Pliers T.C.",
+   "Drahtschneidezangen T.C.",
+   "Alicate de corte de arame T.C.",
+   "Alicates de corte de alambre T.C."
+  ],
+  [
+   "Wire Cutting Pliers T.C.",
+   "Drahtschneidezangen T.C.",
+   "Alicate de corte de arame T.C.",
+   "Alicates de corte de alambre T.C."
+  ],
+  [
+   "Wire Cutting Pliers",
+   "Drahtschneidezangen",
+   "Alicate de corte de arame",
+   "Alicates de corte de alambre"
+  ],
+  [
+   "Wire Cutting Pliers",
+   "Drahtschneidezangen",
+   "Alicate de corte de arame",
+   "Alicates de corte de alambre"
+  ],
+  [
+   "Extension Bows",
+   "Erweiterungsbögen",
+   "Arcos de Extensão",
+   "Arcos de extensión"
+  ],
+  [
+   "Extension Bows",
+   "Erweiterungsbögen",
+   "Arcos de Extensão",
+   "Arcos de extensión"
+  ],
+  [
+   "Extension Bows, Extension Pins",
+   "Verlängerungsbogen, Verlängerungsstifte",
+   "Arcos de Extensão, Pinos de Extensão",
+   "Arcos de extensión, pasadores de extensión"
+  ],
+  [
+   "Drilling Chucks",
+   "Bohrfutter",
+   "Mandris De Perfuração",
+   "Platos de perforación"
+  ],
+  [
+   "Hand Drills",
+   "Handbohrmaschinen",
+   "Brocas manuais",
+   "Taladros de mano"
+  ],
+  [
+   "Bone Chisels, Gouges",
+   "Knochenmeißel, Gouges",
+   "Formões para ossos, goivas",
+   "Cinceles óseos, Gubias"
+  ],
+  [
+   "Osteotomes, Chisels, Gouges",
+   "Osteotome, Meißel, Gouges",
+   "Osteótomos, cinzéis, goivas",
+   "Osteótomos, Cinceles, Gubias"
+  ],
+  [
+   "Chisels, Gouges",
+   "Meißel, Gouges",
+   "Formões, goivas",
+   "Cinceles, Gubias"
+  ],
+  [
+   "Chisels, Gouges",
+   "Meißel, Gouges",
+   "Formões, goivas",
+   "Cinceles, Gubias"
+  ],
+  [
+   "Tampers - Osteotomes, Chisels, Gouges",
+   "Tamper - Osteotome, Meißel, Gouges",
+   "Tampers - Osteótomos, formões, goivas",
+   "Tampers - Osteotomes, Chisels, Gouges"
+  ],
+  [
+   "Osteotomes, Chisels, Gouges",
+   "Osteotome, Meißel, Gouges",
+   "Osteótomos, cinzéis, goivas",
+   "Osteótomos, Cinceles, Gubias"
+  ],
+  [
+   "Osteotomes, Chisels, Gouges",
+   "Osteotome, Meißel, Gouges",
+   "Osteótomos, cinzéis, goivas",
+   "Osteótomos, Cinceles, Gubias"
+  ],
+  [
+   "Osteotomes, Chisels, Gouges",
+   "Osteotome, Meißel, Gouges",
+   "Osteótomos, cinzéis, goivas",
+   "Osteótomos, Cinceles, Gubias"
+  ],
+  [
+   "Spongiosa Gouges",
+   "Spongiosa Gouges",
+   "Spongiosa Gouges",
+   "Gubias de Spongiosa"
+  ],
+  [
+   "Osteotomes, Gouges",
+   "Osteotome, Gouges",
+   "Osteótomos, goivas",
+   "Osteotomos, Gubias"
+  ],
+  [
+   "Osteotomes, Gouges",
+   "Osteotome, Gouges",
+   "Osteótomos, goivas",
+   "Osteotomos, Gubias"
+  ],
+  [
+   "Osteotomes, Gouges",
+   "Osteotome, Gouges",
+   "Osteótomos, goivas",
+   "Osteotomos, Gubias"
+  ],
+  [
+   "Osteotomes, Gouges",
+   "Osteotome, Gouges",
+   "Osteótomos, goivas",
+   "Osteotomos, Gubias"
+  ],
+  [
+   "Curettes",
+   "Küretten",
+   "Curetas",
+   "Curetas"
+  ],
+  [
+   "Curettes",
+   "Küretten",
+   "Curetas",
+   "Curetas"
+  ],
+  [
+   "Raspatories with Handle",
+   "Raspatorien mit Handle",
+   "Raspatórios com alça",
+   "Raspatories con mango"
+  ],
+  [
+   "Osteotomes",
+   "Osteotome",
+   "Osteótomos",
+   "Osteotomos"
+  ],
+  [
+   "Osteotomes",
+   "Osteotome",
+   "Osteótomos",
+   "Osteotomos"
+  ],
+  [
+   "Osteotomes",
+   "Osteotome",
+   "Osteótomos",
+   "Osteotomos"
+  ],
+  [
+   "Gouges",
+   "Gouges",
+   "Goivas",
+   "Gubias"
+  ],
+  [
+   "Osteotomes, Chisels",
+   "Osteotome, Meißel",
+   "Osteótomos, formões",
+   "Osteotomos, Cinceles"
+  ],
+  [
+   "Chisels, Gouges",
+   "Meißel, Gouges",
+   "Formões, goivas",
+   "Cinceles, Gubias"
+  ],
+  [
+   "Bone Rasps",
+   "Knochenraspeln",
+   "Rasps de osso",
+   "Escofinas óseas"
+  ],
+  [
+   "Mallets",
+   "Schlägel",
+   "Baquetas",
+   "Mazos"
+  ],
+  [
+   "Mallets",
+   "Schlägel",
+   "Baquetas",
+   "Mazos"
+  ],
+  [
+   "Mallets",
+   "Schlägel",
+   "Baquetas",
+   "Mazos"
+  ],
+  [
+   "Mallets",
+   "Schlägel",
+   "Baquetas",
+   "Mazos"
+  ],
+  [
+   "Mallets",
+   "Schlägel",
+   "Baquetas",
+   "Mazos"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Bone Curettes, Double-Ended",
+   "Knochenkuretten, zweiseitig",
+   "Curetas Ósseas com Ponta Dupla",
+   "Curetas de hueso, de doble cara"
+  ],
+  [
+   "Bone Curettes",
+   "Knochenküretten",
+   "Curetas Ósseas",
+   "Curetas de hueso"
+  ],
+  [
+   "Periosteal Elevators",
+   "Periostale Aufzüge",
+   "Elevadores Periosteais",
+   "Elevadores periósticos"
+  ],
+  [
+   "Periosteal Elevators",
+   "Periostale Aufzüge",
+   "Elevadores Periosteais",
+   "Elevadores periósticos"
+  ],
+  [
+   "Periosteal Elevators",
+   "Periostale Aufzüge",
+   "Elevadores Periosteais",
+   "Elevadores periósticos"
+  ],
+  [
+   "Periosteal Elevators",
+   "Periostale Aufzüge",
+   "Elevadores Periosteais",
+   "Elevadores periósticos"
+  ],
+  [
+   "Raspatories, Elevators",
+   "Raspatories, Aufzüge",
+   "Raspatórios, Elevadores",
+   "Raspadores, elevadores"
+  ],
+  [
+   "Bone Files",
+   "Bone-Dateien",
+   "Arquivos ósseos",
+   "Archivos de huesos"
+  ],
+  [
+   "Bone Files",
+   "Bone-Dateien",
+   "Arquivos ósseos",
+   "Archivos de huesos"
+  ],
+  [
+   "Alveotomy Files, Dissectors",
+   "Alveotomie-Dateien, Dissektoren",
+   "Arquivos de alveotomia, dissecadores",
+   "Archivos de alveotomia, disectores"
+  ],
+  [
+   "Elevators",
+   "Aufzüge",
+   "Elevadores",
+   "Elevadores"
+  ],
+  [
+   "Knee Retractors, Spinal Retractors",
+   "Knie-Retraktoren, Spina Retraktoren",
+   "Retratores do Joelho, Retratores Espinais",
+   "Retractores de rodilla, retractores espinales"
+  ],
+  [
+   "Bone Levers",
+   "Knochenhebel",
+   "Alavancas Ósseas",
+   "Palancas de hueso"
+  ],
+  [
+   "Bone Levers",
+   "Knochenhebel",
+   "Alavancas Ósseas",
+   "Palancas de hueso"
+  ],
+  [
+   "Bone Levers",
+   "Knochenhebel",
+   "Alavancas Ósseas",
+   "Palancas de hueso"
+  ],
+  [
+   "Bone Levers",
+   "Knochenhebel",
+   "Alavancas Ósseas",
+   "Palancas de hueso"
+  ],
+  [
+   "Bone Levers",
+   "Knochenhebel",
+   "Alavancas Ósseas",
+   "Palancas de hueso"
+  ],
+  [
+   "Bone Levers",
+   "Knochenhebel",
+   "Alavancas Ósseas",
+   "Palancas de hueso"
+  ],
+  [
+   "Bone Levers",
+   "Knochenhebel",
+   "Alavancas Ósseas",
+   "Palancas de hueso"
+  ],
+  [
+   "Bone Levers, Bone Retractor",
+   "Knochenheber, Knochenspreizer",
+   "Alavancas ósseas, Retrator ósseo",
+   "Palancas óseas, retractor óseo"
+  ],
+  [
+   "Bone Retractor",
+   "Knochenretraktor",
+   "Retrator de Osso",
+   "Retractor de hueso"
+  ],
+  [
+   "Special Bone Levers",
+   "Spezielle Knochenhebel",
+   "Alavancas ósseas especiais",
+   "Palancas de hueso especiales"
+  ],
+  [
+   "Meniscus Knives",
+   "Meniskusmesser",
+   "Facas de menisco",
+   "Cuchillos Menisco"
+  ],
+  [
+   "Tendon Strippers",
+   "Sehnenstripper",
+   "Strippers de Tendão",
+   "Tendón Strippers"
+  ],
+  [
+   "Tendon Strippers",
+   "Sehnenstripper",
+   "Strippers de Tendão",
+   "Tendón Strippers"
+  ],
+  [
+   "Tendon Holding Forceps, Tendon Tunnelling Forceps",
+   "Sehnenhaltezange, Tendon Tunnelling Forceps",
+   "Fórceps de Segurar o Tendão, Fórceps de Túnel de Tendão",
+   "Fórceps de sujeción de tendón, fórceps de túnel tendinoso"
+  ],
+  [
+   "Tendon Holding Forceps, Tendon Interlacing Forceps, Bone Holding Forceps",
+   "Tendon-Haltezange, Sehnen-Interlacing-Zange, Knochenhaltezange",
+   "Tenson Holding Forceps, Tendon Entrelaçamento Forceps, Bone Holding Forceps",
+   "Pinzas de sujeción de tendón, pinzas de entrelazamiento de tendón, pinzas de sujeción de hueso"
+  ],
+  [
+   "Cartilage Seizing Forceps",
+   "Knorpelgreifzange",
+   "Pinça de Apreensão de Cartilagem",
+   "Pinzas de agarre de cartílago"
+  ],
+  [
+   "Repositioning Forceps, Bone Holding Forceps",
+   "Repositionierungszange, Knochenhaltezange",
+   "órceps de reposicionamento, fórceps da terra arrendada do osso",
+   "Pinzas de reposicionamiento, fórceps de sujeción ósea"
+  ],
+  [
+   "Repositioning Forceps, Bone Holding Forceps, Sequestrum Forceps",
+   "Repositionierungszange, Knochenhaltezange, Sequesterzange",
+   "Pinças de Reposição, Pinças de Segurar os Ossos, Pinças de Seqüestrador",
+   "Pinzas de reposicionamiento, fórceps de osteosíntesis, pinzas de secuestro"
+  ],
+  [
+   "Bone Holding Forceps",
+   "Knochenhaltezange",
+   "Osso, segurando, fórceps",
+   "Fórceps de sujeción de hueso"
+  ],
+  [
+   "Bone Holding Forceps, Reposition Forceps",
+   "Knochenhaltezange, Repositionszange",
+   "Bone Holding Forceps, fórceps de reposição",
+   "Fórceps de retención de hueso, fórceps de reposición"
+  ],
+  [
+   "Bone Holding Forceps",
+   "Knochenhaltezange",
+   "Osso, segurando, fórceps",
+   "Fórceps de sujeción de hueso"
+  ],
+  [
+   "Bone Holding Forceps",
+   "Knochenhaltezange",
+   "Osso, segurando, fórceps",
+   "Fórceps de sujeción de hueso"
+  ],
+  [
+   "Bone Holding Forceps",
+   "Knochenhaltezange",
+   "Osso, segurando, fórceps",
+   "Fórceps de sujeción de hueso"
+  ],
+  [
+   "Bone Holding Forceps",
+   "Knochenhaltezange",
+   "Osso, segurando, fórceps",
+   "Fórceps de sujeción de hueso"
+  ],
+  [
+   "Bone Holding Forceps",
+   "Knochenhaltezange",
+   "Osso, segurando, fórceps",
+   "Fórceps de sujeción de hueso"
+  ],
+  [
+   "Bone Holding Forceps",
+   "Knochenhaltezange",
+   "Osso, segurando, fórceps",
+   "Fórceps de sujeción de hueso"
+  ],
+  [
+   "Bone Holding Forceps",
+   "Knochenhaltezange",
+   "Osso, segurando, fórceps",
+   "Fórceps de sujeción de hueso"
+  ],
+  [
+   "Bone Holding Forceps, Amputation Retractors",
+   "Knochenhaltezange, Amputations-Retraktoren",
+   "Bone Holding Forceps, Retratores de Amputação",
+   "Fórceps de sujeción de hueso, retractores de amputación"
+  ],
+  [
+   "Synovectomy-Rongeurs, Bone Rongeurs",
+   "Synovektomie Rongeurs, Knochen Rongeurs",
+   "Synovectomy-Rongeurs, Rongeurs óssea",
+   "Sinovectomía-Rongeurs, hueso Rongeurs"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Rongeurs",
+   "Knochen Rongeure",
+   "Rongeurs óssea",
+   "Rongeurs de hueso"
+  ],
+  [
+   "Bone Cutting Forceps",
+   "Knochenschneidezange",
+   "Pinça de corte ósseo",
+   "Fórceps de corte de hueso"
+  ],
+  [
+   "Bone Cutting Forceps",
+   "Knochenschneidezange",
+   "Pinça de corte ósseo",
+   "Fórceps de corte de hueso"
+  ],
+  [
+   "Bone Cutting Forceps",
+   "Knochenschneidezange",
+   "Pinça de corte ósseo",
+   "Fórceps de corte de hueso"
+  ],
+  [
+   "Bone Cutting Forceps",
+   "Knochenschneidezange",
+   "Pinça de corte ósseo",
+   "Fórceps de corte de hueso"
+  ],
+  [
+   "Bone Cutting Forceps",
+   "Knochenschneidezange",
+   "Pinça de corte ósseo",
+   "Fórceps de corte de hueso"
+  ],
+  [
+   "Bone Cutting Forceps",
+   "Knochenschneidezange",
+   "Pinça de corte ósseo",
+   "Fórceps de corte de hueso"
+  ],
+  [
+   "Nail Extracting Forceps, Finger Ring Saws",
+   "Nagel-Extraktions-Zange, Finger-Ring-Sägen",
+   "Pinça de extração de unhas, serras de anel de dedo",
+   "Nail Extractioning Forceps, Finger Ring Saws"
+  ],
+  [
+   "Wire Guides, Wire Tightener",
+   "Drahtführungen, Drahtspanner",
+   "Guias De Arame, Tightener De Arame",
+   "Wire Guides, Wire Tightener"
+  ],
+  [
+   "Instruments For Orthopaedic Implants",
+   "Instrumente für orthopädische Implantate",
+   "Instrumentos Para Implantes Ortopédicos",
+   "Instrumentos para implantes ortopédicos"
+  ],
+  [
+   "Instruments For Orthopaedic Implants",
+   "Instrumente für orthopädische Implantate",
+   "Instrumentos Para Implantes Ortopédicos",
+   "Instrumentos para implantes ortopédicos"
+  ],
+  [
+   "Instruments For Orthopaedic Implants",
+   "Instrumente für orthopädische Implantate",
+   "Instrumentos Para Implantes Ortopédicos",
+   "Instrumentos para implantes ortopédicos"
+  ],
+  [
+   "Epiphyseal Staples Set",
+   "Epiphysen-Heftklammern-Set",
+   "Conjunto de Grampos Epifisários",
+   "Conjunto de grapas epifisarias"
+  ]
+ ]
+}

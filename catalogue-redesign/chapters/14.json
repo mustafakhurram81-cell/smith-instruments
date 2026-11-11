@@ -1,0 +1,474 @@
+{
+ "chapter": "14",
+ "title": "Cardiovascular Surgery",
+ "translations": [
+  "Herz-Kreislauf-Chirurgie",
+  "Cirurgia Cardiovascular",
+  "Cirugía Cardiovascular"
+ ],
+ "source": "https://pub-053a419f2e51468589f2d7fee4b30df0.r2.dev/catalogues/cardiovascular-surgery.pdf",
+ "pages": [
+  [
+   "Rib Shears",
+   "Rippenscheren",
+   "Tesoura De Costela",
+   "Tijeras de costillas"
+  ],
+  [
+   "Rib Shears",
+   "Rippenscheren",
+   "Tesoura De Costela",
+   "Tijeras de costillas"
+  ],
+  [
+   "Rib Shears",
+   "Rippenscheren",
+   "Tesoura De Costela",
+   "Tijeras de costillas"
+  ],
+  [
+   "Rib Shears, Sternum Chisel",
+   "Rippenschere, Sternum-Meißel",
+   "Tesoura de costela, cinzel de esterno",
+   "Tijeras de costillas, cincel de esternón"
+  ],
+  [
+   "Rib Retractors",
+   "Rippen-Retraktoren",
+   "Retratores de Costela",
+   "Retractores de costillas"
+  ],
+  [
+   "Rib Retractors",
+   "Rippen-Retraktoren",
+   "Retratores de Costela",
+   "Retractores de costillas"
+  ],
+  [
+   "Rib Retractors",
+   "Rippen-Retraktoren",
+   "Retratores de Costela",
+   "Retractores de costillas"
+  ],
+  [
+   "Rib Retractors",
+   "Rippen-Retraktoren",
+   "Retratores de Costela",
+   "Retractores de costillas"
+  ],
+  [
+   "Rib Retractors",
+   "Rippen-Retraktoren",
+   "Retratores de Costela",
+   "Retractores de costillas"
+  ],
+  [
+   "Rib Retractors",
+   "Rippen-Retraktoren",
+   "Retratores de Costela",
+   "Retractores de costillas"
+  ],
+  [
+   "Rib Retractors",
+   "Rippen-Retraktoren",
+   "Retratores de Costela",
+   "Retractores de costillas"
+  ],
+  [
+   "Thoracic Retractors",
+   "Thorax-Retraktoren",
+   "Retratores Torácicos",
+   "Retractores torácicos"
+  ],
+  [
+   "Thoracic and I.M.A Retractor",
+   "Brust- und I.M.A Retraktor",
+   "Afastador torácico e I.M.A",
+   "Torácico y I.M.A Retractor"
+  ],
+  [
+   "Rib Contractors",
+   "Rib Auftragnehmer",
+   "Empreiteiros Rib",
+   "Rib Contractors"
+  ],
+  [
+   "Lung Spatulas",
+   "Lungenspatel",
+   "Espátulas Pulmonares",
+   "Espátulas pulmonares"
+  ],
+  [
+   "Bronchus Clamps",
+   "Bronchusklammern",
+   "Grampos de brônquio",
+   "Abrazaderas bronquiales"
+  ],
+  [
+   "Bronchus Clamps",
+   "Bronchusklammern",
+   "Grampos de brônquio",
+   "Abrazaderas bronquiales"
+  ],
+  [
+   "Lung Grasping Forceps, Haemostatic Forceps",
+   "Lungenfaßzange, Hämostatische Pinzette",
+   "Pinça de Agarrar no Pulmão, Pinça Hemostática",
+   "Pinzas de agarre de los pulmones, pinzas hemostáticas"
+  ],
+  [
+   "Bulldog Clamps",
+   "Bulldogklammern",
+   "Braçadeiras de Buldogue",
+   "Bulldog abrazaderas"
+  ],
+  [
+   "Bulldog Clamps",
+   "Bulldogklammern",
+   "Braçadeiras de Buldogue",
+   "Bulldog abrazaderas"
+  ],
+  [
+   "Aortic Clamps",
+   "Aortenklemmen",
+   "Braçadeiras Aórticas",
+   "Abrazaderas aórticas"
+  ],
+  [
+   "Multi Purpose Vascular Clamps",
+   "Mehrzweck-Gefäßklemmen",
+   "Grampos vasculares de múltiplos propósitos",
+   "Abrazaderas vasculares multiusos"
+  ],
+  [
+   "Peripheral Vascular Clamps, Profunda Clamps",
+   "iphere Gefäßklemmen, Profunda-Klemmen",
+   "Braçadeiras Vasculares Periféricas, Grampos Profunda",
+   "Abrazaderas vasculares periféricas, abrazaderas Profunda"
+  ],
+  [
+   "Carotid Shunt Clamps",
+   "Karotis-Shunt-Klammern",
+   "Braçadeiras de Derivação Carotídeas",
+   "Abrazaderas de derivación carótida"
+  ],
+  [
+   "Peripheral Vascular Clamps",
+   "Periphere Gefäßklemmen",
+   "Grampos vasculares periféricos",
+   "Pinzas vasculares periféricas"
+  ],
+  [
+   "Aortic Clamps",
+   "Aortenklemmen",
+   "Braçadeiras Aórticas",
+   "Abrazaderas aórticas"
+  ],
+  [
+   "Aortic Clamps, Vascular Measuring Device",
+   "Aortenklemmen, Gefäßmessgerät",
+   "Braçadeiras Aórticas, Aparelho de Medição Vascular",
+   "Abrazaderas aórticas, dispositivo de medición vascular"
+  ],
+  [
+   "Peripheral Vascular Clamps",
+   "Periphere Gefäßklemmen",
+   "Grampos vasculares periféricos",
+   "Pinzas vasculares periféricas"
+  ],
+  [
+   "Catheter Clamps",
+   "Katheterklemmen",
+   "Braçadeiras de cateter",
+   "Abrazaderas de catéter"
+  ],
+  [
+   "Vascular Forceps",
+   "Gefäßzange",
+   "Pinça Vascular",
+   "Pinzas Vasculares"
+  ],
+  [
+   "Vascular Forceps",
+   "Gefäßzange",
+   "Pinça Vascular",
+   "Pinzas Vasculares"
+  ],
+  [
+   "Vascular Forceps",
+   "Gefäßzange",
+   "Pinça Vascular",
+   "Pinzas Vasculares"
+  ],
+  [
+   "Bulldog Clamps",
+   "Bulldogklammern",
+   "Braçadeiras de Buldogue",
+   "Bulldog abrazaderas"
+  ],
+  [
+   "Bulldog Clamps",
+   "Bulldogklammern",
+   "Braçadeiras de Buldogue",
+   "Bulldog abrazaderas"
+  ],
+  [
+   "Coarctation Clamps",
+   "Coarctationsklemmen",
+   "Grampos de coarctação",
+   "Abrazaderas de coartación"
+  ],
+  [
+   "Anastomosis Clamps, Ligature Forceps",
+   "Anastomoseklemmen, Ligaturzange",
+   "Grampos Anastomose, Pinça Ligadura",
+   "Abrazaderas de anastomosis, pinzas de ligadura"
+  ],
+  [
+   "Peripheral Vascular Clamps",
+   "Periphere Gefäßklemmen",
+   "Grampos vasculares periféricos",
+   "Pinzas vasculares periféricas"
+  ],
+  [
+   "Peripheral Vascular Clamps",
+   "Periphere Gefäßklemmen",
+   "Grampos vasculares periféricos",
+   "Pinzas vasculares periféricas"
+  ],
+  [
+   "Multi Purpose Vascular Clamps",
+   "Mehrzweck-Gefäßklemmen",
+   "Grampos vasculares de múltiplos propósitos",
+   "Abrazaderas vasculares multiusos"
+  ],
+  [
+   "Aortic Aneurysm Clamps",
+   "Aortenaneurysma-Klammern",
+   "Grampos de aneurisma aórtico",
+   "Abrazaderas de aneurisma aórtico"
+  ],
+  [
+   "Aortic Aneurysm Clamps",
+   "Aortenaneurysma-Klammern",
+   "Grampos de aneurisma aórtico",
+   "Abrazaderas de aneurisma aórtico"
+  ],
+  [
+   "Aortic Ligature Forceps",
+   "Aorten Ligatur Pinzette",
+   "Pinça de ligadura aórtica",
+   "Pinzas de ligadura aórtica"
+  ],
+  [
+   "Ligature Forceps, Aortic Clamps",
+   "Ligatur Pinzetten, Aortenklemmen",
+   "Pinça de Ligadura, Grampos Aórticos",
+   "Pinzas de ligadura, abrazaderas aórticas"
+  ],
+  [
+   "Ligature Forceps",
+   "Ligaturzange",
+   "Pinça de ligadura",
+   "Pinzas de ligadura"
+  ],
+  [
+   "Aorta Clamps",
+   "Aorta Klammern",
+   "Braçadeiras de Aorta",
+   "Abrazaderas de aorta"
+  ],
+  [
+   "Aorta-Nastomosis Clamps, Forceps For Vena Cava",
+   "Aorta-Anastomosenklemmen, Pinzetten für Vena Cava",
+   "Grampos de Anastomose de Aorta, Fórceps para Veia Cava",
+   "Abrazaderas de aorta-anastomosis, fórceps para Vena Cava"
+  ],
+  [
+   "Liver Forceps",
+   "Leberzange",
+   "Pinça de Fígado",
+   "Pinzas para el hígado"
+  ],
+  [
+   "Forceps for Kidney, Pancreas",
+   "Pinzetten für Niere, Pankreas",
+   "Pinça para rim, pâncreas",
+   "Pinzas para riñones, páncreas"
+  ],
+  [
+   "Tangential Occlusion Clamps",
+   "Tangentiale Okklusionsklemmen",
+   "Grampos de oclusão tangencial",
+   "Abrazaderas de oclusión tangencial"
+  ],
+  [
+   "Auricle Clamps",
+   "Ohrmuschelklemmen",
+   "Grampos de Aurícula",
+   "Abrazaderas de Auricle"
+  ],
+  [
+   "Bronchus Clamps",
+   "Ohrmuschelklemmen",
+   "Grampos de Aurícula",
+   "Abrazaderas de Auricle"
+  ],
+  [
+   "Aorta-Anastomosis Clamps, Anastomosis Clamps",
+   "Aorta-Anastomose-Klemmen, Anastomose-Klemmen",
+   "Braçadeiras Anastomose Aorta, Anastomose Braçadeiras",
+   "Abrazaderas de aorta-anastomosis, abrazaderas de anastomosis"
+  ],
+  [
+   "Aortic Clamps",
+   "Aortenklemmen",
+   "Braçadeiras Aórticas",
+   "Abrazaderas aórticas"
+  ],
+  [
+   "Aneurysm Clamps",
+   "Aneurysma-Klammern",
+   "Grampos de aneurisma",
+   "Abrazaderas de aneurisma"
+  ],
+  [
+   "Multi Purpose Vascular Clamps",
+   "Mehrzweck-Gefäßklemmen",
+   "Grampos vasculares de múltiplos propósitos",
+   "Abrazaderas vasculares multiusos"
+  ],
+  [
+   "Multi Purpose Vascular Clamps",
+   "Mehrzweck-Gefäßklemmen",
+   "Grampos vasculares de múltiplos propósitos",
+   "Abrazaderas vasculares multiusos"
+  ],
+  [
+   "Multi Purpose Vascular Clamps",
+   "Mehrzweck-Gefäßklemmen",
+   "Grampos vasculares de múltiplos propósitos",
+   "Abrazaderas vasculares multiusos"
+  ],
+  [
+   "Multi Purpose Vascular Clamps",
+   "Mehrzweck-Gefäßklemmen",
+   "Grampos vasculares de múltiplos propósitos",
+   "Abrazaderas vasculares multiusos"
+  ],
+  [
+   "Haemostatic Forceps",
+   "Hämostatische Pinzetten",
+   "Pinça hemostática",
+   "Pinzas hemostáticas"
+  ],
+  [
+   "Multi Purpose Vascular Clamps",
+   "Mehrzweck-Gefäßklemmen",
+   "Grampos vasculares de múltiplos propósitos",
+   "Abrazaderas vasculares multiusos"
+  ],
+  [
+   "Multi Purpose Vascular Clamps",
+   "Mehrzweck-Gefäßklemmen",
+   "Grampos vasculares de múltiplos propósitos",
+   "Abrazaderas vasculares multiusos"
+  ],
+  [
+   "Anastomosis Clamps, Vascular Forceps",
+   "Anastomoseschellen, Gefäßzangen",
+   "Grampos de Anastomose, Pinças Vasculares",
+   "Abrazaderas de anastomosis, fórceps vascular"
+  ],
+  [
+   "Anastomosis Clamps",
+   "Anastomoseschellen",
+   "Grampos Anastomose",
+   "Abrazaderas de anastomosis"
+  ],
+  [
+   "Pediatric Vascular Clamps",
+   "Pädiatrische Gefäßklemmen",
+   "Braçadeiras Vasculares Pediátricas",
+   "Pinzas vasculares pediátricas"
+  ],
+  [
+   "Pediatric Vascular Clamps",
+   "Pädiatrische Gefäßklemmen",
+   "Braçadeiras Vasculares Pediátricas",
+   "Pinzas vasculares pediátricas"
+  ],
+  [
+   "Anastomosis Clamps, Multi Purpose Vascular Clamps",
+   "Anastomosenklemmen, Mehrzweck-Gefäßklemmen",
+   "Braçadeiras Anastomose, Braçadeiras Vasculares Multifuncionais",
+   "Abrazaderas de anastomosis, abrazaderas vasculares multiusos"
+  ],
+  [
+   "Anastomosis Clamps, Multi Purpose Vascular Clamps",
+   "Anastomosenklemmen, Mehrzweck-Gefäßklemmen",
+   "Braçadeiras Anastomose, Braçadeiras Vasculares Multifuncionais",
+   "Abrazaderas de anastomosis, abrazaderas vasculares multiusos"
+  ],
+  [
+   "Anastomosis Clamps, Multi Purpose Vascular Clamps",
+   "Anastomosenklemmen, Mehrzweck-Gefäßklemmen",
+   "Braçadeiras Anastomose, Braçadeiras Vasculares Multifuncionais",
+   "Abrazaderas de anastomosis, abrazaderas vasculares multiusos"
+  ],
+  [
+   "Anastomosis Clamps",
+   "Anastomoseschellen",
+   "Grampos Anastomose",
+   "Abrazaderas de anastomosis"
+  ],
+  [
+   "Aortic Dilators",
+   "Aortendilatatoren",
+   "Dilatadores Aórticos",
+   "Dilatadores aórticos"
+  ],
+  [
+   "Vascular Dilators",
+   "Gefäßdilatatoren",
+   "Dilatadores Vasculares",
+   "Dilatadores vasculares"
+  ],
+  [
+   "Fasciotomy Knife, Fasciotomy Spatulas",
+   "Fasciotomy Messer, Fasciotomy Spatel",
+   "Faca de fasciotomia, espátulas de fasciotomia",
+   "Cuchillo de fasciotomía, fasciotomía, espátulas"
+  ],
+  [
+   "Intima Spatulas, Vascular Dissectors",
+   "Intima Spatula, vaskuläre Dissektoren",
+   "Intima Espátulas, Dissectores Vasculares",
+   "Intima Spatulas, Vascular Disectors"
+  ],
+  [
+   "Nerve Hooklets, Tourniquets",
+   "Nerven-Haken, Tourniquets",
+   "Nervos, torniquetes",
+   "Nervio Hooklets, torniquetes"
+  ],
+  [
+   "Aortic Clamps",
+   "Aortenklemmen",
+   "Braçadeiras Aórticas",
+   "Abrazaderas aórticas"
+  ],
+  [
+   "Pediatric Vascular Clamps",
+   "Pädiatrische Gefäßklemmen",
+   "Braçadeiras Vasculares Pediátricas",
+   "Pinzas vasculares pediátricas"
+  ],
+  [
+   "Pediatric Vascular Clamps, Neonatal Vascular Clamps",
+   "Pädiatrische Gefäßklemmen, neonatale Gefäßklemmen",
+   "Braçadeiras Vasculares Pediátricas, Braçadeiras Vasculares Neonatais",
+   "Pinzas vasculares pediátricas, pinzas vasculares neonatales"
+  ]
+ ]
+}

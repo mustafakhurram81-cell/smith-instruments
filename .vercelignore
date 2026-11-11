@@ -10,6 +10,7 @@ dist
 *.pdf
 # except the certificates the About page links to
 !public/certificates/*.pdf
+!public/catalogue-pdfs/*.pdf
 *.mp4
 # Work in progress and local assets that are not part of the live site
 web
@@ -24,3 +25,4 @@ social-stand
 supabase/.temp
 generate_invoice.py
 brand-identity.html
+catalogue-redesign

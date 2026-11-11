@@ -266,6 +266,8 @@ export const ProductPage: React.FC = () => {
   // Where the code shown is printed in its chapter's PDF catalogue.
   const cataloguePage = (shownVariant ?? variants[0])?.page ?? variants.find(v => v.page)?.page ?? null;
   const catalogueLink = catalogue ? `/catalogues?catalogue=${family.code.slice(0, 2)}${cataloguePage ? `&page=${cataloguePage}` : ''}` : null;
+  // The link opens the PDF's own page (the cover is its page 1); the page shows the number printed on it, one less.
+  const printedPage = cataloguePage && cataloguePage > 1 ? String(cataloguePage - 1).padStart(2, '0') : null;
   const related = catalog.families.filter(f => f.code !== family.code && f.type === family.type && f.subtype === family.subtype).slice(0, 5);
   const hasRange = family.sizeMin !== null && family.sizeMax !== null && family.sizeMax > family.sizeMin;
   const material = family.features.includes('titanium') ? 'Titanium or stainless steel (by model)'
@@ -305,9 +307,9 @@ export const ProductPage: React.FC = () => {
           <div className="lg:sticky lg:top-28 bg-white border border-stone-200 rounded-lg p-6 md:p-10">
             <Gallery pictures={pictures} current={current} caption={caption} onPick={pick}
               alt={shownVariant && showPictures ? `${family.name}, ${shownVariant.sku}` : family.name} />
-            {catalogue && catalogueLink && cataloguePage && (
+            {catalogue && catalogueLink && printedPage && (
               <Link to={catalogueLink} className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-brand-charcoal hover:text-brand-orange">
-                <BookOpen size={16} /> See it in the {catalogue.title} catalogue, page {cataloguePage}
+                <BookOpen size={16} /> See it in the {catalogue.title} catalogue, page {printedPage}
               </Link>
             )}
             {hasRange && (
@@ -367,7 +369,7 @@ export const ProductPage: React.FC = () => {
                 {catalogue && (
                   <div className="grid grid-cols-[140px_1fr] gap-4 py-3 border-b border-stone-200">
                     <dt className="text-stone-500">Catalogue</dt>
-                    <dd><Link to={catalogueLink ?? '/catalogues'} className="inline-flex items-center gap-1.5 hover:text-brand-orange"><BookOpen size={15} /> {catalogue.title}{cataloguePage ? `, page ${cataloguePage}` : ''}</Link></dd>
+                    <dd><Link to={catalogueLink ?? '/catalogues'} className="inline-flex items-center gap-1.5 hover:text-brand-orange"><BookOpen size={15} /> {catalogue.title}{printedPage ? `, page ${printedPage}` : ''}</Link></dd>
                   </div>
                 )}
               </dl>
