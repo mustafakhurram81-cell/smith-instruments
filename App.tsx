@@ -33,14 +33,26 @@ const NotFound = lazy(() => import('./pages/NotFound').then(module => ({ default
 
 // Scroll to top on route change
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   React.useEffect(() => {
     // Use startTransition to defer scroll until after navigation is complete
     React.startTransition(() => {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     });
-  }, [pathname]);
+    // Jump to an in-page anchor (e.g. /about#certifications) once the lazy page has rendered
+    if (hash) {
+      let tries = 0;
+      const timer = window.setInterval(() => {
+        const el = document.getElementById(hash.slice(1));
+        if (el || ++tries > 20) {
+          window.clearInterval(timer);
+          el?.scrollIntoView({ behavior: 'instant' as ScrollBehavior, block: 'start' });
+        }
+      }, 100);
+      return () => window.clearInterval(timer);
+    }
+  }, [pathname, hash]);
 
   return null;
 };

@@ -10,6 +10,7 @@ import logoTransparent from '../assets/smith-logo-transparent.png';
 
 const COMPANY_LINKS = [
     { to: '/about', label: 'About Us' },
+    { to: '/about#certifications', label: 'Certifications' },
     // { to: '/events', label: 'Events & Gallery' }, // Hidden until content is ready
     { to: '/distributor', label: 'Become a Distributor' },
     { to: '/blog', label: 'Blog' },

@@ -204,7 +204,7 @@ export const About: React.FC = () => {
       </section>
 
       {/* 7. CERTIFICATIONS & COMPLIANCE */}
-      <section className="bg-white py-24 border-t border-stone-200/50">
+      <section id="certifications" className="bg-white py-24 border-t border-stone-200/50 scroll-mt-24">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
             <span className="text-brand-orange uppercase tracking-[0.2em] text-sm font-bold block mb-3">Quality Assurance</span>
